@@ -1,0 +1,1097 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html class="o-js" lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <title>Organyxhub Marketplace</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/imgs/theme/favicon.svg' %}" />
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/animate.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+</head>
+
+<body>
+    <!-- Modal -->
+    <div class="modal fade custom-modal" id="onloadModal" tabindex="-1" aria-labelledby="onloadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="deal" style="background-image: url('{% static 'assets/imgs/banner/popup-1.png' %}')">
+                        <div class="deal-top">
+                            <h6 class="mb-10 text-brand-2">Oferta do Dia</h6>
+                        </div>
+                        <div class="deal-content detail-info">
+                            <h4 class="product-title"><a href="shop-product-right.html" class="text-heading">Frutas orgânicas para a saúde da sua família</a></h4>
+                            <div class="clearfix product-price-cover">
+                                <div class="product-price primary-color float-left">
+                                    <span class="current-price text-brand">$38</span>
+                                    <span>
+                                        <span class="save-price font-md color3 ml-15">26% Off</span>
+                                        <span class="old-price font-md ml-15">$52</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="deal-bottom">
+                            <p class="mb-20">Apresse-se! A oferta termina em:</p>
+                            <div class="deals-countdown pl-5" data-countdown="2025/03/25 00:00:00">
+                                <span class="countdown-section"><span class="countdown-amount hover-up">03</span><span class="countdown-period"> dias </span></span><span class="countdown-section"><span class="countdown-amount hover-up">02</span><span class="countdown-period"> horas </span></span><span class="countdown-section"><span class="countdown-amount hover-up">43</span><span class="countdown-period"> min </span></span><span class="countdown-section"><span class="countdown-amount hover-up">29</span><span class="countdown-period"> seg </span></span>
+                            </div>
+                            <div class="product-detail-rating">
+                                <div class="product-rate-cover text-end">
+                                    <div class="product-rate d-inline-block">
+                                        <div class="product-rating" style="width: 90%"></div>
+                                    </div>
+                                    <span class="font-small ml-5 text-muted"> (32 rates)</span>
+                                </div>
+                            </div>
+                            <a href="shop-grid-right.html" class="btn hover-up">Compre Agora <i class="fi-rs-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Quick view -->
+    <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
+                            <div class="detail-gallery">
+                                <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                <!-- SLIDES PRINCIPAIS -->
+                                <div class="product-image-slider">
+                                    <figure class="border-radius-10">
+                                        <img src="{% static 'assets/imgs/shop/product-16-2.jpg' %}" alt="imagem do produto" />
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="{% static 'assets/imgs/shop/product-16-1.jpg' %}" alt="imagem do produto" />
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="{% static 'assets/imgs/shop/product-16-3.jpg' %}" alt="imagem do produto" />
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="{% static 'assets/imgs/shop/product-16-4.jpg' %}" alt="imagem do produto" />
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="{% static 'assets/imgs/shop/product-16-5.jpg' %}" alt="imagem do produto" />
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="{% static 'assets/imgs/shop/product-16-6.jpg' %}" alt="imagem do produto" />
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="{% static 'assets/imgs/shop/product-16-7.jpg' %}" alt="imagem do produto" />
+                                    </figure>
+                                </div>
+                                <!-- THUMBNAILS -->
+                                <div class="slider-nav-thumbnails">
+                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" alt="imagem do produto" /></div>
+                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" alt="imagem do produto" /></div>
+                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-5.jpg' %}" alt="imagem do produto" /></div>
+                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-6.jpg' %}" alt="imagem do produto" /></div>
+                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-7.jpg' %}" alt="imagem do produto" /></div>
+                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-8.jpg' %}" alt="imagem do produto" /></div>
+                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-9.jpg' %}" alt="imagem do produto" /></div>
+                                </div>
+                            </div>
+                            <!-- End Gallery -->
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="detail-info pr-30 pl-30">
+                                <span class="stock-status out-stock"> Promoção </span>
+                                <h3 class="title-detail"><a href="shop-product-right.html" class="text-heading">Quinoa Orgânica Seeds of Change, Marrom</a></h3>
+                                <div class="product-detail-rating">
+                                    <div class="product-rate-cover text-end">
+                                        <div class="product-rate d-inline-block">
+                                            <div class="product-rating" style="width: 90%"></div>
+                                        </div>
+                                        <span class="font-small ml-5 text-muted"> (32 avaliações)</span>
+                                    </div>
+                                </div>
+                                <div class="clearfix product-price-cover">
+                                    <div class="product-price primary-color float-left">
+                                        <span class="current-price text-brand">R$38</span>
+                                        <span>
+                                            <span class="save-price font-md color3 ml-15">26% Off</span>
+                                            <span class="old-price font-md ml-15">R$52</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="detail-extralink mb-30">
+                                    <div class="detail-qty border radius">
+                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                        <span class="qty-val">1</span>
+                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                    </div>
+                                    <div class="product-extra-link2">
+                                        <button type="submit" class="button button-add-to-cart"><i class="fi-rs-shopping-cart"></i>Adicionar ao carrinho</button>
+                                    </div>
+                                </div>
+                                <div class="font-xs">
+                                    <ul>
+                                        <li class="mb-5">Vendedor: <span class="text-brand">Nest</span></li>
+                                        <li class="mb-5">Fabricação:<span class="text-brand"> 4 Jun 2022</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Detail Info -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header class="header-area header-style-1 header-height-2">
+        <div class="mobile-promotion">
+            <span style="white-space: nowrap;">Grande inauguração, <strong>até 15%</strong> de desconto em todos os itens. Apenas <strong>3 dias</strong> restantes</span>
+        </div>
+        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info">
+                            <ul style="display: flex;">
+                                <li><a href="page-about.htlm">Sobre Nós</a></li>
+                                <li><a href="page-account.html">Conta</a></li>
+                                <li><a href="shop-wishlist.html">Wishlist</a></li>
+                                <li><a href="shop-order.html">Rastreamento de Pedido</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                            <div id="news-flash" class="d-inline-block">
+                                <ul style="white-space: nowrap;">
+                                    <li>Entrega 100% Segura sem contato com o entregador</li>
+                                    <li>Super Ofertas - Economize mais com cupons</li>
+                                    <li>Joias prata da moda 25, economize até 35% hoje</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <ul style="display: flex;">
+                                <li>Precisa de ajuda? Ligue: <strong class="text-brand"> + 1800 900</strong></li>
+                                <li>
+                                    <a class="language-dropdown-active" href="#">Português <i class="fi-rs-angle-small-down"></i></a>
+                                    <ul class="language-dropdown">
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-fr.png' %}" alt="" />Français</a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-dt.png' %}" alt="" />Deutsch</a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-ru.png' %}" alt="" />Pусский</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="language-dropdown-active" href="#">BRL <i class="fi-rs-angle-small-down"></i></a>
+                                    <ul class="language-dropdown">
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-fr.png' %}" alt="" />INR</a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-dt.png' %}" alt="" />MBP</a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-ru.png' %}" alt="" />EU</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                    </div>
+                    <div class="header-right">
+                        <div class="search-style-2">
+                            <form action="#">
+                                <select class="select-active">
+                                    <option>Categorias</option>
+                                    <option>Leites e Laticínios</option>
+                                    <option>Vinhos & Bebidas Alcoólicas</option>
+                                    <option>Roupas & Beleza</option>
+                                    <option>Alimentos & Brinquedos para Pets</option>
+                                    <option>Fast food</option>
+                                    <option>Material de Padaria</option>
+                                    <option>Legumes</option>
+                                    <option>Frutos do Mar Frescos</option>
+                                    <option>Macarrão & Arroz</option>
+                                    <option>Sorvete</option>
+                                </select>
+                                <input type="text" placeholder="Buscar itens..." />
+                            </form>
+                        </div>
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="search-location">
+                                    <form action="#">
+                                        <select class="select-active">
+                                            <option>Localização</option>
+                                            <option>São Paulo</option>
+                                            <option>Rio de Janeiro</option>
+                                            <option>Minas Gerais</option>
+                                            <option>Bahia</option>
+                                            <option>Rio Grande do Sul</option>
+                                            <option>Paraná</option>
+                                            <option>Pernambuco</option>
+                                            <option>Ceará</option>
+                                            <option>Pará</option>
+                                            <option>Santa Catarina</option>
+                                            <option>Goiás</option>
+                                            <option>Maranhão</option>
+                                            <option>Amazonas</option>
+                                        </select>
+                                    </form>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a href="shop-compare.html">
+                                        <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-compare.svg' %}" />
+                                        <span class="pro-count blue">3</span>
+                                    </a>
+                                    <a href="shop-compare.html"><span class="lable ml-0">Comparar</span></a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a href="shop-wishlist.html">
+                                        <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
+                                        <span class="pro-count blue">6</span>
+                                    </a>
+                                    <a href="shop-wishlist.html"><span class="lable">Wishlist</span></a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="shop-cart.html">
+                                        <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
+                                        <span class="pro-count blue">2</span>
+                                    </a>
+                                    <a href="shop-cart.html"><span class="lable">Carrinho</span></a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                        <ul>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" /></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Bolsa Casual Daisy</a></h4>
+                                                    <h4><span>1 × </span>R$800.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-2.jpg' %}" /></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Camisas de Veludo</a></h4>
+                                                    <h4><span>1 × </span>R$3200.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="shopping-cart-footer">
+                                            <div class="shopping-cart-total">
+                                                <h4>Total <span>R$4000.00</span></h4>
+                                            </div>
+                                            <div class="shopping-cart-button">
+                                                <a href="shop-cart.html" class="outline">Ver carrinho</a>
+                                                <a href="shop-checkout.html">Finalizar Compra</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a href="page-account.html">
+                                        <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-user.svg' %}" />
+                                    </a>
+                                    <a href="page-account.html"><span class="lable ml-0">Conta</span></a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
+                                        <ul>
+                                            <li>
+                                                <a href="page-account.html"><i class="fi fi-rs-user mr-10"></i>Minha Conta</a>
+                                            </li>
+                                            <li>
+                                                <a href="page-account.html"><i class="fi fi-rs-location-alt mr-10"></i>Rastrear Pedido</a>
+                                            </li>
+                                            <li>
+                                                <a href="page-account.html"><i class="fi fi-rs-label mr-10"></i>Meus Cupons</a>
+                                            </li>
+                                            <li>
+                                                <a href="shop-wishlist.html"><i class="fi fi-rs-heart mr-10"></i>Lista de Desejos</a>
+                                            </li>
+                                            <li>
+                                                <a href="page-account.html"><i class="fi fi-rs-settings-sliders mr-10"></i>Configurações</a>
+                                            </li>
+                                            <li>
+                                                <a href="page-login.html"><i class="fi fi-rs-sign-out mr-10"></i>Sair</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+                        <div class="main-categori-wrap d-none d-lg-block">
+                            <a class="categories-button-active" href="#">
+                                <span class="fi-rs-apps"></span> <span class="et">Navegue por</span> Todas as Categorias
+                                <i class="fi-rs-angle-down"></i>
+                            </a>
+                            <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
+                                <div class="d-flex categori-dropdown-inner">
+                                    <ul>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" />Leites e Laticínios</a>
+                                        </li>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-2.svg' %}" alt="" />Roupas & Beleza</a>
+                                        </li>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-3.svg' %}" alt="" />Alimentos & Brinquedos para Pets</a>
+                                        </li>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-4.svg' %}" alt="" />Material de Padaria</a>
+                                        </li>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-5.svg' %}" alt="" />Frutas Frescas</a>
+                                        </li>
+                                    </ul>
+                                    <ul class="end">
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-6.svg' %}" alt="" />Vinhos & Bebidas</a>
+                                        </li>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-7.svg' %}" alt="" />Frutos do Mar Frescos</a>
+                                        </li>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-8.svg' %}" alt="" />Fast food</a>
+                                        </li>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-9.svg' %}" alt="" />Legumes</a>
+                                        </li>
+                                        <li>
+                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-10.svg' %}" alt="" />Pães e Sucos</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="more_slide_open" style="display: none">
+                                    <div class="d-flex categori-dropdown-inner">
+                                        <ul>
+                                            <li>
+                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/icon-1.svg' %}" alt="" />Leites e Laticínios</a>
+                                            </li>
+                                            <li>
+                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/icon-2.svg' %}" alt="" />Roupas & Beleza</a>
+                                            </li>
+                                        </ul>
+                                        <ul class="end">
+                                            <li>
+                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/icon-3.svg' %}" alt="" />Vinhos & Bebidas</a>
+                                            </li>
+                                            <li>
+                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/icon-4.svg' %}" alt="" />Frutos do Mar Frescos</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="more_categories"><span class="icon"></span> <span class="heading-sm-1">Mostrar mais...</span></div>
+                            </div>
+                        </div>
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
+                            <nav>
+                                <ul>
+                                    <li class="hot-deals"><img src="{% static 'assets/imgs/theme/icons/icon-hot.svg' %}" alt="ofertas" /><a href="shop-grid-right.html">Ofertas</a></li>
+                                    <li>
+                                        <a class="active" href="index.html">Início <i class="fi-rs-angle-down"></i></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="index.html">Início 1</a></li>
+                                            <li><a href="index-2.html">Início 2</a></li>
+                                            <li><a href="index-3.html">Início 3</a></li>
+                                            <li><a href="index-4.html">Início 4</a></li>
+                                            <li><a href="index-5.html">Início 5</a></li>
+                                            <li><a href="index-6.html">Início 6</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="page-about.html">Sobre</a>
+                                    </li>
+                                    <li>
+                                        <a href="shop-grid-right.html">Loja <i class="fi-rs-angle-down"></i></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="shop-grid-right.html">Loja Grid – Barra Lateral Direita</a></li>
+                                            <li><a href="shop-grid-left.html">Loja Grid – Barra Lateral Esquerda</a></li>
+                                            <li><a href="shop-list-right.html">Loja Lista – Barra Lateral Direita</a></li>
+                                            <li><a href="shop-list-left.html">Loja Lista – Barra Lateral Esquerda</a></li>
+                                            <li><a href="shop-fullwidth.html">Loja - Largura Total</a></li>
+                                            <li>
+                                                <a href="#">Produto Único <i class="fi-rs-angle-right"></i></a>
+                                                <ul class="level-menu">
+                                                    <li><a href="shop-product-right.html">Produto – Barra Lateral Direita</a></li>
+                                                    <li><a href="shop-product-left.html">Produto – Barra Lateral Esquerda</a></li>
+                                                    <li><a href="shop-product-full.html">Produto – Sem barra lateral</a></li>
+                                                    <li><a href="shop-product-vendor.html">Produto – Info do Vendedor</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="shop-filter.html">Loja – Filtro</a></li>
+                                            <li><a href="shop-wishlist.html">Loja – Lista de Desejos</a></li>
+                                            <li><a href="shop-cart.html">Loja – Carrinho</a></li>
+                                            <li><a href="shop-checkout.html">Loja – Finalizar Compra</a></li>
+                                            <li><a href="shop-compare.html">Loja – Comparar</a></li>
+                                            <li>
+                                                <a href="#">Fatura da Loja<i class="fi-rs-angle-right"></i></a>
+                                                <ul class="level-menu">
+                                                    <li><a href="shop-invoice-1.html">Fatura da Loja 1</a></li>
+                                                    <li><a href="shop-invoice-2.html">Fatura da Loja 2</a></li>
+                                                    <li><a href="shop-invoice-3.html">Fatura da Loja 3</a></li>
+                                                    <li><a href="shop-invoice-4.html">Fatura da Loja 4</a></li>
+                                                    <li><a href="shop-invoice-5.html">Fatura da Loja 5</a></li>
+                                                    <li><a href="shop-invoice-6.html">Fatura da Loja 6</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">Vendedores <i class="fi-rs-angle-down"></i></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="vendors-grid.html">Grade de Vendedores</a></li>
+                                            <li><a href="vendors-list.html">Lista de Vendedores</a></li>
+                                            <li><a href="vendor-details-1.html">Detalhes do Vendedor 01</a></li>
+                                            <li><a href="vendor-details-2.html">Detalhes do Vendedor 02</a></li>
+                                            <li><a href="vendor-dashboard.html">Painel do Vendedor</a></li>
+                                            <li><a href="vendor-guide.html">Guia do Vendedor</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="position-static">
+                                        <a href="#">Mega menu <i class="fi-rs-angle-down"></i></a>
+                                        <ul class="mega-menu">
+                                            <li class="sub-mega-menu sub-mega-menu-width-22">
+                                                <a class="menu-title" href="#">Frutas & Legumes</a>
+                                                <ul>
+                                                    <li><a href="shop-product-right.html">Carnes & Aves</a></li>
+                                                    <li><a href="shop-product-right.html">Legumes Frescos</a></li>
+                                                    <li><a href="shop-product-right.html">Ervas & Temperos</a></li>
+                                                    <li><a href="shop-product-right.html">Cortes & Brotos</a></li>
+                                                    <li><a href="shop-product-right.html">Frutas & Legumes Exóticos</a></li>
+                                                    <li><a href="shop-product-right.html">Produtos Embalados</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="sub-mega-menu sub-mega-menu-width-22">
+                                                <a class="menu-title" href="#">Café da Manhã & Laticínios</a>
+                                                <ul>
+                                                    <li><a href="shop-product-right.html">Leite & Leites Saborizados</a></li>
+                                                    <li><a href="shop-product-right.html">Manteiga e Margarina</a></li>
+                                                    <li><a href="shop-product-right.html">Substitutos de Ovos</a></li>
+                                                    <li><a href="shop-product-right.html">Geléias</a></li>
+                                                    <li><a href="shop-product-right.html">Creme de Leite</a></li>
+                                                    <li><a href="shop-product-right.html">Queijos</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="sub-mega-menu sub-mega-menu-width-22">
+                                                <a class="menu-title" href="#">Carnes & Frutos do Mar</a>
+                                                <ul>
+                                                    <li><a href="shop-product-right.html">Linguiça para Café da Manhã</a></li>
+                                                    <li><a href="shop-product-right.html">Linguiça para Jantar</a></li>
+                                                    <li><a href="shop-product-right.html">Frango</a></li>
+                                                    <li><a href="shop-product-right.html">Frios Fatiados</a></li>
+                                                    <li><a href="shop-product-right.html">Filés de Peixe Selvagem</a></li>
+                                                    <li><a href="shop-product-right.html">Caranguejo e Frutos do Mar</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="sub-mega-menu sub-mega-menu-width-34">
+                                                <div class="menu-banner-wrap">
+                                                    <a href="shop-product-right.html"><img src="{% static 'assets/imgs/banner/banner-menu.png' %}" alt="Nest" /></a>
+                                                    <div class="menu-banner-content">
+                                                        <h4>Ofertas Quentes</h4>
+                                                        <h3>
+                                                            Não perca<br />
+                                                            Tendências
+                                                        </h3>
+                                                        <div class="menu-banner-price">
+                                                            <span class="new-price text-success">Economize até 50%</span>
+                                                        </div>
+                                                        <div class="menu-banner-btn">
+                                                            <a href="shop-product-right.html">Comprar agora</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="menu-banner-discount">
+                                                        <h3>
+                                                            <span>25%</span>
+                                                            off
+                                                        </h3>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="blog-category-grid.html">Blog <i class="fi-rs-angle-down"></i></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="blog-category-grid.html">Blog Categoria Grid</a></li>
+                                            <li><a href="blog-category-list.html">Blog Categoria Lista</a></li>
+                                            <li><a href="blog-category-big.html">Blog Categoria Grande</a></li>
+                                            <li><a href="blog-category-fullwidth.html">Blog Categoria Largura Total</a></li>
+                                            <li>
+                                                <a href="#">Post Único <i class="fi-rs-angle-right"></i></a>
+                                                <ul class="level-menu level-menu-modify">
+                                                    <li><a href="blog-post-left.html">Barra Lateral Esquerda</a></li>
+                                                    <li><a href="blog-post-right.html">Barra Lateral Direita</a></li>
+                                                    <li><a href="blog-post-fullwidth.html">Sem Barra Lateral</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">Páginas <i class="fi-rs-angle-down"></i></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="page-about.html">Sobre Nós</a></li>
+                                            <li><a href="page-contact.html">Contato</a></li>
+                                            <li><a href="page-account.html">Minha Conta</a></li>
+                                            <li><a href="page-login.html">Login</a></li>
+                                            <li><a href="page-register.html">Registrar</a></li>
+                                            <li><a href="page-forgot-password.html">Esqueci a senha</a></li>
+                                            <li><a href="page-reset-password.html">Redefinir senha</a></li>
+                                            <li><a href="page-purchase-guide.html">Guia de Compra</a></li>
+                                            <li><a href="page-privacy-policy.html">Política de Privacidade</a></li>
+                                            <li><a href="page-terms.html">Termos de Serviço</a></li>
+                                            <li><a href="page-404.html">Página 404</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="page-contact.html">Contato</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="hotline d-none d-lg-flex">
+                        <img src="{% static 'assets/imgs/theme/icons/icon-headphone.svg' %}" alt="suporte" />
+                        <p>1900 - 888<span>Central de Suporte 24/7</span></p>
+                    </div>
+                    <div class="header-action-icon-2 d-block d-lg-none">
+                        <div class="burger-icon burger-icon-white">
+                            <span class="burger-icon-top"></span>
+                            <span class="burger-icon-mid"></span>
+                            <span class="burger-icon-bottom"></span>
+                        </div>
+                    </div>
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="shop-wishlist.html">
+                                    <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
+                                    <span class="pro-count white">4</span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="#">
+                                    <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
+                                    <span class="pro-count white">2</span>
+                                </a>
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                    <ul>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" /></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Camisas Listradas</a></h4>
+                                                <h3><span>1 × </span>R$800,00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" /></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
+                                                <h3><span>1 × </span>R$3500,00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="shopping-cart-footer">
+                                        <div class="shopping-cart-total">
+                                            <h4>Total <span>R$4300,00</span></h4>
+                                        </div>
+                                        <div class="shopping-cart-button">
+                                            <a href="shop-cart.html">Ver carrinho</a>
+                                            <a href="shop-checkout.html">Finalizar Compra</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                <div class="mobile-search search-style-3 mobile-header-border">
+                    <form action="#">
+                        <input type="text" placeholder="Buscar itens..." />
+                        <button type="submit"><i class="fi-rs-search"></i></button>
+                    </form>
+                </div>
+                <div class="mobile-menu-wrap mobile-header-border">
+                    <!-- menu mobile início -->
+                    <nav>
+                        <ul class="mobile-menu font-heading">
+                            <li class="menu-item-has-children">
+                                <a href="index.html">Início</a>
+                                <ul class="dropdown">
+                                    <li><a href="index.html">Início 1</a></li>
+                                    <li><a href="index-2.html">Início 2</a></li>
+                                    <li><a href="index-3.html">Início 3</a></li>
+                                    <li><a href="index-4.html">Início 4</a></li>
+                                    <li><a href="index-5.html">Início 5</a></li>
+                                    <li><a href="index-6.html">Início 6</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="shop-grid-right.html">Loja</a>
+                                <ul class="dropdown">
+                                    <li><a href="shop-grid-right.html">Loja Grid - Barra Lateral Direita</a></li>
+                                    <li><a href="shop-grid-left.html">Loja Grid - Barra Lateral Esquerda</a></li>
+                                    <li><a href="shop-list-right.html">Loja Lista - Barra Lateral Direita</a></li>
+                                    <li><a href="shop-list-left.html">Loja Lista - Barra Lateral Esquerda</a></li>
+                                    <li><a href="shop-fullwidth.html">Loja - Largura Total</a></li>
+                                    <li class="menu-item-has-children">
+                                        <a href="#">Produto Único</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Produto - Barra Lateral Direita</a></li>
+                                            <li><a href="shop-product-left.html">Produto - Barra Lateral Esquerda</a></li>
+                                            <li><a href="shop-product-full.html">Produto - Sem barra lateral</a></li>
+                                            <li><a href="shop-product-vendor.html">Produto - Info do Vendedor</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="shop-filter.html">Loja - Filtro</a></li>
+                                    <li><a href="shop-wishlist.html">Loja - Lista de Desejos</a></li>
+                                    <li><a href="shop-cart.html">Loja - Carrinho</a></li>
+                                    <li><a href="shop-checkout.html">Loja - Finalizar Compra</a></li>
+                                    <li><a href="shop-compare.html">Loja - Comparar</a></li>
+                                    <li class="menu-item-has-children">
+                                        <a href="#">Fatura da Loja</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-invoice-1.html">Fatura da Loja 1</a></li>
+                                            <li><a href="shop-invoice-2.html">Fatura da Loja 2</a></li>
+                                            <li><a href="shop-invoice-3.html">Fatura da Loja 3</a></li>
+                                            <li><a href="shop-invoice-4.html">Fatura da Loja 4</a></li>
+                                            <li><a href="shop-invoice-5.html">Fatura da Loja 5</a></li>
+                                            <li><a href="shop-invoice-6.html">Fatura da Loja 6</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="#">Vendedores</a>
+                                <ul class="dropdown">
+                                    <li><a href="vendors-grid.html">Grade de Vendedores</a></li>
+                                    <li><a href="vendors-list.html">Lista de Vendedores</a></li>
+                                    <li><a href="vendor-details-1.html">Detalhes do Vendedor 01</a></li>
+                                    <li><a href="vendor-details-2.html">Detalhes do Vendedor 02</a></li>
+                                    <li><a href="vendor-dashboard.html">Painel do Vendedor</a></li>
+                                    <li><a href="vendor-guide.html">Guia do Vendedor</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="#">Mega menu</a>
+                                <ul class="dropdown">
+                                    <li class="menu-item-has-children">
+                                        <a href="#">Moda Feminina</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Vestidos</a></li>
+                                            <li><a href="shop-product-right.html">Blusas & Camisas</a></li>
+                                            <li><a href="shop-product-right.html">Moletons & Casacos</a></li>
+                                            <li><a href="shop-product-right.html">Conjuntos Femininos</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item-has-children">
+                                        <a href="#">Moda Masculina</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Jaquetas</a></li>
+                                            <li><a href="shop-product-right.html">Couro Sintético Casual</a></li>
+                                            <li><a href="shop-product-right.html">Couro Legítimo</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item-has-children">
+                                        <a href="#">Tecnologia</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Notebooks Gamer</a></li>
+                                            <li><a href="shop-product-right.html">Notebooks Ultrafinos</a></li>
+                                            <li><a href="shop-product-right.html">Tablets</a></li>
+                                            <li><a href="shop-product-right.html">Acessórios para Notebook</a></li>
+                                            <li><a href="shop-product-right.html">Acessórios para Tablet</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="blog-category-fullwidth.html">Blog</a>
+                                <ul class="dropdown">
+                                    <li><a href="blog-category-grid.html">Blog Categoria Grid</a></li>
+                                    <li><a href="blog-category-list.html">Blog Categoria Lista</a></li>
+                                    <li><a href="blog-category-big.html">Blog Categoria Grande</a></li>
+                                    <li><a href="blog-category-fullwidth.html">Blog Categoria Largura Total</a></li>
+                                    <li class="menu-item-has-children">
+                                        <a href="#">Layout de Produto Único</a>
+                                        <ul class="dropdown">
+                                            <li><a href="blog-post-left.html">Barra Lateral Esquerda</a></li>
+                                            <li><a href="blog-post-right.html">Barra Lateral Direita</a></li>
+                                            <li><a href="blog-post-fullwidth.html">Sem Barra Lateral</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="#">Páginas</a>
+                                <ul class="dropdown">
+                                    <li><a href="page-about.html">Sobre Nós</a></li>
+                                    <li><a href="page-contact.html">Contato</a></li>
+                                    <li><a href="page-account.html">Minha Conta</a></li>
+                                    <li><a href="page-login.html">Login</a></li>
+                                    <li><a href="page-register.html">Registrar</a></li>
+                                    <li><a href="page-forgot-password.html">Esqueci a senha</a></li>
+                                    <li><a href="page-reset-password.html">Redefinir senha</a></li>
+                                    <li><a href="page-purchase-guide.html">Guia de Compra</a></li>
+                                    <li><a href="page-privacy-policy.html">Política de Privacidade</a></li>
+                                    <li><a href="page-terms.html">Termos de Serviço</a></li>
+                                    <li><a href="page-404.html">Página 404</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="#">Idioma</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Inglês</a></li>
+                                    <li><a href="#">Francês</a></li>
+                                    <li><a href="#">Alemão</a></li>
+                                    <li><a href="#">Espanhol</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- fim do menu mobile -->
+                </div>
+                <div class="mobile-header-info-wrap">
+                    <div class="single-mobile-header-info">
+                        <a href="page-contact.html"><i class="fi-rs-marker"></i> Nossa localização </a>
+                    </div>
+                    <div class="single-mobile-header-info">
+                        <a href="page-login.html"><i class="fi-rs-user"></i>Entrar / Cadastrar </a>
+                    </div>
+                    <div class="single-mobile-header-info">
+                        <a href="#"><i class="fi-rs-headphones"></i>(+01) - 2345 - 6789 </a>
+                    </div>
+                </div>
+                <div class="mobile-social-icon mb-50">
+                    <h6 class="mb-15">Siga-nos</h6>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-facebook-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-twitter-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-instagram-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-pinterest-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-youtube-white.svg' %}" alt="" /></a>
+                </div>
+                <div class="site-copyright">Copyright 2023 © Organyxhub. Todos os direitos reservados. Desenvolvido por Dan Marques.</div>
+            </div>
+        </div>
+    </div>
+    <!--End header-->
+
+    {% block content %}
+
+
+
+    {%endblock content %}
+
+    <section class="newsletter mb-15 wow animate__animated animate__fadeIn">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="position-relative newsletter-inner">
+                        <div class="newsletter-content">
+                            <h2 class="mb-20">
+                                Fique em casa e receba suas<br />
+                                necessidades diárias da nossa loja
+                            </h2>
+                            <p class="mb-45">Comece suas compras diárias com <span class="text-brand">Organyxhub</span></p>
+                            <form class="form-subcriber d-flex">
+                                <input type="email" placeholder="Seu endereço de email" />
+                                <button class="btn" type="submit">Inscrever</button>
+                            </form>
+                        </div>
+                        <img src="{% static 'assets/imgs/banner/banner-9.png' %}" alt="newsletter" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="featured section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-1-5 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay="0">
+                        <div class="banner-icon">
+                            <img src="{% static 'assets/imgs/theme/icons/icon-1.svg' %}" alt="" />
+                        </div>
+                        <div class="banner-text">
+                            <h3 class="icon-box-title">Melhores preços e ofertas</h3>
+                            <p>Pedidos acima de R$50</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".1s">
+                        <div class="banner-icon">
+                            <img src="{% static 'assets/imgs/theme/icons/icon-2.svg' %}" alt="" />
+                        </div>
+                        <div class="banner-text">
+                            <h3 class="icon-box-title">Entrega grátis</h3>
+                            <p>Serviço 24/7 incrível</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".2s">
+                        <div class="banner-icon">
+                            <img src="{% static 'assets/imgs/theme/icons/icon-3.svg' %}" alt="" />
+                        </div>
+                        <div class="banner-text">
+                            <h3 class="icon-box-title">Grandes ofertas diárias</h3>
+                            <p>Quando você se cadastra</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".3s">
+                        <div class="banner-icon">
+                            <img src="{% static 'assets/imgs/theme/icons/icon-4.svg' %}" alt="" />
+                        </div>
+                        <div class="banner-text">
+                            <h3 class="icon-box-title">Grande variedade</h3>
+                            <p>Mega descontos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".4s">
+                        <div class="banner-icon">
+                            <img src="{% static 'assets/imgs/theme/icons/icon-5.svg' %}" alt="" />
+                        </div>
+                        <div class="banner-text">
+                            <h3 class="icon-box-title">Devolução fácil</h3>
+                            <p>Em até 30 dias</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1-5 col-md-4 col-12 col-sm-6 d-xl-none">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".5s">
+                        <div class="banner-icon">
+                            <img src="{% static 'assets/imgs/theme/icons/icon-6.svg' %}" alt="" />
+                        </div>
+                        <div class="banner-text">
+                            <h3 class="icon-box-title">Entrega segura</h3>
+                            <p>Em até 30 dias</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section-padding footer-mid">
+        <div class="container pt-15 pb-20">
+            <div class="row">
+                <div class="col">
+                    <div class="widget-about font-md mb-md-3 mb-lg-3 mb-xl-0 wow animate__animated animate__fadeInUp" data-wow-delay="0">
+                        <div class="logo mb-30">
+                            <a href="index.html" class="mb-15"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                            <p class="font-lg text-heading">Incrível template de site de mercado</p>
+                        </div>
+                        <ul class="contact-infor">
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Endereço: </strong> <span>5171 W Campbell Ave undefined Kent, Utah 53127 Estados Unidos</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Ligue para:</strong><span>(+91) - 540-025-124553</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-email-2.svg' %}" alt="" /><strong>Email:</strong><span>vendas@Nest.com</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-clock.svg' %}" alt="" /><strong>Horário:</strong><span>10:00 - 18:00, Seg - Sáb</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-link-widget col wow animate__animated animate__fadeInUp" data-wow-delay=".1s>
+                    <h4 class="widget-title">Empresa</h4>
+                    <ul class="footer-list mb-sm-5 mb-md-0">
+                        <li><a href="#">Sobre Nós</a></li>
+                        <li><a href="#">Informações de Entrega</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos e Condições</a></li>
+                        <li><a href="#">Contate-nos</a></li>
+                        <li><a href="#">Central de Suporte</a></li>
+                        <li><a href="#">Carreiras</a></li>
+                    </ul>
+                </div>
+                <div class="footer-link-widget col wow animate__animated animate__fadeInUp" data-wow-delay=".2s">
+                    <h4 class="widget-title">Conta</h4>
+                    <ul class="footer-list mb-sm-5 mb-md-0">
+                        <li><a href="#">Entrar</a></li>
+                        <li><a href="#">Ver Carrinho</a></li>
+                        <li><a href="#">Minha Lista de Desejos</a></li>
+                        <li><a href="#">Rastrear Meu Pedido</a></li>
+                        <li><a href="#">Ticket de Ajuda</a></li>
+                        <li><a href="#">Detalhes de Envio</a></li>
+                        <li><a href="#">Comparar produtos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-link-widget col wow animate__animated animate__fadeInUp" data-wow-delay=".3s">
+                    <h4 class="widget-title">Corporativo</h4>
+                    <ul class="footer-list mb-sm-5 mb-md-0">
+                        <li><a href="#">Torne-se um Vendedor</a></li>
+                        <li><a href="#">Programa de Afiliados</a></li>
+                        <li><a href="#">Negócios Rurais</a></li>
+                        <li><a href="#">Carreiras Rurais</a></li>
+                        <li><a href="#">Nossos Fornecedores</a></li>
+                        <li><a href="#">Acessibilidade</a></li>
+                        <li><a href="#">Promoções</a></li>
+                    </ul>
+                </div>
+                <div class="footer-link-widget col wow animate__animated animate__fadeInUp" data-wow-delay=".4s">
+                    <h4 class="widget-title">Popular</h4>
+                    <ul class="footer-list mb-sm-5 mb-md-0">
+                        <li><a href="#">Leite e Leites Saborizados</a></li>
+                        <li><a href="#">Manteiga e Margarina</a></li>
+                        <li><a href="#">Substitutos de Ovos</a></li>
+                        <li><a href="#">Geleias</a></li>
+                        <li><a href="#">Creme de Leite e Molhos</a></li>
+                        <li><a href="#">Chá e Kombucha</a></li>
+                        <li><a href="#">Queijos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-link-widget widget-install-app col wow animate__animated animate__fadeInUp" data-wow-delay=".5s">
+                    <h4 class="widget-title">Instalar App</h4>
+                    <p class="">Da App Store ou Google Play</p>
+                    <div class="download-app">
+                        <a href="#" class="hover-up mb-sm-2 mb-lg-0"><img class="active" src="{% static 'assets/imgs/theme/app-store.jpg' %}" alt="" /></a>
+                        <a href="#" class="hover-up mb-sm-2"><img src="{% static 'assets/imgs/theme/google-play.jpg' %}" alt="" /></a>
+                    </div>
+                    <p class="mb-20">Gateways de Pagamento Seguros</p>
+                    <img class="" src="{% static 'assets/imgs/theme/payment-method.png' %}" alt="" />
+                </div>
+            </div>
+    </section>
+    <div class="container pb-30 wow animate__animated animate__fadeInUp" data-wow-delay="0">
+        <div class="row align-items-center">
+            <div class="col-12 mb-30">
+                <div class="footer-bottom"></div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6">
+                <p class="font-sm mb-0">&copy; 2022, <strong class="text-brand">Nest</strong> - Template de E-commerce HTML <br />Todos os direitos reservados</p>
+            </div>
+            <div class="col-xl-4 col-lg-6 text-center d-none d-xl-block">
+                <div class="hotline d-lg-inline-flex mr-30">
+                    <img src="{% static 'assets/imgs/theme/icons/phone-call.svg' %}" alt="hotline" />
+                    <p>1900 - 6666<span>Funcionamento 8:00 - 22:00</span></p>
+                </div>
+                <div class="hotline d-lg-inline-flex">
+                    <img src="{% static 'assets/imgs/theme/icons/phone-call.svg' %}" alt="hotline" />
+                    <p>1900 - 8888<span>Central de Suporte 24/7</span></p>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 text-end d-none d-md-block">
+                <div class="mobile-social-icon">
+                    <h6>Siga-nos</h6>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-facebook-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-twitter-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-instagram-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-pinterest-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-youtube-white.svg' %}" alt="" /></a>
+                </div>
+                <p class="font-sm">Até 15% de desconto na sua primeira inscrição</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="text-center">
+                    <img src="{% static 'assets/imgs/theme/loading.gif' %}" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Vendor JS-->
+    <script src="{% static 'assets/js/vendor/modernizr-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/jquery-migrate-3.3.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/slick.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/jquery.syotimer.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/waypoints.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/wow.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/perfect-scrollbar.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/magnific-popup.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/counterup.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/images-loaded.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/isotope.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/scrollup.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/jquery.vticker-min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/jquery.theia.sticky.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/jquery.elevatezoom.js' %}"></script>
+    <!-- Template  JS -->
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/shop.js' %}"></script>
+</body>
+
+</html>
