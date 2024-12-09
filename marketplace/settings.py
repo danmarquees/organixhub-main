@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
 
     #Custom Apps
     'core',
+    'userauths',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +136,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+JAZZMIN_SETTINGS = {
+    'site_header': "Organyxhub Marketplace",
+    'site_brand': "Grow Like a Plant",
+    'site_logo': "assets/imgs/logos/logo_brw-01.png",
+    'copyright': "organyxhub",
+}
+
+
+AUTH_USER_MODEL = 'userauths.User'
