@@ -13,15 +13,16 @@
     <meta property="og:url" content="" />
     <meta property="og:image" content="" />
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/imgs/theme/favicon.svg' %}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/imgs/theme/favicon.ico' %}" />
     <!-- Template CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/plugins/animate.min.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+
 </head>
 
 <body>
     <!-- Modal -->
-    <div class="modal fade custom-modal" id="onloadModal" tabindex="-1" aria-labelledby="onloadModalLabel" aria-hidden="true">
+    <!--<div class="modal fade custom-modal" id="onloadModal" tabindex="-1" aria-labelledby="onloadModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -185,7 +186,7 @@
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
                             <ul style="display: flex;">
-                                <li>Precisa de ajuda? Ligue: <strong class="text-brand"> + 1800 900</strong></li>
+                                <li>Precisa de ajuda? Ligue: <strong class="text-brand">08007775000</strong></li>
                                 <li>
                                     <a class="language-dropdown-active" href="#">Português <i class="fi-rs-angle-small-down"></i></a>
                                     <ul class="language-dropdown">
@@ -224,7 +225,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.png' %}" alt="logo" /></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -347,9 +348,13 @@
                                             <li>
                                                 <a href="page-account.html"><i class="fi fi-rs-settings-sliders mr-10"></i>Configurações</a>
                                             </li>
+                                            {% if request.user.is_authenticated %}
+                                            <li><a href="{% url 'userauths:sign-out' %}"><i class="fi fi-rs-sign-out mr-10"></i>Sair</a></li>
+                                            {% else %}
                                             <li>
-                                                <a href="page-login.html"><i class="fi fi-rs-sign-out mr-10"></i>Sair</a>
+                                                <a href="{% url 'userauths:sign-in' %}"><i class="fi fi-rs-sign-in mr-10"></i>Entrar</a>
                                             </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </div>
@@ -363,7 +368,7 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.png' %}" alt="logo" /></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categori-wrap d-none d-lg-block">
@@ -662,6 +667,21 @@
                         </div>
                     </div>
                 </div>
+                {% if messages %}
+                    {% for message in  messages  %}
+                       <div class="alert alert-{{message.tags}}">
+                         <strong>{{ message }}</strong>
+                       </div>
+
+                    {% endfor  %}
+                {% endif %}
+                <script>
+                  setTimeout(() => {
+                    $(".alert").fadeOut("slow", function() {
+                      $(this).alert('close');
+                    });
+                  }, 6000);
+                </script>
             </div>
         </div>
     </header>
@@ -669,7 +689,7 @@
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
-                    <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                    <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.png' %}" alt="logo" /></a>
                 </div>
                 <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
                     <button class="close-style search-close">
@@ -955,18 +975,18 @@
                 <div class="col">
                     <div class="widget-about font-md mb-md-3 mb-lg-3 mb-xl-0 wow animate__animated animate__fadeInUp" data-wow-delay="0">
                         <div class="logo mb-30">
-                            <a href="index.html" class="mb-15"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
-                            <p class="font-lg text-heading">Incrível template de site de mercado</p>
+                            <a href="index.html" class="mb-15"><img src="{% static 'assets/imgs/theme/logo.png' %}" alt="logo" /></a>
+                            <p class="font-lg text-heading">Onde a Consciência e o Consumo Andam Juntos</p>
                         </div>
                         <ul class="contact-infor">
-                            <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Endereço: </strong> <span>5171 W Campbell Ave undefined Kent, Utah 53127 Estados Unidos</span></li>
-                            <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Ligue para:</strong><span>(+91) - 540-025-124553</span></li>
-                            <li><img src="{% static 'assets/imgs/theme/icons/icon-email-2.svg' %}" alt="" /><strong>Email:</strong><span>vendas@Nest.com</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Endereço: </strong> <span>Rua Augusta, 1500, Jardim Paulista, São Paulo, SP, 01304-001, Brasil</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Ligue para:</strong><span>(11) 3456-7890</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-email-2.svg' %}" alt="" /><strong>Email:</strong><span>vendas@organyxhub.com</span></li>
                             <li><img src="{% static 'assets/imgs/theme/icons/icon-clock.svg' %}" alt="" /><strong>Horário:</strong><span>10:00 - 18:00, Seg - Sáb</span></li>
                         </ul>
                     </div>
                 </div>
-                <div class="footer-link-widget col wow animate__animated animate__fadeInUp" data-wow-delay=".1s>
+                <div class="footer-link-widget col wow animate__animated animate__fadeInUp" data-wow-delay=".1s">
                     <h4 class="widget-title">Empresa</h4>
                     <ul class="footer-list mb-sm-5 mb-md-0">
                         <li><a href="#">Sobre Nós</a></li>

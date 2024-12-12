@@ -31,7 +31,10 @@
                                         <h1 class="mb-5">Criar uma Conta</h1>
                                         <p class="mb-30">
                                             Já tem uma conta?
-                                            <a href="page-login.html">Entrar</a>
+                                            <a
+                                                href="{% url 'userauths:sign-up' %}"
+                                                >Entrar</a
+                                            >
                                         </p>
                                     </div>
                                     <form method="post" method="POST">

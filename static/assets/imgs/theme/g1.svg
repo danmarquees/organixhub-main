@@ -4,34 +4,12 @@
 <svg
    version="1.1"
    id="svg1"
-   width="500"
-   height="500"
-   viewBox="0 0 500 500"
-   sodipodi:docname="logo.svg"
-   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   width="196.93718"
+   height="37.070541"
+   viewBox="0 0 196.93718 37.070541"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="1.106"
-     inkscape:cx="249.54792"
-     inkscape:cy="250"
-     inkscape:window-width="1080"
-     inkscape:window-height="754"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" />
   <defs
      id="defs1">
     <clipPath
@@ -49,10 +27,7 @@
   </defs>
   <g
      id="g1"
-     transform="matrix(0.42708339,0,0,0.42708339,129.10634,144.19453)"
-     inkscape:export-filename="logo.svg"
-     inkscape:export-xdpi="104.80499"
-     inkscape:export-ydpi="104.80499">
+     transform="matrix(0.42708339,0,0,0.42708339,-8.495329,-87.270209)">
     <image
        width="500"
        height="500"

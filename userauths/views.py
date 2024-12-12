@@ -1,10 +1,11 @@
 from django.shortcuts import redirect, render
 from userauths.forms import UserRegisterForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
+from userauths.models import User
 
-User = settings.AUTH_USER_MODEL
+#User = settings.AUTH_USER_MODEL
 
 def register_view(request):
 
@@ -42,20 +43,24 @@ def login_view(request):
 
         try:
             user = User.objects.get(email=email)
+            user = authenticate(request, email=email, password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, "Você está logado em sua conta.")
+                return redirect("core:index")
+            else:
+                messages.warning(request, "Usuário não existe. Favor, criar uma conta.")
+
         except:
             messages.warning(request, f"Usuário {email} não existe.")
 
-        user = authenticate(request, email=email, password=password)
 
-        if user is not None:
-            login(request, user)
-            messages.success(request, "Você está logado.")
-            return redirect("core:index")
-        else:
-            messages.warning(request, "Usuário não existe. Favor, criar uma conta.")
+    return render(request, "userauths/sign-in.html")
 
-    context = {
 
-    }
 
-    return render(request, "userauths/sign-in.html", context)
+def logout_view(request):
+    logout(request)
+    messages.success(request, "Voce saiu da sua conta.")
+    return redirect("userauths:sign-in")
