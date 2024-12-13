@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     #Custom Apps
     'core',
     'userauths',
+
 ]
 
 MIDDLEWARE = [
@@ -109,14 +112,18 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'pt-br'
 
 USE_I18N = True
 
+#Configuração do fuso horário
 USE_TZ = True
+TIME_ZONE = 'America/Sao_Paulo'
 
+## Configurando os locais onde o Django procurará por arquivos de tradução
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -137,14 +144,35 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-
 JAZZMIN_SETTINGS = {
-    'site_header': "Organyxhub Marketplace",
-    'site_brand': "Grow Like a Plant",
-    'site_logo': "assets/imgs/logos/logo_brw-01.png",
-    'copyright': "organyxhub",
+    "site_title": "Organyx Shop",
+    "site_header": "Organyxhub Marketplace",
+    "site_brand": "Grow Like a Plant",
+    "welcome_sign": "Bem-vindo ao Painel Administrativo",
+    "copyright": "Organyxhub Ltda",
+    "site_logo": "assets/imgs/theme/favicon.ico",
+    "dark_mode_theme": None,
+
+    "menu_labels": {
+        "users": "Usuários",
+        "auth": "Autenticação",
+        "Administration": "Administração",
+    },
+
+    "custom_links": {
+        "books": [{
+            "name": "Fazer doação",
+            "url": "make-donate",
+            "icon": "fas fa-hand-holding-usd",
+        }]
+    },
 }
 
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "navbar_color": "navbar-light",
+    "navbar_bg": "bg-white",
+    "navbar_border": True,
+}
 
 AUTH_USER_MODEL = 'userauths.User'

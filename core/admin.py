@@ -6,7 +6,7 @@ class ImagemProdutoAdmin(admin.TabularInline):
 
 class ProdutoAdmin(admin.ModelAdmin):
     inlines = [ImagemProdutoAdmin]
-    list_display = ['usuario', 'titulo', 'imagem_produto', 'preco', 'destaque', 'status_produto']
+    list_display = ['user', 'titulo', 'imagem_produto', 'preco', 'vendedor', 'destaque', 'status_produto']
 
 
 class CategoriaAdmin(admin.ModelAdmin):
@@ -18,7 +18,7 @@ class VendedorAdmin(admin.ModelAdmin):
 
 
 class PedidoCarrinhoAdmin(admin.ModelAdmin):
-    list_display = ['usuario', 'preco', 'status_pagamento','data_pedido', 'status_produto']
+    list_display = ['user', 'preco', 'status_pagamento','data_pedido', 'status_produto']
 
 
 class ItensPedidoCarrinhoAdmin(admin.ModelAdmin):
@@ -26,15 +26,15 @@ class ItensPedidoCarrinhoAdmin(admin.ModelAdmin):
 
 
 class AvaliacaoProdutoAdmin(admin.ModelAdmin):
-    list_display = ['usuario', 'produto', 'avaliacao', 'classificacao' ]
+    list_display = ['user', 'produto', 'avaliacao', 'classificacao' ]
 
 
 class WishlistAdmin(admin.ModelAdmin):
-    list_display = ['usuario', 'produto', 'data' ]
+    list_display = ['user', 'produto', 'data' ]
 
 
 class EnderecoAdmin(admin.ModelAdmin):
-    list_display = ['usuario', 'endereco', 'status' ]
+    list_display = ['user', 'endereco', 'status' ]
 
 
 

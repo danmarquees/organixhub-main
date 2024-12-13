@@ -77,8 +77,10 @@ class Vendedor(models.Model):
 class Produto(models.Model):
     pid = ShortUUIDField(unique=True, length=10, max_length=10, alphabet="abcdefgh12345")
 
-    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True)
+    vendedor = models.ForeignKey(Vendedor, on_delete=models.SET_NULL, null=True)
+
 
     titulo = models.CharField(max_length=100, default="Lima Laranja")
     imagem = models.ImageField(upload_to=user_directory_path, default="produto.jpg")
@@ -88,9 +90,9 @@ class Produto(models.Model):
     preco_antigo = models.DecimalField(max_digits=999999999, decimal_places=2, default=2.99)
 
     especificacoes = models.TextField(null=True, blank=True)
-    tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
 
     status_produto = models.CharField(choices=STATUS, max_length=10, default="in_review")
+
 
     status = models.BooleanField(default=True)
     em_estoque = models.BooleanField(default=False)
@@ -112,7 +114,7 @@ class Produto(models.Model):
         return self.titulo
 
     def obter_porcentagem(self):
-        novo_preco = float(str(self.preco)) / float(str(self.preco_antigo)) * 100
+        novo_preco = "-" + str(round(((self.preco_antigo - self.preco) / self.preco_antigo) * 100)) + "%"
         return novo_preco
 
 class ImagemProduto(models.Model):
@@ -129,7 +131,7 @@ class ImagemProduto(models.Model):
 ######################################Carrinho, Pedido, Itens e Endereço##################################
 
 class PedidoCarrinho(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     preco = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
     status_pagamento = models.BooleanField(default=False)
     data_pedido = models.DateTimeField(auto_now_add=True)
@@ -160,7 +162,7 @@ class ItensPedidoCarrinho(models.Model):
 ######################################Avaliação do Produto, Lista de Desejos, Endereço##################################
 
 class AvaliacaoProduto(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     produto = models.ForeignKey(Produto, on_delete=models.SET_NULL, null=True)
     avaliacao = models.TextField()
     classificacao = models.IntegerField(choices=RATING, default=None)
@@ -181,7 +183,7 @@ class AvaliacaoProduto(models.Model):
 
 
 class Wishlist(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     produto = models.ForeignKey(Produto, on_delete=models.SET_NULL, null=True)
     data = models.DateTimeField(auto_now_add=True)
 
@@ -193,7 +195,7 @@ class Wishlist(models.Model):
 
 
 class Endereco(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     endereco = models.CharField(max_length=100, null=True)
     status = models.BooleanField(default=False)
 
