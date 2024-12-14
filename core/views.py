@@ -32,3 +32,14 @@ def lista_categorias(request):
         "categorias": categorias
     }
     return render(request, 'core/category-list.html', context)
+
+
+def categoria_produtos(request, cid):
+    categoria = Categoria.objects.get(cid=cid)
+    produtos = Produto.objects.filter(status_produto="published", categoria=categoria)
+
+    context = {
+        "categoria":categoria,
+        "produtos":produtos,
+    }
+    return render(request, "core/category-product-list.html", context)
