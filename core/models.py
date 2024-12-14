@@ -78,7 +78,7 @@ class Produto(models.Model):
     pid = ShortUUIDField(unique=True, length=10, max_length=10, alphabet="abcdefgh12345")
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, related_name='categoria')
     vendedor = models.ForeignKey(Vendedor, on_delete=models.SET_NULL, null=True)
 
 

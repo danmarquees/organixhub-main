@@ -6,7 +6,7 @@ class ImagemProdutoAdmin(admin.TabularInline):
 
 class ProdutoAdmin(admin.ModelAdmin):
     inlines = [ImagemProdutoAdmin]
-    list_display = ['user', 'titulo', 'imagem_produto', 'preco', 'vendedor', 'destaque', 'status_produto']
+    list_display = ['user', 'titulo', 'imagem_produto', 'preco', 'categoria', 'vendedor', 'destaque', 'status_produto']
 
 
 class CategoriaAdmin(admin.ModelAdmin):
