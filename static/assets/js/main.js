@@ -729,4 +729,3 @@
         showItems: 1
     });
 })(jQuery);
-

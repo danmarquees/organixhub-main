@@ -12,3 +12,23 @@ def index(request):
     }
 
     return render(request, 'core/index.html', context)
+
+
+def lista_produtos(request):
+    produto = Produto.objects.filter(status_produto="published")
+
+    context = {
+        "produtos": produto
+    }
+
+    return render(request, 'core/product-list.html', context)
+
+
+def lista_categorias(request):
+    categoria = Categoria.objects.all()
+
+    context = {
+        "categorias": categoria
+    }
+
+    return render(request, 'core/product-list.html', context)
