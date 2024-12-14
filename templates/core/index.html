@@ -136,46 +136,7 @@
             </div>
         </section>
         <!--End category slider-->
-        <section class="banners mb-25">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay="0">
-                            <img src="{% static 'assets/imgs/banner/banner-1.png' %}" alt="" />
-                            <div class="banner-text">
-                                <h4>
-                                    Sempre Fresco & <br />Limpo com Nossos<br />
-                                    Produtos
-                                </h4>
-                                <a href="shop-grid-right.html" class="btn btn-xs">Comprar Agora <i class="fi-rs-arrow-small-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay=".2s">
-                            <img src="{% static 'assets/imgs/banner/banner-2.png' %}" alt="" />
-                            <div class="banner-text">
-                                <h4>
-                                    Faça seu Café da Manhã<br />
-                                    Saudável e Fácil
-                                </h4>
-                                <a href="shop-grid-right.html" class="btn btn-xs">Comprar Agora <i class="fi-rs-arrow-small-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 d-md-none d-lg-flex">
-                        <div class="banner-img mb-sm-0 wow animate__animated animate__fadeInUp" data-wow-delay=".4s">
-                            <img src="{% static 'assets/imgs/banner/banner-3.png' %}" alt="" />
-                            <div class="banner-text">
-                                <h4>Os melhores Produtos <br />Orgânicos Online</h4>
-                                <a href="shop-grid-right.html" class="btn btn-xs">Comprar Agora <i class="fi-rs-arrow-small-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!--End banners-->
+
         <section class="product-tabs section-padding position-relative">
             <div class="container">
                 <div class="section-title style-2 wow animate__animated animate__fadeIn">
@@ -3048,6 +3009,151 @@
             </div>
         </section>
         <!--End Deals-->
+        <section class="banners mb-25">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay="0">
+                            <img src="{% static 'assets/imgs/banner/banner-1.png' %}" alt="" />
+                            <div class="banner-text">
+                                <h4>
+                                    Sempre Fresco & <br />Limpo com Nossos<br />
+                                    Produtos
+                                </h4>
+                                <a href="shop-grid-right.html" class="btn btn-xs">Comprar Agora <i class="fi-rs-arrow-small-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay=".2s">
+                            <img src="{% static 'assets/imgs/banner/banner-2.png' %}" alt="" />
+                            <div class="banner-text">
+                                <h4>
+                                    Faça seu Café da Manhã<br />
+                                    Saudável e Fácil
+                                </h4>
+                                <a href="shop-grid-right.html" class="btn btn-xs">Comprar Agora <i class="fi-rs-arrow-small-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 d-md-none d-lg-flex">
+                        <div class="banner-img mb-sm-0 wow animate__animated animate__fadeInUp" data-wow-delay=".4s">
+                            <img src="{% static 'assets/imgs/banner/banner-3.png' %}" alt="" />
+                            <div class="banner-text">
+                                <h4>Os melhores Produtos <br />Orgânicos Online</h4>
+                                <a href="shop-grid-right.html" class="btn btn-xs">Comprar Agora <i class="fi-rs-arrow-small-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--End banners-->
+                        <section class="popular-categories section-padding">
+                            <div class="container">
+                                <div class="section-title">
+                                    <div class="title">
+                                        <h3>Compre por Categorias</h3>
+                                        <a class="show-all" href="#">
+                                            Todas as Categorias
+                                            <i class="fi-rs-angle-right"></i>
+                                        </a>
+                                    </div>
+                                    <div class="slider-arrow slider-arrow-2 flex-right carausel-8-columns-arrow" id="carausel-8-columns-arrows"></div>
+                                </div>
+                                <div class="carausel-8-columns-cover position-relative">
+                                    <div class="carausel-8-columns" id="carausel-8-columns">
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#">Leites e <br />Laticínios</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-2.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#">Vinhos & <br />
+                                                    Álcool</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-3.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#}">Roupas & <br />Beleza</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-4.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#">Rações para <br />Animais & Brinquedos</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-5.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#}">Fast food <br />embalado</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-6.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#">Material de <br />Confeitaria</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-7.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#">Legumes <br />& tubérculos</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-8.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#">Frutos do Mar <br />Frescos</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-9.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6>
+                                                <a href="#">Macarrão <br />Arroz</a>
+                                            </h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-10.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6><a href="#">Fast food</a></h6>
+                                        </div>
+                                        <div class="card-1">
+                                            <figure class="img-hover-scale overflow-hidden">
+                                                <a href="#"><img src="{% static 'assets/imgs/theme/icons/category-11.svg' %}" alt="" /></a>
+                                            </figure>
+                                            <h6><a href="#">Sorvete</a></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+        <!--End category slider-->
         <section class="section-padding mb-30">
             <div class="container">
                 <div class="row">
