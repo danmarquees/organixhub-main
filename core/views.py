@@ -43,3 +43,11 @@ def categoria_produtos(request, cid):
         "produtos":produtos,
     }
     return render(request, "core/category-product-list.html", context)
+
+
+def lista_vendedores(request):
+    vendedor = Vendedor.objects.all()
+    context = {
+        "vendedor": vendedor,
+    }
+    return render(request, "core/vendor-list.html", context)

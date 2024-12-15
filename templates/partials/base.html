@@ -337,38 +337,16 @@
                             <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
                                 <div class="d-flex categori-dropdown-inner">
                                     <ul>
+
+                                        {% for c in categorias %}
                                         <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" />Leites e Laticínios</a>
+                                            <a href="{% url 'core:category-product-list' c.cid %}">  <img src="{{ c.imagem.url }}" alt="" />{{ c.titulo }}</a>
                                         </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-2.svg' %}" alt="" />Roupas & Beleza</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-3.svg' %}" alt="" />Alimentos & Brinquedos para Pets</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-4.svg' %}" alt="" />Material de Padaria</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-5.svg' %}" alt="" />Frutas Frescas</a>
-                                        </li>
-                                    </ul>
+                                            {% endfor%}
+
+
                                     <ul class="end">
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-6.svg' %}" alt="" />Vinhos & Bebidas</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-7.svg' %}" alt="" />Frutos do Mar Frescos</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-8.svg' %}" alt="" />Fast food</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-9.svg' %}" alt="" />Legumes</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-10.svg' %}" alt="" />Pães e Sucos</a>
-                                        </li>
+
                                     </ul>
                                 </div>
                                 <div class="more_slide_open" style="display: none">
@@ -409,43 +387,17 @@
                                             <li><a href="index-6.html">Início 6</a></li>
                                         </ul>
                                     </li>
+
+
                                     <li>
-                                        <a href="page-about.html">Sobre</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-grid-right.html">Loja <i class="fi-rs-angle-down"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="shop-grid-right.html">Loja Grid – Barra Lateral Direita</a></li>
-                                            <li><a href="shop-grid-left.html">Loja Grid – Barra Lateral Esquerda</a></li>
-                                            <li><a href="shop-list-right.html">Loja Lista – Barra Lateral Direita</a></li>
-                                            <li><a href="shop-list-left.html">Loja Lista – Barra Lateral Esquerda</a></li>
-                                            <li><a href="shop-fullwidth.html">Loja - Largura Total</a></li>
-                                            <li>
-                                                <a href="#">Produto Único <i class="fi-rs-angle-right"></i></a>
-                                                <ul class="level-menu">
-                                                    <li><a href="shop-product-right.html">Produto – Barra Lateral Direita</a></li>
-                                                    <li><a href="shop-product-left.html">Produto – Barra Lateral Esquerda</a></li>
-                                                    <li><a href="shop-product-full.html">Produto – Sem barra lateral</a></li>
-                                                    <li><a href="shop-product-vendor.html">Produto – Info do Vendedor</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="shop-filter.html">Loja – Filtro</a></li>
-                                            <li><a href="shop-wishlist.html">Loja – Lista de Desejos</a></li>
-                                            <li><a href="shop-cart.html">Loja – Carrinho</a></li>
-                                            <li><a href="shop-checkout.html">Loja – Finalizar Compra</a></li>
-                                            <li><a href="shop-compare.html">Loja – Comparar</a></li>
-                                            <li>
-                                                <a href="#">Fatura da Loja<i class="fi-rs-angle-right"></i></a>
-                                                <ul class="level-menu">
-                                                    <li><a href="shop-invoice-1.html">Fatura da Loja 1</a></li>
-                                                    <li><a href="shop-invoice-2.html">Fatura da Loja 2</a></li>
-                                                    <li><a href="shop-invoice-3.html">Fatura da Loja 3</a></li>
-                                                    <li><a href="shop-invoice-4.html">Fatura da Loja 4</a></li>
-                                                    <li><a href="shop-invoice-5.html">Fatura da Loja 5</a></li>
-                                                    <li><a href="shop-invoice-6.html">Fatura da Loja 6</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
+                                        <a href="shop-grid-right.html">Categorias<i class="fi-rs-angle-down"></i></a>
+                                            <ul class="sub-menu">
+                                                {% for c in categorias %}
+                                                <li><a href="{% url 'core:category-product-list' c.cid %}">{{ c.titulo }}</a></li>
+                                                {% endfor %}
+                                                <hr>
+                                                <li><a href="{% url 'core:category-list' %}">Todas as Categorias</a></li>
+                                            </ul>
                                     </li>
                                     <li>
                                         <a href="#">Vendedores <i class="fi-rs-angle-down"></i></a>
@@ -562,7 +514,7 @@
                     </div>
                     <div class="hotline d-none d-lg-flex">
                         <img src="{% static 'assets/imgs/theme/icons/icon-headphone.svg' %}" alt="suporte" />
-                        <p>0800-777-5000<span>Central de Suporte 24/7</span></p>
+                        <p>0800-777<span>Central de Suporte 24/7</span></p>
                     </div>
                     <div class="header-action-icon-2 d-block d-lg-none">
                         <div class="burger-icon burger-icon-white">
@@ -1053,9 +1005,11 @@
     <script src="{% static 'assets/js/plugins/jquery.syotimer.min.js' %}"></script>
     <script src="{% static 'assets/js/plugins/waypoints.js' %}"></script>
     <script src="{% static 'assets/js/plugins/wow.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/slider-range.js' %}"></script>
     <script src="{% static 'assets/js/plugins/perfect-scrollbar.js' %}"></script>
     <script src="{% static 'assets/js/plugins/magnific-popup.js' %}"></script>
     <script src="{% static 'assets/js/plugins/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/waypoints.js' %}"></script>
     <script src="{% static 'assets/js/plugins/counterup.js' %}"></script>
     <script src="{% static 'assets/js/plugins/jquery.countdown.min.js' %}"></script>
     <script src="{% static 'assets/js/plugins/images-loaded.js' %}"></script>
