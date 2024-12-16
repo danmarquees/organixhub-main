@@ -53,6 +53,7 @@ class Vendedor(models.Model):
 
     titulo = models.CharField(max_length=100, default="Organyx")
     imagem = models.ImageField(upload_to=user_directory_path, default="vendedor.jpg")
+    capa_imagem = models.ImageField(upload_to=user_directory_path, default="capa.jpg")
     descricao = models.TextField(null=True, blank=True, default="Sou um vendedor de sucesso")
 
     endereco = models.CharField(max_length=100, default="Rua Principal")
@@ -63,7 +64,9 @@ class Vendedor(models.Model):
     dias_devolucao = models.CharField(max_length=100, default="100")
     periodo_garantia = models.CharField(max_length=100, default="100")
 
-    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    data = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
 
     class Meta:
         verbose_name_plural = "Vendedores"
@@ -79,7 +82,7 @@ class Produto(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, related_name='categoria')
-    vendedor = models.ForeignKey(Vendedor, on_delete=models.SET_NULL, null=True)
+    vendedor = models.ForeignKey(Vendedor, on_delete=models.SET_NULL, null=True, related_name='produto')
 
 
     titulo = models.CharField(max_length=100, default="Lima Laranja")

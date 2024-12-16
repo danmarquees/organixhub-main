@@ -3600,12 +3600,12 @@
                         </div>
                         <div class="col-lg-1-5 primary-sidebar sticky-sidebar pt-30">
                             <div class="sidebar-widget widget-category-2 mb-30">
-                                <h5 class="section-title style-1 mb-30">Categoria</h5>
+                                <h5 class="section-title style-1 mb-30">Categorias</h5>
                                 <ul>
 
                                     {% for c in categorias %}
                                     <li>
-                                        <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{ c.imagem.url }}"  alt="" />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
+                                        <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{ c.imagem.url }}"  />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
                                     </li>
                                        {% endfor %}
 

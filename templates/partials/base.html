@@ -399,16 +399,16 @@
                                                 <li><a href="{% url 'core:category-list' %}">Todas as Categorias</a></li>
                                             </ul>
                                     </li>
-                                    <li>
-                                        <a href="#">Vendedores <i class="fi-rs-angle-down"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="vendors-grid.html">Grade de Vendedores</a></li>
-                                            <li><a href="vendors-list.html">Lista de Vendedores</a></li>
-                                            <li><a href="vendor-details-1.html">Detalhes do Vendedor 01</a></li>
-                                            <li><a href="vendor-details-2.html">Detalhes do Vendedor 02</a></li>
-                                            <li><a href="vendor-dashboard.html">Painel do Vendedor</a></li>
-                                            <li><a href="vendor-guide.html">Guia do Vendedor</a></li>
-                                        </ul>
+                                        <li>
+                                         <a href="#">Vendedores <i class="fi-rs-angle-down"></i></a>
+                                            <ul class="sub-menu">
+                                                {% for vendedor in vendedores %}
+                                                <li><a href="{% url 'core:vendor-detail' vendedor.vid %}">{{ vendedor.titulo }}</a></li>
+                                                {% endfor %}
+                                                <hr>
+                                                <li><a href="{% url 'core:vendor-list' %}">Lista de Vendedores</a></li>
+
+                                            </ul>
                                     </li>
                                     <li class="position-static">
                                         <a href="#">Mega menu <i class="fi-rs-angle-down"></i></a>
