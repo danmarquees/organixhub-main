@@ -48,3 +48,17 @@ def descricao_vendedores(request, vid):
         "produtos": produtos,
     }
     return render(request, "core/vendor-detail.html", context)
+
+
+def detalhes_produto(request, pid):
+    produto = Produto.objects.get(pid=pid)
+    produto = get_object_or_404(Produto, pid=pid)
+
+    p_imagem = produto.p_imagem.all()
+
+    context = {
+        "p": produto,
+        "p_imagem": p_imagem,
+    }
+
+    return render (request, "core/product-detail.html", context)

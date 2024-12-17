@@ -65,7 +65,7 @@ class Vendedor(models.Model):
     periodo_garantia = models.CharField(max_length=100, default="100")
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    data = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    data = models.DateTimeField(auto_now_add=False, null=True, blank=True)
 
 
     class Meta:
@@ -85,7 +85,7 @@ class Produto(models.Model):
     vendedor = models.ForeignKey(Vendedor, on_delete=models.SET_NULL, null=True, related_name='produto')
 
 
-    titulo = models.CharField(max_length=100, default="Lima Laranja")
+    titulo = models.CharField(max_length=100, default="Lima Laranja", null=True, blank=True)
     imagem = models.ImageField(upload_to=user_directory_path, default="produto.jpg")
     descricao = models.TextField(null=True, blank=True, default="Este é o produto")
 
@@ -93,8 +93,13 @@ class Produto(models.Model):
     preco_antigo = models.DecimalField(max_digits=999999999, decimal_places=2, default=2.99)
 
     especificacoes = models.TextField(null=True, blank=True)
+    tipo = models.CharField(max_length=100, default="Orgânico", null=True, blank=True)
+    qtd_estoque = models.CharField(max_length=100, default="10", null=True, blank=True)
+    validade = models.CharField(max_length=100, default="100 dias", null=True, blank=True)
+    data_fab = models.DateTimeField(auto_now_add=False, null=True, blank=True)
 
     status_produto = models.CharField(choices=STATUS, max_length=10, default="in_review")
+
 
 
     status = models.BooleanField(default=True)
@@ -122,7 +127,7 @@ class Produto(models.Model):
 
 class ImagemProduto(models.Model):
     imagens = models.ImageField(upload_to="imagens-produto", default="produto.jpg")
-    produto = models.ForeignKey(Produto, on_delete=models.SET_NULL, null=True)
+    produto = models.ForeignKey(Produto,related_name="p_imagem", on_delete=models.SET_NULL, null=True)
     data = models.DateTimeField(auto_now_add=True)
 
     class Meta:
