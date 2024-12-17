@@ -212,8 +212,8 @@
                                 <div class="product-img-action-wrap">
                                     <div class="product-img product-img-zoom">
                                         <a href="{% url 'core:product-detail' p.pid %}">
-                                            <img class="default-img" src="{{ p.imagem.url }}" alt="" />
-                                            <img class="hover-img" src="{{ p.imagem.url }}" alt="" />
+                                            <img class="default-img" src="{{ p.imagem.url }}" alt="" style="aspect-ratio: 1/1; object-fit: cover;" />
+                                            <img class="hover-img" src="{{ p.imagem.url }}" alt="" style="aspect-ratio: 1/1; object-fit: cover;" />
                                         </a>
                                     </div>
                                     <div class="product-action-1">

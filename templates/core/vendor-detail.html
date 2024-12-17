@@ -10,11 +10,11 @@
         </div>
     </div>
     <div class="container mb-30">
-        <div class="archive-header-3 mt-30 mb-80" style="background-image:url({{ vendedor.capa_imagem.url }})">
-            <div class="archive-header-3-inner">
-                <div class="vendor-logo mr-50">
-                    <img src="{{ vendedor.imagem.url }}" alt="" />
-                </div>
+                <div class="archive-header-3 mt-30 mb-80" style="background-image:url({{ vendedor.capa_imagem.url }}); background-size: cover; background-position: center;">
+                    <div class="archive-header-3-inner">
+                        <div class="vendor-logo mr-50">
+                            <img src="{{ vendedor.imagem.url }}" alt="" />
+                        </div>
                 <div class="vendor-content">
                     <div class="product-category">
                         <span class="text-muted">Desde {{ vendedor.data|date:"Y" }}</span>
@@ -29,7 +29,7 @@
                     <div class="row">
                         <div class="col-lg-4" id="vendor-description">
                             <div class="vendor-des mb-15">
-                                <p class="font-sm text-white" id="description-text">{{vendedor.descricao|truncatechars:100}}</p>
+                                <p class="font-sm text-white" id="description-text">{{vendedor.descricao|truncatechars:100|safe}}</p>
                             </div>
                         </div>
                         <div class="col-lg-3" id="vendor-information">
@@ -40,7 +40,6 @@
                                 </ul>
                             </div>
                         </div>
-
                         <div class="col-lg-4">
                             <div class="follow-social">
                                 <h6 class="mb-15 text-white">Siga-nos</h6>
@@ -383,7 +382,7 @@
                             <span class="font-small ml-5 text-muted"> (4.0)</span>
                         </div>
                         <div class="vendor-des mb-30">
-                            <p class="font-sm text-heading">{{ vendedor.descricao }}</p>
+                            <p class="font-sm text-heading">{{ vendedor.descricao|safe }}</p>
                         </div>
                         <div class="follow-social mb-20">
                             <h6 class="mb-15">Siga-nos</h6>

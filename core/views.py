@@ -51,9 +51,13 @@ def lista_vendedores(request): # Alteração aqui
 def descricao_vendedores(request, vid):
     vendedor = get_object_or_404(Vendedor, vid=vid) # Utiliza get_object_or_404 para um tratamento de erro 404 mais limpo
     produtos = Produto.objects.filter(vendedor=vendedor, status_produto="published")
+    categorias = Categoria.objects.all()
+    vendedores = Vendedor.objects.all() #Adi
     context = {
         "vendedor": vendedor,
         "produtos": produtos,
+        "categorias": categorias,
+        "vendedores": vendedores,
     }
     return render(request, "core/vendor-detail.html", context)
 

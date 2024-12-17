@@ -20,28 +20,28 @@
                                     <div class="detail-gallery">
                                         <span class="zoom-icon"><i class="fi-rs-search"></i></span>
                                         <!-- MAIN SLIDES -->
-                                        <div class="product-image-slider">
-                                            <figure class="border-radius-10">
-                                                <img src="{{p.imagem.url}}"
-                                                    alt="product image" />
-                                            </figure>
-                                            {% for p in p_imagem %}
-                                            <figure class="border-radius-10">
-                                                <img src="{{ p.imagens.url }}"
-                                                    alt="product image" />
-                                            </figure>
-                                            {% endfor %}
-                                        </div>
-                                        <!-- THUMBNAILS -->
-                                        <div class="slider-nav-thumbnails">
-                                            <div><img src="{{ p.imagem.url }}"
-                                                    alt="product image" /></div>
-                                            {% for p in p_imagem %}
-                                            <div><img src="{{ p.imagens.url }}"
-                                                    alt="product image" /></div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
+                                                                                <div class="product-image-slider">
+                                                                                    <figure class="border-radius-10">
+                                                                                        <img src="{{p.imagem.url}}"
+                                                                                            alt="product image" style="aspect-ratio: 1/1; object-fit: cover;" />
+                                                                                    </figure>
+                                                                                    {% for p in p_imagem %}
+                                                                                    <figure class="border-radius-10">
+                                                                                        <img src="{{ p.imagens.url }}"
+                                                                                            alt="product image" style="aspect-ratio: 1/1; object-fit: cover;" />
+                                                                                    </figure>
+                                                                                    {% endfor %}
+                                                                                </div>
+                                                                                <!-- THUMBNAILS -->
+                                                                                <div class="slider-nav-thumbnails">
+                                                                                    <div><img src="{{ p.imagem.url }}"
+                                                                                            alt="product image" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                                                                                    {% for p in p_imagem %}
+                                                                                    <div><img src="{{ p.imagens.url }}"
+                                                                                            alt="product image" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                                                                                    {% endfor %}
+                                                                                </div>
+                                                                            </div>
                                     <!-- End Gallery -->
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
@@ -66,7 +66,7 @@
                                             </div>
                                         </div>
                                         <div class="short-desc mb-30">
-                                            <p class="font-lg">{{p.descricao|truncatechars:100}}</p>
+                                             <p class="font-lg">{{p.descricao|truncatechars:200|safe}}</p>
                                         </div>
                                        <!-- -- <div class="attr-detail attr-size mb-30">
                                             <strong class="mr-10">Size / Weight: </strong>
@@ -133,7 +133,7 @@
                                     <div class="tab-content shop_info_tab entry-main-content">
                                         <div class="tab-pane fade show active" id="Description">
                                                                                         <div class="">
-                                                                                            <p>{{p.descricao}}</p>
+                                                                                            <p>{{p.descricao|safe}}</p>
                                                                                            <!-- -- <ul class="product-more-infor mt-30">
                                                                                                 <li><span>Tipo de Embalagem</span> {{p.tipo_embalagem}}</li>
                                                                                                 <li><span>Cor</span> {{p.cor}}</li>
@@ -142,8 +142,8 @@
                                                                                                 <li><span>Peças em uma</span> {{p.pecas_em_uma}}</li>
                                                                                             </ul>-->
                                                                                             <hr class="wp-block-separator is-style-dots" />
-                                                                                            <p>{{p.especificacoes}}</p>
-                                                                                            <h4 class="mt-30">Embalagem e Entrega</h4>
+                                                                                            <p>{{p.especificacoes|safe}}</p>
+                                                                                          <!-- --  <h4 class="mt-30">Embalagem e Entrega</h4>
                                                                                             <hr class="wp-block-separator is-style-wide" />
                                                                                             <p>{{p.embalagem_entrega}}</p>
                                                                                             <h4 class="mt-30">Uso Sugerido</h4>
@@ -156,7 +156,7 @@
                                                                                             </ul>
                                                                                             <h4 class="mt-30">Avisos</h4>
                                                                                             <ul class="product-more-infor mt-30">
-                                                                                                <li>{{p.avisos}}</li>
+                                                                                                <li>{{p.avisos}}</li> -->
                                                                                             </ul>
                                                                                         </div>
                                         </div>
@@ -502,15 +502,15 @@
                                         <div class="col-lg-3 col-md-4 col-12 col-sm-6">
                                             <div class="product-cart-wrap hover-up">
                                                 <div class="product-img-action-wrap">
-                                                    <div class="product-img product-img-zoom">
-                                                        <a href="{% url 'core:product-detail' p.pid %}" tabindex="0">
-                                                            <img class="default-img"
-                                                                src="{{p.imagem.url}}"
-                                                                alt="" />
-                                                            <img class="hover-img"
-                                                                src="{{p.imagem.url}}"
-                                                                alt="" />
-                                                        </a>
+                                                                                                        <div class="product-img product-img-zoom">
+                                                                                                            <a href="{% url 'core:product-detail' p.pid %}" tabindex="0">
+                                                                                                                <img class="default-img"
+                                                                                                                    src="{{p.imagem.url}}"
+                                                                                                                    alt="" style="aspect-ratio: 1/1; object-fit: cover;" />
+                                                                                                                <img class="hover-img"
+                                                                                                                    src="{{p.imagem.url}}"
+                                                                                                                    alt="" style="aspect-ratio: 1/1; object-fit: cover;" />
+                                                                                                            </a>
                                                     </div>
                                                     <div class="product-action-1">
                                                         <a aria-label="Quick view" class="action-btn small hover-up"

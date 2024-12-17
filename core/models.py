@@ -1,9 +1,11 @@
-from email.policy import default
 from django.db import models
 from shortuuid.django_fields import ShortUUIDField
 from django.utils.html import mark_safe
 from userauths.models import User
 from taggit.managers import TaggableManager
+from django_ckeditor_5.fields import CKEditor5Field
+
+
 
 STATUS_CHOICES = (
     ("processing", "Em Processamento"),
@@ -55,7 +57,9 @@ class Vendedor(models.Model):
     titulo = models.CharField(max_length=100, default="Organyx")
     imagem = models.ImageField(upload_to=user_directory_path, default="vendedor.jpg")
     capa_imagem = models.ImageField(upload_to=user_directory_path, default="capa.jpg")
-    descricao = models.TextField(null=True, blank=True, default="Sou um vendedor de sucesso")
+    #descricao = models.TextField(null=True, blank=True, default="Sou um vendedor de sucesso")
+    descricao = CKEditor5Field(null=True, blank=True, default="Sou um vendedor de sucesso")
+
 
     endereco = models.CharField(max_length=100, default="Rua Principal")
     contato = models.CharField(max_length=100, default="+55 (12) 12345 6789")
@@ -88,12 +92,15 @@ class Produto(models.Model):
 
     titulo = models.CharField(max_length=100, default="Lima Laranja", null=True, blank=True)
     imagem = models.ImageField(upload_to=user_directory_path, default="produto.jpg")
-    descricao = models.TextField(null=True, blank=True, default="Este é o produto")
+    #descricao = models.TextField(null=True, blank=True, default="Este é o produto")
+    descricao = CKEditor5Field(null=True, blank=True, default="Este é o produto.")
+
 
     preco = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
     preco_antigo = models.DecimalField(max_digits=999999999, decimal_places=2, default=2.99)
 
-    especificacoes = models.TextField(null=True, blank=True)
+    #especificacoes = models.TextField(null=True, blank=True)
+    especificacoes = CKEditor5Field(null=True, blank=True)
     tipo = models.CharField(max_length=100, default="Orgânico", null=True, blank=True)
     qtd_estoque = models.CharField(max_length=100, default="10", null=True, blank=True)
     validade = models.CharField(max_length=100, default="100 dias", null=True, blank=True)
