@@ -1,5 +1,6 @@
 from django.urls import path
-from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto
+from . import views
+from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list
 
 
 app_name = "core"
@@ -12,4 +13,5 @@ urlpatterns = [
     path("categoria/<cid>", categoria_produtos, name="category-product-list"), #Página de seleção de determinada categoria específica, onde listam os produtos daquela categoria
     path("vendedores/", lista_vendedores, name="vendor-list"), #Página de lista de vendedores da plataforma
     path("vendedor/<vid>", descricao_vendedores, name="vendor-detail"), #Página de um vendedor específico selecionado
+    path("produtos/tag/<slug:tag_slug>/", tag_list, name="tags"),
 ]

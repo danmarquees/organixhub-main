@@ -1,5 +1,6 @@
 from django.shortcuts import HttpResponse, render, get_object_or_404, redirect
 from django.db.models import Count
+from taggit.models import Tag
 from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco
 
 
@@ -17,7 +18,14 @@ def index(request):
 
 def lista_produtos(request):
     produtos = Produto.objects.filter(status_produto="published")
-    context = {"produtos": produtos}
+    vendedores = Vendedor.objects.all()
+
+    context = {
+        "produtos": produtos,
+        "vendedores": vendedores,
+        "categorias": Categoria.objects.all()
+
+    }
     return render(request, 'core/product-list.html', context)
 
 
@@ -53,12 +61,35 @@ def descricao_vendedores(request, vid):
 def detalhes_produto(request, pid):
     produto = Produto.objects.get(pid=pid)
     produto = get_object_or_404(Produto, pid=pid)
+    produtos = Produto.objects.filter(categoria=produto.categoria).exclude(pid=pid)
+    categorias = Categoria.objects.all()
+    vendedores = Vendedor.objects.all() #Adicione esta linha
 
     p_imagem = produto.p_imagem.all()
 
     context = {
         "p": produto,
         "p_imagem": p_imagem,
+        "categorias": categorias,
+        "vendedores": vendedores, #Adicione aqui
+        "produtos": produtos,
+
     }
 
     return render (request, "core/product-detail.html", context)
+
+
+def tag_list(request, tag_slug=None):
+    produtos = Produto.objects.filter(status_produto="published").order_by("-id")
+
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        produtos = produtos.filter(tags__in=[tag])
+
+    context = {
+        "produtos": produtos,
+        "tag": tag
+    }
+
+    return render(request, "core/tag.html", context)

@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    #terceiros
+    'taggit',
+
     #Custom Apps
     'core',
     'userauths',
@@ -145,6 +148,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 JAZZMIN_SETTINGS = {
     "site_title": "Organyx Shop",
     "site_header": "Organyxhub Marketplace",
@@ -153,27 +157,17 @@ JAZZMIN_SETTINGS = {
     "copyright": "Organyxhub Ltda",
     "site_logo": "assets/imgs/theme/favicon.ico",
     "dark_mode_theme": None,
+    "navbar_small_text": False,
+    "navbar_color": "navbar-dark",
+    "navbar_bg": "bg-dark",
+    "navbar_border": True,
 
     "menu_labels": {
         "users": "Usuários",
         "auth": "Autenticação",
         "Administration": "Administração",
     },
-
-    "custom_links": {
-        "books": [{
-            "name": "Fazer doação",
-            "url": "make-donate",
-            "icon": "fas fa-hand-holding-usd",
-        }]
-    },
 }
 
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "navbar_color": "navbar-light",
-    "navbar_bg": "bg-white",
-    "navbar_border": True,
-}
 
 AUTH_USER_MODEL = 'userauths.User'
