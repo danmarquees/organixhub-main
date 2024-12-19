@@ -5,7 +5,8 @@
         <div class="container">
             <div class="breadcrumb">
                 <a href="{% url 'core:index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Início</a>
-                <span></span><a href="{% url 'core:category-product-list' p.categoria.cid %}">{{p.categoria}}</a> <span></span> {{p.titulo}}
+                <span></span><a href="{% url 'core:category-product-list' p.categoria.cid %}">{{p.categoria}}</a>
+                <span></span> {{p.titulo}}
             </div>
         </div>
     </div>
@@ -20,28 +21,28 @@
                                     <div class="detail-gallery">
                                         <span class="zoom-icon"><i class="fi-rs-search"></i></span>
                                         <!-- MAIN SLIDES -->
-                                                                                <div class="product-image-slider">
-                                                                                    <figure class="border-radius-10">
-                                                                                        <img src="{{p.imagem.url}}"
-                                                                                            alt="product image" style="aspect-ratio: 1/1; object-fit: cover;" />
-                                                                                    </figure>
-                                                                                    {% for p in p_imagem %}
-                                                                                    <figure class="border-radius-10">
-                                                                                        <img src="{{ p.imagens.url }}"
-                                                                                            alt="product image" style="aspect-ratio: 1/1; object-fit: cover;" />
-                                                                                    </figure>
-                                                                                    {% endfor %}
-                                                                                </div>
-                                                                                <!-- THUMBNAILS -->
-                                                                                <div class="slider-nav-thumbnails">
-                                                                                    <div><img src="{{ p.imagem.url }}"
-                                                                                            alt="product image" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
-                                                                                    {% for p in p_imagem %}
-                                                                                    <div><img src="{{ p.imagens.url }}"
-                                                                                            alt="product image" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
-                                                                                    {% endfor %}
-                                                                                </div>
-                                                                            </div>
+                                        <div class="product-image-slider">
+                                            <figure class="border-radius-10">
+                                                <img src="{{p.imagem.url}}" alt="product image"
+                                                    style="aspect-ratio: 1/1; object-fit: cover;" />
+                                            </figure>
+                                            {% for p in p_imagem %}
+                                            <figure class="border-radius-10">
+                                                <img src="{{ p.imagens.url }}" alt="product image"
+                                                    style="aspect-ratio: 1/1; object-fit: cover;" />
+                                            </figure>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- THUMBNAILS -->
+                                        <div class="slider-nav-thumbnails">
+                                            <div><img src="{{ p.imagem.url }}" alt="product image"
+                                                    style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                                            {% for p in p_imagem %}
+                                            <div><img src="{{ p.imagens.url }}" alt="product image"
+                                                    style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                     <!-- End Gallery -->
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
@@ -49,26 +50,21 @@
                                         <span class="stock-status out-stock"> {{ p.obter_porcentagem}} </span>
                                         <h2 class="title-detail">{{p.titulo}}</h2>
                                         <div class="product-detail-rating">
-                                            <div class="product-rate-cover text-end">
-                                                <div class="product-rate d-inline-block">
-                                                    <div class="product-rating" style="width: 90%"></div>
-                                                </div>
-                                                <span class="font-small ml-5 text-muted"> (32 reviews)</span>
-                                            </div>
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
                                                 <span class="current-price text-brand">R${{p.preco}}</span>
                                                 <span>
-                                                    <span class="save-price font-md color3 ml-15">{{p.obter_porcentagem}}</span>
+                                                    <span
+                                                        class="save-price font-md color3 ml-15">{{p.obter_porcentagem}}</span>
                                                     <span class="old-price font-md ml-15">R${{p.preco_antigo}}</span>
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="short-desc mb-30">
-                                             <p class="font-lg">{{p.descricao|truncatechars:200|safe}}</p>
+                                            <p class="font-lg">{{p.descricao|truncatechars:200|safe}}</p>
                                         </div>
-                                       <!-- -- <div class="attr-detail attr-size mb-30">
+                                        <!-- -- <div class="attr-detail attr-size mb-30">
                                             <strong class="mr-10">Size / Weight: </strong>
                                             <ul class="list-filter size-filter font-small">
                                                 <li><a href="#">50g</a></li>
@@ -96,13 +92,17 @@
                                         <div class="font-xs">
                                             <ul class="mr-50 float-start">
                                                 <li class="mb-5">Tipo: <span class="text-brand">{{p.tipo}}</span></li>
-                                                    <li class="mb-5">Data de Fabricação:<span class="text-brand"> {{p.data_fab|date:"m/Y"}}</span></li>
+                                                <li class="mb-5">Data de Fabricação:<span class="text-brand">
+                                                        {{p.data_fab|date:"m/Y"}}</span></li>
                                                 <li>Validade: <span class="text-brand">{{p.validade}}</span></li>
                                             </ul>
                                             <ul class="float-start">
                                                 <li class="mb-5">SKU: <a href="#">{{p.pid.upper}}</a></li>
-                                                <li class="mb-5">Tags: {% for tag in p.tags.all%} <a href="{% url 'core:tags' tag.slug %}" rel="tag"> {{tag.name}} </a>,{% endfor %}</li>
-                                                <li>Qtde. disponível:<span class="in-stock text-brand ml-5">{{p.qtd_estoque}} Itens em
+                                                <li class="mb-5">Tags: {% for tag in p.tags.all%} <a
+                                                        href="{% url 'core:tags' tag.slug %}" rel="tag"> {{tag.name}}
+                                                    </a>,{% endfor %}</li>
+                                                <li>Qtde. disponível:<span
+                                                        class="in-stock text-brand ml-5">{{p.qtd_estoque}} Itens em
                                                         estoque</span></li>
                                             </ul>
                                         </div>
@@ -126,24 +126,24 @@
                                                 href="#Vendor-info">Vendedor</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="Reviews-tab" data-bs-toggle="tab"
-                                                href="#Reviews">Avaliações (3)</a>
+                                            <a class="nav-link" id="reviews-tab" data-bs-toggle="tab"
+                                                href="#Reviews">Avaliações ({{reviews.count}})</a>
                                         </li>
                                     </ul>
                                     <div class="tab-content shop_info_tab entry-main-content">
                                         <div class="tab-pane fade show active" id="Description">
-                                                                                        <div class="">
-                                                                                            <p>{{p.descricao|safe}}</p>
-                                                                                           <!-- -- <ul class="product-more-infor mt-30">
+                                            <div class="">
+                                                <p>{{p.descricao|safe}}</p>
+                                                <!-- -- <ul class="product-more-infor mt-30">
                                                                                                 <li><span>Tipo de Embalagem</span> {{p.tipo_embalagem}}</li>
                                                                                                 <li><span>Cor</span> {{p.cor}}</li>
                                                                                                 <li><span>Quantidade por caixa</span> {{p.quantidade_por_caixa}}</li>
                                                                                                 <li><span>Álcool Etílico</span> {{p.alcool_etilico}}</li>
                                                                                                 <li><span>Peças em uma</span> {{p.pecas_em_uma}}</li>
                                                                                             </ul>-->
-                                                                                            <hr class="wp-block-separator is-style-dots" />
-                                                                                            <p>{{p.especificacoes|safe}}</p>
-                                                                                          <!-- --  <h4 class="mt-30">Embalagem e Entrega</h4>
+                                                <hr class="wp-block-separator is-style-dots" />
+                                                <p>{{p.especificacoes|safe}}</p>
+                                                <!-- --  <h4 class="mt-30">Embalagem e Entrega</h4>
                                                                                             <hr class="wp-block-separator is-style-wide" />
                                                                                             <p>{{p.embalagem_entrega}}</p>
                                                                                             <h4 class="mt-30">Uso Sugerido</h4>
@@ -157,8 +157,8 @@
                                                                                             <h4 class="mt-30">Avisos</h4>
                                                                                             <ul class="product-more-infor mt-30">
                                                                                                 <li>{{p.avisos}}</li> -->
-                                                                                            </ul>
-                                                                                        </div>
+                                                </ul>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="Additional-info">
                                             <table class="font-md">
@@ -253,24 +253,22 @@
                                         </div>
                                         <div class="tab-pane fade" id="Vendor-info">
                                             <div class="vendor-logo d-flex mb-30">
-                                                <img src="{{p.vendedor.imagem.url}}" alt="" style="max-width:10%; height:auto;" />
+                                                <img src="{{p.vendedor.imagem.url}}" alt=""
+                                                    style="max-width:10%; height:auto;" />
                                                 <div class="vendor-name ml-15">
                                                     <h6>
-                                                       <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{ p.vendedor.titulo }}</a>
+                                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{
+                                                            p.vendedor.titulo }}</a>
                                                     </h6>
-                                                    <div class="product-rate-cover text-end">
-                                                        <div class="product-rate d-inline-block">
-                                                            <div class="product-rating" style="width: 90%"></div>
-                                                        </div>
-                                                        <span class="font-small ml-5 text-muted"> (32 reviews)</span>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <ul class="contact-infor mb-50">
                                                 <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}"
-                                                        alt="" /><strong>Endereço: </strong> <span>{{p.vendedor.endereco}}</span></li>
+                                                        alt="" /><strong>Endereço: </strong>
+                                                    <span>{{p.vendedor.endereco}}</span></li>
                                                 <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}"
-                                                        alt="" /><strong>Contatar vendedor:</strong><span>{{p.vendedor.contato}}</span></li>
+                                                        alt="" /><strong>Contatar
+                                                        vendedor:</strong><span>{{p.vendedor.contato}}</span></li>
                                             </ul>
                                             <div class="d-flex mb-55">
                                                 <div class="mr-30">
@@ -294,105 +292,32 @@
                                                 <div class="row">
                                                     <div class="col-lg-8">
                                                         <h4 class="mb-30">Perguntas e respostas dos clientes</h4>
-                                                        <div class="comment-list">
+                                                        <div class="comment-container" style="max-height: 300px; overflow-y: auto;">
+                                                            {% for r in reviews %}
                                                             <div
-                                                                class="single-comment justify-content-between d-flex mb-30">
+                                                                class="single-comment justify-content-between d-flex mb-30" data-review-id="{{ r.id }}">
                                                                 <div class="user justify-content-between d-flex">
                                                                     <div class="thumb text-center">
-                                                                        <img src="{% static 'assets/imgs/blog/author-2.png' %}"
+                                                                        <img src="https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"
                                                                             alt="" />
-                                                                        <a href="#"
-                                                                            class="font-heading text-brand">Sienna</a>
+                                                                        <br>
+                                                                        <a href="#" class="font-heading text-brand">{{r.user.username|title}}</a>
                                                                     </div>
                                                                     <div class="desc">
                                                                         <div
                                                                             class="d-flex justify-content-between mb-10">
                                                                             <div class="d-flex align-items-center">
                                                                                 <span
-                                                                                    class="font-xs text-muted">December
-                                                                                    4, 2022 at 3:12 pm </span>
+                                                                                    class="font-xs text-muted">{{r.data|date:"d M, Y" }}</span>
                                                                             </div>
                                                                             <div class="product-rate d-inline-block">
-                                                                                <div class="product-rating"
-                                                                                    style="width: 100%"></div>
                                                                             </div>
                                                                         </div>
-                                                                        <p class="mb-10">Lorem ipsum dolor sit amet,
-                                                                            consectetur adipisicing elit. Delectus,
-                                                                            suscipit exercitationem accusantium
-                                                                            obcaecati quos voluptate nesciunt facilis
-                                                                            itaque modi commodi dignissimos sequi
-                                                                            repudiandae minus ab deleniti totam officia
-                                                                            id incidunt? <a href="#"
-                                                                                class="reply">Responder</a></p>
+                                                                        <p class="mb-10">{{ r.avaliacao }}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div
-                                                                class="single-comment justify-content-between d-flex mb-30 ml-30">
-                                                                <div class="user justify-content-between d-flex">
-                                                                    <div class="thumb text-center">
-                                                                        <img src="{% static 'assets/imgs/blog/author-3.png' %}"
-                                                                            alt="" />
-                                                                        <a href="#"
-                                                                            class="font-heading text-brand">Brenna</a>
-                                                                    </div>
-                                                                    <div class="desc">
-                                                                        <div
-                                                                            class="d-flex justify-content-between mb-10">
-                                                                            <div class="d-flex align-items-center">
-                                                                                <span
-                                                                                    class="font-xs text-muted">December
-                                                                                    4, 2022 at 3:12 pm </span>
-                                                                            </div>
-                                                                            <div class="product-rate d-inline-block">
-                                                                                <div class="product-rating"
-                                                                                    style="width: 80%"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <p class="mb-10">Lorem ipsum dolor sit amet,
-                                                                            consectetur adipisicing elit. Delectus,
-                                                                            suscipit exercitationem accusantium
-                                                                            obcaecati quos voluptate nesciunt facilis
-                                                                            itaque modi commodi dignissimos sequi
-                                                                            repudiandae minus ab deleniti totam officia
-                                                                            id incidunt? <a href="#"
-                                                                                class="reply">Responder</a></p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="single-comment justify-content-between d-flex">
-                                                                <div class="user justify-content-between d-flex">
-                                                                    <div class="thumb text-center">
-                                                                        <img src="{% static 'assets/imgs/blog/author-4.png' %}"
-                                                                            alt="" />
-                                                                        <a href="#"
-                                                                            class="font-heading text-brand">Gemma</a>
-                                                                    </div>
-                                                                    <div class="desc">
-                                                                        <div
-                                                                            class="d-flex justify-content-between mb-10">
-                                                                            <div class="d-flex align-items-center">
-                                                                                <span
-                                                                                    class="font-xs text-muted">December
-                                                                                    4, 2022 at 3:12 pm </span>
-                                                                            </div>
-                                                                            <div class="product-rate d-inline-block">
-                                                                                <div class="product-rating"
-                                                                                    style="width: 80%"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <p class="mb-10">Lorem ipsum dolor sit amet,
-                                                                            consectetur adipisicing elit. Delectus,
-                                                                            suscipit exercitationem accusantium
-                                                                            obcaecati quos voluptate nesciunt facilis
-                                                                            itaque modi commodi dignissimos sequi
-                                                                            repudiandae minus ab deleniti totam officia
-                                                                            id incidunt? <a href="#"
-                                                                                class="reply">Responder</a></p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -401,7 +326,8 @@
                                                             <div class="product-rate d-inline-block mr-15">
                                                                 <div class="product-rating" style="width: 90%"></div>
                                                             </div>
-                                                            <h6>4.8 de 5</h6>
+                                                            <h6>{{media_aval.average_classification|floatformat:1}} de
+                                                                5,0</h6>
                                                         </div>
                                                         <div class="progress">
                                                             <span>5 estrelas</span>
@@ -440,23 +366,36 @@
                                             </div>
                                             <!--comment form-->
                                             <div class="comment-form">
-                                                <h4 class="mb-15">Adicionar uma avaliação</h4>
-                                                <div class="product-rate d-inline-block mb-30"></div>
+                                                <h4 class="mb-15 add-review">Adicionar uma avaliação</h4>
+                                                <strong class="text-success" id="review-res"> </strong>
+                                                <!--<div class="product-rate d-inline-block mb-30"></div> -->
                                                 <div class="row">
                                                     <div class="col-lg-8 col-md-12">
-
-                                                        <form class="form-contact comment_form" action="#"
-                                                            id="commentForm">
+                                                        <form class="form-contact comment_form hide-comment-form"
+                                                            action="{% url 'core:ajax-add-review' p.id %}"
+                                                            id="commentForm" method="POST">
+                                                            {% csrf_token %}
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <textarea class="form-control w-100"
+                                                                        {{review_form.avaliacao}}
+                                                                        <!-- --  <textarea class="form-control w-100"
                                                                             name="comment" id="comment" cols="30"
                                                                             rows="9"
-                                                                            placeholder="Escreva seu comentário"></textarea>
+                                                                            placeholder="Escreva seu comentário"></textarea> -->
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-6">
+
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        {{review_form.classificacao}}
+                                                                        <!-- --  <textarea class="form-control w-100"
+                                                                            name="comment" id="comment" cols="30"
+                                                                            rows="9"
+                                                                            placeholder="Escreva seu comentário"></textarea> -->
+                                                                    </div>
+                                                                </div>
+                                                                <!-- -- <div class="col-sm-6">
                                                                     <div class="form-group">
                                                                         <input class="form-control" name="name"
                                                                             id="name" type="text" placeholder="Nome" />
@@ -475,7 +414,7 @@
                                                                             id="website" type="text"
                                                                             placeholder="Website" />
                                                                     </div>
-                                                                </div>
+                                                                </div> -->
                                                             </div>
                                                             <div class="form-group">
                                                                 <button type="submit"
@@ -502,23 +441,22 @@
                                         <div class="col-lg-3 col-md-4 col-12 col-sm-6">
                                             <div class="product-cart-wrap hover-up">
                                                 <div class="product-img-action-wrap">
-                                                                                                        <div class="product-img product-img-zoom">
-                                                                                                            <a href="{% url 'core:product-detail' p.pid %}" tabindex="0">
-                                                                                                                <img class="default-img"
-                                                                                                                    src="{{p.imagem.url}}"
-                                                                                                                    alt="" style="aspect-ratio: 1/1; object-fit: cover;" />
-                                                                                                                <img class="hover-img"
-                                                                                                                    src="{{p.imagem.url}}"
-                                                                                                                    alt="" style="aspect-ratio: 1/1; object-fit: cover;" />
-                                                                                                            </a>
+                                                    <div class="product-img product-img-zoom">
+                                                        <a href="{% url 'core:product-detail' p.pid %}" tabindex="0">
+                                                            <img class="default-img" src="{{p.imagem.url}}" alt=""
+                                                                style="aspect-ratio: 1/1; object-fit: cover;" />
+                                                            <img class="hover-img" src="{{p.imagem.url}}" alt=""
+                                                                style="aspect-ratio: 1/1; object-fit: cover;" />
+                                                        </a>
                                                     </div>
                                                     <div class="product-action-1">
                                                         <a aria-label="Quick view" class="action-btn small hover-up"
                                                             data-bs-toggle="modal" data-bs-target="#quickViewModal"><i
                                                                 class="fi-rs-search"></i></a>
                                                         <a aria-label="Add To Wishlist"
-                                                            class="action-btn small hover-up" href="{% url 'core:product-detail' p.pid %}"
-                                                            tabindex="0"><i class="fi-rs-heart"></i></a>
+                                                            class="action-btn small hover-up"
+                                                            href="{% url 'core:product-detail' p.pid %}" tabindex="0"><i
+                                                                class="fi-rs-heart"></i></a>
                                                         <a aria-label="Compare" class="action-btn small hover-up"
                                                             href="{% url 'core:product-detail' p.pid %}" tabindex="0"><i
                                                                 class="fi-rs-shuffle"></i></a>
@@ -529,7 +467,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="product-content-wrap">
-                                                    <h2><a href="{% url 'core:product-detail' p.pid %}" tabindex="0">{{p.titulo|truncatechars:20}}</a></h2>
+                                                    <h2><a href="{% url 'core:product-detail' p.pid %}"
+                                                            tabindex="0">{{p.titulo|truncatechars:20}}</a></h2>
                                                     <div class="rating-result" title="90%">
                                                         <span> </span>
                                                     </div>
@@ -554,12 +493,12 @@
                                     <i class="fi fi-rs-marker mr-10 text-brand"></i>
                                     <span>
                                         {{ endereco.endereco }} <br />
-                                         <br />
-                                         {% if endereco.status == True %}
-                                         <span class="text-success">Endereço Verificado</span>
-                                         {% else %}
-                                         <span class="text-danger">Endereço Não Verificado</span>
-                                         {% endif %}
+                                        <br />
+                                        {% if endereco.status == True %}
+                                        <span class="text-success">Endereço Verificado</span>
+                                        {% else %}
+                                        <span class="text-danger">Endereço Não Verificado</span>
+                                        {% endif %}
                                     </span>
                                     <a href="#" class="change float-end">Change</a>
                                 </li>
@@ -587,14 +526,8 @@
                                 <img src="{{p.vendedor.imagem.url}}" alt="" style="max-width:25%; height:auto;" />
                                 <div class="vendor-name ml-15">
                                     <h6>
-                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{ p.vendedor.titulo }}</a>
+                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{ p.vendedor.titulo}}</a>
                                     </h6>
-                                    <div class="product-rate-cover text-end">
-                                        <div class="product-rate d-inline-block">
-                                            <div class="product-rating" style="width: 90%"></div>
-                                        </div>
-                                        <span class="font-small ml-5 text-muted"> (32 reviews)</span>
-                                    </div>
                                 </div>
                             </div>
                             <ul class="contact-infor">
@@ -628,7 +561,8 @@
                             <ul>
                                 {% for c in categorias %}
                                 <li>
-                                    <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{ c.imagem.url }}"  />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
+                                    <a href="{% url 'core:category-product-list' c.cid %}"> <img
+                                    src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
                                 </li>
                                 {% endfor %}
                             </ul>

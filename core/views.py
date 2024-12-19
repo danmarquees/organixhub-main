@@ -1,7 +1,12 @@
+from django.db.models.aggregates import Avg
+from django.http import JsonResponse
 from django.shortcuts import HttpResponse, render, get_object_or_404, redirect
-from django.db.models import Count
+from django.db.models import Count, Avg
 from taggit.models import Tag
 from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco
+from core.forms import AvaliacaoProdutoForm
+from userauths.models import User
+from django.utils import timezone
 
 
 def index(request):
@@ -63,24 +68,29 @@ def descricao_vendedores(request, vid):
 
 
 def detalhes_produto(request, pid):
-    produto = Produto.objects.get(pid=pid)
     produto = get_object_or_404(Produto, pid=pid)
     produtos = Produto.objects.filter(categoria=produto.categoria).exclude(pid=pid)
     categorias = Categoria.objects.all()
-    vendedores = Vendedor.objects.all() #Adicione esta linha
+    vendedores = Vendedor.objects.all()
+    reviews = AvaliacaoProduto.objects.filter(produto=produto).order_by("-data")
 
+    # Corrected aggregation
+    media_aval = AvaliacaoProduto.objects.filter(produto=produto).aggregate(average_classification=Avg('classificacao'))
+
+    review_form = AvaliacaoProdutoForm()
     p_imagem = produto.p_imagem.all()
 
     context = {
         "p": produto,
+        "review_form": review_form,
         "p_imagem": p_imagem,
+        "media_aval": media_aval,
+        "reviews": reviews,
         "categorias": categorias,
-        "vendedores": vendedores, #Adicione aqui
+        "vendedores": vendedores,
         "produtos": produtos,
-
     }
-
-    return render (request, "core/product-detail.html", context)
+    return render(request, "core/product-detail.html", context)
 
 
 def tag_list(request, tag_slug=None):
@@ -97,3 +107,41 @@ def tag_list(request, tag_slug=None):
     }
 
     return render(request, "core/tag.html", context)
+
+
+def ajax_add_review(request, pid):
+    produto = get_object_or_404(Produto, pk=pid)
+    user = request.user
+
+    if request.method == 'POST':
+        review_form = AvaliacaoProdutoForm(request.POST)
+        if review_form.is_valid():
+            try:
+                review = review_form.save(commit=False)
+                review.user = user
+                review.produto = produto
+                review.data = timezone.now()
+                review.save()
+                return JsonResponse({
+                    'bool': True,
+                    'context': {
+                        'user': user.username,
+                        'review': review.avaliacao,
+                        'rating': review.classificacao,
+                        'data': review.data.strftime("%d %b, %Y"),
+                        'user_image': user.profile.image.url if hasattr(user, 'profile') and user.profile.image else None,
+                    },
+                    'media_aval': AvaliacaoProduto.objects.filter(produto=produto).aggregate(average_rating=Avg('classificacao'))
+                })
+            except ObjectDoesNotExist:
+                return JsonResponse({'bool': False, 'errors': 'Usuário ou produto não encontrado'}, status=404)
+            except IntegrityError:
+                return JsonResponse({'bool': False, 'errors': 'Erro de integridade do banco de dados'}, status=500)
+            except ValueError as e:
+                return JsonResponse({'bool': False, 'errors': f'Erro de valor: {e}'}, status=500)
+            except Exception as e:
+                return JsonResponse({'bool': False, 'errors': f'Erro inesperado: {e}'}, status=500)
+        else:
+            return JsonResponse({'bool': False, 'errors': review_form.errors}, status=400)
+    else:
+        return JsonResponse({'bool': False, 'errors': 'Método de requisição inválido'}, status=405)
