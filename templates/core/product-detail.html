@@ -310,8 +310,8 @@
                                                                                 <span
                                                                                     class="font-xs text-muted">{{r.data|date:"d M, Y" }}</span>
                                                                             </div>
-                                                                            <div class="product-rate d-inline-block">
-                                                                            </div>
+                                                                            <!--<div class="product-rate d-inline-block">
+                                                                            </div> -->
                                                                         </div>
                                                                         <p class="mb-10">{{ r.avaliacao }}</p>
                                                                     </div>
@@ -323,8 +323,8 @@
                                                     <div class="col-lg-4">
                                                         <h4 class="mb-30">Avaliações dos clientes</h4>
                                                         <div class="d-flex mb-30">
-                                                            <div class="product-rate d-inline-block mr-15">
-                                                                <div class="product-rating" style="width: 90%"></div>
+                                                          <div class="product-rate d-inline-block mr-15">
+                                                               <!-- -- <div class="product-rating" style="width: 90%"></div> -->
                                                             </div>
                                                             <h6>{{media_aval.average_classification|floatformat:1}} de
                                                                 5,0</h6>
@@ -368,7 +368,7 @@
                                             <div class="comment-form">
                                                 <h4 class="mb-15 add-review">Adicionar uma avaliação</h4>
                                                 <strong class="text-success" id="review-res"> </strong>
-                                                <!--<div class="product-rate d-inline-block mb-30"></div> -->
+                                                <div class="product-rate d-inline-block mb-30"></div>
                                                 <div class="row">
                                                     <div class="col-lg-8 col-md-12">
                                                         <form class="form-contact comment_form hide-comment-form"
@@ -379,20 +379,14 @@
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         {{review_form.avaliacao}}
-                                                                        <!-- --  <textarea class="form-control w-100"
-                                                                            name="comment" id="comment" cols="30"
-                                                                            rows="9"
-                                                                            placeholder="Escreva seu comentário"></textarea> -->
+
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         {{review_form.classificacao}}
-                                                                        <!-- --  <textarea class="form-control w-100"
-                                                                            name="comment" id="comment" cols="30"
-                                                                            rows="9"
-                                                                            placeholder="Escreva seu comentário"></textarea> -->
+
                                                                     </div>
                                                                 </div>
                                                                 <!-- -- <div class="col-sm-6">
@@ -633,7 +627,7 @@
                                     <h5><a href="shop-product-detail.html">Chen Cardigan</a></h5>
                                     <p class="price mb-0 mt-5">$99.50</p>
                                     <div class="product-rate">
-                                        <div class="product-rating" style="width: 90%"></div>
+                                       <!-- -- <div class="product-rating" style="width: 90%"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -645,7 +639,7 @@
                                     <h6><a href="shop-product-detail.html">Chen Sweater</a></h6>
                                     <p class="price mb-0 mt-5">$89.50</p>
                                     <div class="product-rate">
-                                        <div class="product-rating" style="width: 80%"></div>
+                                      <!--  <div class="product-rating" style="width: 80%"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -657,7 +651,7 @@
                                     <h6><a href="shop-product-detail.html">Colorful Jacket</a></h6>
                                     <p class="price mb-0 mt-5">$25</p>
                                     <div class="product-rate">
-                                        <div class="product-rating" style="width: 60%"></div>
+                                       <!-- -- <div class="product-rating" style="width: 60%"></div> -->
                                     </div>
                                 </div>
                             </div>

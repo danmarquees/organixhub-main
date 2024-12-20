@@ -181,7 +181,7 @@ class ItensPedidoCarrinho(models.Model):
 
 class AvaliacaoProduto(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    produto = models.ForeignKey(Produto, on_delete=models.SET_NULL, null=True)
+    produto = models.ForeignKey(Produto, on_delete=models.SET_NULL, null=True, related_name="reviews")
     avaliacao = models.TextField()
     classificacao = models.IntegerField(choices=RATING, default=None)
     data = models.DateTimeField(auto_now_add=True)

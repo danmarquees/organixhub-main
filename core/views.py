@@ -145,3 +145,15 @@ def ajax_add_review(request, pid):
             return JsonResponse({'bool': False, 'errors': review_form.errors}, status=400)
     else:
         return JsonResponse({'bool': False, 'errors': 'Método de requisição inválido'}, status=405)
+
+
+def search(request):
+    query = request.GET.get("q")
+
+    produtos = Produto.objects.filter(titulo__icontains=query).order_by("-data")
+
+    context = {
+        "produtos": produtos,
+        "query": query,
+    }
+    return render(request, "core/search.html", context)
