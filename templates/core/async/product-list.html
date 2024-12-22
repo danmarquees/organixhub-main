@@ -1,0 +1,92 @@
+{% for p in produtos %}
+<div class="col-lg-3 col-md-4 col-12 col-sm-6">
+    <div
+        class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+        data-wow-delay=".1s"
+    >
+        <div class="product-img-action-wrap">
+            <div class="product-img product-img-zoom">
+                <a href="{% url 'core:product-detail' p.pid %}">
+                    <img
+                        class="default-img"
+                        src="{{ p.imagem.url }}"
+                        alt=""
+                        style="aspect-ratio: 1/1; object-fit: cover"
+                    />
+                    <img
+                        class="hover-img"
+                        src="{{ p.imagem.url }}"
+                        alt=""
+                        style="aspect-ratio: 1/1; object-fit: cover"
+                    />
+                </a>
+            </div>
+            <div class="product-action-1">
+                <a
+                    aria-label="Adicionar à Lista de Desejos"
+                    class="action-btn"
+                    href="shop-wishlist.html"
+                    ><i class="fi-rs-heart"></i
+                ></a>
+                <a
+                    aria-label="Comparar"
+                    class="action-btn"
+                    href="shop-compare.html"
+                    ><i class="fi-rs-shuffle"></i
+                ></a>
+                <a
+                    aria-label="Visualização Rápida"
+                    class="action-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#quickViewModal"
+                    ><i class="fi-rs-eye"></i
+                ></a>
+            </div>
+            <div
+                class="product-badges product-badges-position product-badges-mrg"
+            >
+                <span class="hot">{{ p.obter_porcentagem }}</span>
+            </div>
+        </div>
+        <div class="product-content-wrap">
+            <div class="product-category">
+                <a href="{% url 'core:product-detail' p.pid %}"
+                    >{{ p.categoria.titulo }}</a
+                >
+            </div>
+            <h2>
+                <a href="{% url 'core:product-detail' p.pid %}"
+                    >{{ p.titulo }}</a
+                >
+            </h2>
+            <div class="product-rate-cover">
+                <div class="product-rate d-inline-block">
+                    <div class="product-rating" style="width: 90%"></div>
+                </div>
+                <span class="font-small ml-5 text-muted"
+                    >({{ p.media_avaliacoes|floatformat:1 }})</span
+                >
+            </div>
+            <div>
+                <span class="font-small text-muted"
+                    >Por
+                    <a href="{% url 'core:vendor-detail' p.vendedor.vid %}"
+                        >{{ p.vendedor }}</a
+                    ></span
+                >
+            </div>
+            <div class="product-card-bottom">
+                <div class="product-price">
+                    <span>R$ {{ p.preco }}</span>
+                    <span class="old-price">R$ {{ p.preco_antigo }}</span>
+                </div>
+                <div class="add-cart">
+                    <a class="add" href="shop-cart.html"
+                        ><i class="fi-rs-shopping-cart mr-5"></i>Adicionar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

@@ -299,15 +299,18 @@
                                                                 data-review-id="{{ r.id }}">
                                                                 <div class="user justify-content-between d-flex">
                                                                     <div class="thumb text-center">
-                                                                        <img src="https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png" alt="" />
+                                                                        <img src="https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"
+                                                                            alt="" />
                                                                         <br>
                                                                         <a href="#"
                                                                             class="font-heading text-brand">{{r.user.username|title}}</a>
                                                                     </div>
                                                                     <div class="desc">
-                                                                        <div class="d-flex justify-content-between mb-10">
+                                                                        <div
+                                                                            class="d-flex justify-content-between mb-10">
                                                                             <div class="d-flex align-items-center">
-                                                                                <span class="font-xs text-muted">{{r.data|date:"d M, Y" }}</span>
+                                                                                <span
+                                                                                    class="font-xs text-muted">{{r.data|date:"d M, Y" }}</span>
                                                                             </div>
                                                                         </div>
                                                                         <div>
@@ -326,15 +329,16 @@
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <h4 class="mb-30">Avaliações dos clientes</h4>
-                                                                                                                <div class="d-flex mb-30">
-                                                                                                                    <div class="rating">
-                                                                                                                        {% for i in range_5 %}
-                                                                                                                        <i class="fas fa-star {% if i <= media_aval.average_classification %}text-warning{% else %}text-secondary{% endif %}"></i>
-                                                                                                                        {% endfor %}
-                                                                                                                    </div>
-                                                                                                                    <h6>{{media_aval.average_classification|floatformat:1}} de
-                                                                                                                        5,0</h6>
-                                                                                                                </div>
+                                                        <div class="d-flex mb-30">
+                                                            <div class="rating">
+                                                                {% for i in range_5 %}
+                                                                <i
+                                                                    class="fas fa-star {% if i <= media_aval.average_classification %}text-warning{% else %}text-secondary{% endif %}"></i>
+                                                                {% endfor %}
+                                                            </div>
+                                                            <h6>{{media_aval.average_classification|floatformat:1}} de
+                                                                5,0</h6>
+                                                        </div>
                                                         <div class="progress">
                                                             <span>5 estrelas</span>
                                                             <div class="progress-bar" role="progressbar"
@@ -397,7 +401,6 @@
                                                                 </div>
                                                                 <!-- -- <div class="col-sm-6">
                                                                     <div class="form-group">
-                                                                        <input class="form-control" name="name"
                                                                             id="name" type="text" placeholder="Nome" />
                                                                     </div>
                                                                 </div>
@@ -526,8 +529,8 @@
                                 <img src="{{p.vendedor.imagem.url}}" alt="" style="max-width:25%; height:auto;" />
                                 <div class="vendor-name ml-15">
                                     <h6>
-                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{
-                                            p.vendedor.titulo}}</a>
+                                        <a
+                                            href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{p.vendedor.titulo}}</a>
                                     </h6>
                                 </div>
                             </div>
@@ -563,7 +566,8 @@
                                 {% for c in categorias %}
                                 <li>
                                     <a href="{% url 'core:category-product-list' c.cid %}"> <img
-                                            src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
+                                            src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{
+                                        c.produtos.count }}</span>
                                 </li>
                                 {% endfor %}
                             </ul>

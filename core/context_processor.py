@@ -6,10 +6,12 @@ from django.contrib.auth.decorators import login_required
 def default(request):
     categoria = Categoria.objects.all()
     endereco = Endereco.objects.get(user=request.user)
+    vendedores = Vendedor.objects.all()
 
     return {
         'categorias': categoria,
         'endereco': endereco,
+        'vendedores': vendedores
 
     }
 

@@ -7,6 +7,7 @@ from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedid
 from core.forms import AvaliacaoProdutoForm # Importa o formulário para avaliações de produtos
 from userauths.models import User # Importa o modelo de usuário
 from django.utils import timezone # Importa funções relacionadas a data e hora
+from django.template.loader import render_to_string
 
 
 def index(request):
@@ -14,6 +15,15 @@ def index(request):
     produto = Produto.objects.filter(status_produto="published", destaque=True)
     # Busca todos os vendedores
     vendedores = Vendedor.objects.all()
+
+    # Calcula a média das avaliações para cada produto
+    for p in produto:
+        media_aval = AvaliacaoProduto.objects.filter(produto=p).aggregate(average_classification=Avg('classificacao'))
+        if media_aval['average_classification'] is not None:
+            p.media_avaliacoes = media_aval['average_classification']
+        else:
+            p.media_avaliacoes = 0
+
 
     # Cria o contexto para o template
     context = {
@@ -26,20 +36,41 @@ def index(request):
 
 
 def lista_produtos(request):
+    # Pega o slug da tag da requisição GET
+    tag_slug = request.GET.get('tag')
+
+    # Busca todos os produtos publicados
+    produtos = Produto.objects.filter(status_produto='published')
+
+    # Se um slug de tag for fornecido, filtra os produtos pela tag
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        produtos = produtos.filter(tags__in=[tag])
     # Busca todos os produtos publicados
     produtos = Produto.objects.filter(status_produto="published")
     # Busca todos os vendedores
     vendedores = Vendedor.objects.all()
+    # Calcula a média das avaliações para cada produto
+
+    for p in produtos:
+        media_aval = AvaliacaoProduto.objects.filter(produto=p).aggregate(average_classification=Avg('classificacao'))
+        if media_aval['average_classification'] is not None:
+            p.media_avaliacoes = media_aval['average_classification']
+        else:
+            p.media_avaliacoes = 0
+
+
 
     # Cria o contexto para o template
     context = {
         "produtos": produtos,
         "vendedores": vendedores,
-        "categorias": Categoria.objects.all() #Busca todas as categorias
-
+        "categorias": Categoria.objects.all(), #Busca todas as categorias
+        "tags": Tag.objects.all()
     }
     # Renderiza o template product-list.html com o contexto
     return render(request, 'core/product-list.html', context)
+
 
 
 def lista_categorias(request):
@@ -222,3 +253,21 @@ def search(request):
     }
     # Renderiza o template search.html com o contexto
     return render(request, "core/search.html", context)
+
+
+def filter_product(request):
+    categorias = request.GET.getlist("categoria[]")
+    vendedores = request.GET.getlist("vendedor[]")
+
+    produtos = Produto.objects.filter(status_produto="published").order_by("-id").distinct()
+
+    if len(categorias) > 0:
+        produtos = produtos.filter(categoria__id__in=categorias).distinct()
+
+
+    if len(vendedores) > 0:
+        produtos = produtos.filter(vendedor__id__in=vendedores).distinct()
+
+
+    data = render_to_string("core/async/product-list.html",{"produtos": produtos})
+    return JsonResponse({"data": data})

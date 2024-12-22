@@ -18,8 +18,11 @@
     <link rel="stylesheet" href="{% static 'assets/css/plugins/animate.min.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 
 <body>
     <!-- Quick view -->
@@ -71,22 +74,23 @@
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="detail-info pr-30 pl-30">
+                                {% for p in produtos %}
                                 <span class="stock-status out-stock"> Promoção </span>
-                                <h3 class="title-detail"><a href="shop-product-right.html" class="text-heading">Quinoa Orgânica Seeds of Change, Marrom</a></h3>
+                                    <h3 class="title-detail"><a href="{% url 'core:product-detail' p.pid %}" class="text-heading">{{ p.titulo}}</a></h3>
                                 <div class="product-detail-rating">
                                     <div class="product-rate-cover text-end">
                                         <div class="product-rate d-inline-block">
                                             <div class="product-rating" style="width: 90%"></div>
                                         </div>
-                                        <span class="font-small ml-5 text-muted"> (32 avaliações)</span>
+                                        <span class="font-small ml-5 text-muted">({{p.media_avaliacao}})</span>
                                     </div>
                                 </div>
                                 <div class="clearfix product-price-cover">
                                     <div class="product-price primary-color float-left">
-                                        <span class="current-price text-brand">R$38</span>
+                                        <span class="current-price text-brand">R${{p.preco}}</span>
                                         <span>
                                             <span class="save-price font-md color3 ml-15">26% Off</span>
-                                            <span class="old-price font-md ml-15">R$52</span>
+                                            <span class="old-price font-md ml-15">R${{p.preco_antigo}}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -102,10 +106,11 @@
                                 </div>
                                 <div class="font-xs">
                                     <ul>
-                                        <li class="mb-5">Vendedor: <span class="text-brand">Nest</span></li>
+                                        <li class="mb-5">Vendedor: <span class="text-brand">{{p.vendedor.titulo}}</span></li>
                                         <li class="mb-5">Fabricação:<span class="text-brand"> 4 Jun 2022</span></li>
                                     </ul>
                                 </div>
+                                {% endfor %}
                             </div>
                             <!-- Detail Info -->
                         </div>

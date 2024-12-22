@@ -26,18 +26,13 @@
                                     <h5 class="mb-30">Por Categorias</h5>
                                     <div class="categories-dropdown-wrap font-heading">
                                         <ul>
+                                            {% for c in categorias %}
                                             <li>
-                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" />Leites e Laticínios</a>
+                                                <input data-filter="categoria" class="form-check-input filter-checkbox" type="checkbox" name="checkbox"  id="exampleCheckbox2" value="{{c.id}}" />
+                                                &nbsp;&nbsp;
+                                                <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{c.imagem.url}}" alt="" />{{c.titulo}}</a>
                                             </li>
-                                            <li>
-                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-2.svg' %}" alt="" />Roupas e Beleza</a>
-                                            </li>
-                                            <li>
-                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-3.svg' %}" alt="" />Rações e Brinquedos para Pets</a>
-                                            </li>
-                                            <li class="mb-0">
-                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-4.svg' %}" alt="" />Materiais para Confeitaria</a>
-                                            </li>
+                                            {% endfor %}
                                         </ul>
                                     </div>
                                 </div>
@@ -46,50 +41,14 @@
                                 <div class="card">
                                     <h5 class="mb-30">Por Vendedores</h5>
                                     <div class="d-flex">
-                                        <div class="custome-checkbox mr-80">
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox1"><span>Aldi</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox2" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox2"><span>Adidas</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox3" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox3"><span>Burbe</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox4" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox4"><span>Chanel</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox5" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox5"><span>Prada</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox6" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox6"><span>Kroger</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox7" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox7"><span>Traders</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox8" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox8"><span>Publix</span></label>
+                                        <div class="customeeeee-checkbox mr-80">
+                                            {% for v in vendedores %}
+                                            <input class="form-check-input filter-checkbox" data-filter="vendedor" type="checkbox" name="checkbox" id="exampleCheckbox1" value="{{v.id}}" />
+                                            <label class="form-check-label" for="exampleCheckbox1"><span>{{v.titulo}}</span></label>
+                                            <br /><br />
+                                            {% endfor %}
                                         </div>
-                                        <div class="custome-checkbox">
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox11"><span>Harris</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox21" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox21"><span>Costco</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox31" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox31"><span>Targets</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox41" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox41"><span>Green Tea</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox51" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox51"><span>iSnack</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox61" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox61"><span>Pambox</span></label>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -100,24 +59,6 @@
                                         <ul class="tags-list">
                                             <li class="hover-up">
                                                 <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Leite</a>
-                                            </li>
-                                            <li class="hover-up">
-                                                <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Brócolis</a>
-                                            </li>
-                                            <li class="hover-up">
-                                                <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Suco</a>
-                                            </li>
-                                            <li class="hover-up">
-                                                <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Fruta</a>
-                                            </li>
-                                            <li class="hover-up mr-0">
-                                                <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Salada</a>
-                                            </li>
-                                            <li class="hover-up mr-0">
-                                                <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Aperitivo</a>
-                                            </li>
-                                            <li class="hover-up mr-0 mb-0">
-                                                <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Aperitivo</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -204,7 +145,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row product-grid">
+                    <div class="row product-grid" id="filtered-product">
 
                         {% for p in produtos %}
                         <div class="col-lg-3 col-md-4 col-12 col-sm-6">
@@ -234,7 +175,7 @@
                                         <div class="product-rate d-inline-block">
                                             <div class="product-rating" style="width: 90%"></div>
                                         </div>
-                                        <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                        <span class="font-small ml-5 text-muted">({{ p.media_avaliacoes|floatformat:1 }})</span>
                                     </div>
                                     <div>
                                         <span class="font-small text-muted">Por <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{ p.vendedor }}</a></span>
