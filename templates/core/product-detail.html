@@ -135,28 +135,28 @@
                                             <div class="">
                                                 <p>{{p.descricao|safe}}</p>
                                                 <!-- -- <ul class="product-more-infor mt-30">
-                                                                                                <li><span>Tipo de Embalagem</span> {{p.tipo_embalagem}}</li>
-                                                                                                <li><span>Cor</span> {{p.cor}}</li>
-                                                                                                <li><span>Quantidade por caixa</span> {{p.quantidade_por_caixa}}</li>
-                                                                                                <li><span>Álcool Etílico</span> {{p.alcool_etilico}}</li>
-                                                                                                <li><span>Peças em uma</span> {{p.pecas_em_uma}}</li>
-                                                                                            </ul>-->
+                                                                                                                                                                        <li><span>Tipo de Embalagem</span> {{p.tipo_embalagem}}</li>
+                                                                                                                                                                        <li><span>Cor</span> {{p.cor}}</li>
+                                                                                                                                                                        <li><span>Quantidade por caixa</span> {{p.quantidade_por_caixa}}</li>
+                                                                                                                                                                        <li><span>Álcool Etílico</span> {{p.alcool_etilico}}</li>
+                                                                                                                                                                        <li><span>Peças em uma</span> {{p.pecas_em_uma}}</li>
+                                                                                                                                                                    </ul>-->
                                                 <hr class="wp-block-separator is-style-dots" />
                                                 <p>{{p.especificacoes|safe}}</p>
                                                 <!-- --  <h4 class="mt-30">Embalagem e Entrega</h4>
-                                                                                            <hr class="wp-block-separator is-style-wide" />
-                                                                                            <p>{{p.embalagem_entrega}}</p>
-                                                                                            <h4 class="mt-30">Uso Sugerido</h4>
-                                                                                            <ul class="product-more-infor mt-30">
-                                                                                                <li>{{p.uso_sugerido}}</li>
-                                                                                            </ul>
-                                                                                            <h4 class="mt-30">Outros Ingredientes</h4>
-                                                                                            <ul class="product-more-infor mt-30">
-                                                                                                <li>{{p.outros_ingredientes}}</li>
-                                                                                            </ul>
-                                                                                            <h4 class="mt-30">Avisos</h4>
-                                                                                            <ul class="product-more-infor mt-30">
-                                                                                                <li>{{p.avisos}}</li> -->
+                                                                                                                                                                    <hr class="wp-block-separator is-style-wide" />
+                                                                                                                                                                    <p>{{p.embalagem_entrega}}</p>
+                                                                                                                                                                    <h4 class="mt-30">Uso Sugerido</h4>
+                                                                                                                                                                    <ul class="product-more-infor mt-30">
+                                                                                                                                                                        <li>{{p.uso_sugerido}}</li>
+                                                                                                                                                                    </ul>
+                                                                                                                                                                    <h4 class="mt-30">Outros Ingredientes</h4>
+                                                                                                                                                                    <ul class="product-more-infor mt-30">
+                                                                                                                                                                        <li>{{p.outros_ingredientes}}</li>
+                                                                                                                                                                    </ul>
+                                                                                                                                                                    <h4 class="mt-30">Avisos</h4>
+                                                                                                                                                                    <ul class="product-more-infor mt-30">
+                                                                                                                                                                        <li>{{p.avisos}}</li> -->
                                                 </ul>
                                             </div>
                                         </div>
@@ -265,7 +265,8 @@
                                             <ul class="contact-infor mb-50">
                                                 <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}"
                                                         alt="" /><strong>Endereço: </strong>
-                                                    <span>{{p.vendedor.endereco}}</span></li>
+                                                    <span>{{p.vendedor.endereco}}</span>
+                                                </li>
                                                 <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}"
                                                         alt="" /><strong>Contatar
                                                         vendedor:</strong><span>{{p.vendedor.contato}}</span></li>
@@ -292,28 +293,31 @@
                                                 <div class="row">
                                                     <div class="col-lg-8">
                                                         <h4 class="mb-30">Perguntas e respostas dos clientes</h4>
-                                                        <div class="comment-container" style="max-height: 300px; overflow-y: auto;">
+                                                        <div class="comment-container" style="overflow-y: auto;">
                                                             {% for r in reviews %}
-                                                            <div
-                                                                class="single-comment justify-content-between d-flex mb-30" data-review-id="{{ r.id }}">
+                                                            <div class="single-comment justify-content-between d-flex mb-30"
+                                                                data-review-id="{{ r.id }}">
                                                                 <div class="user justify-content-between d-flex">
                                                                     <div class="thumb text-center">
-                                                                        <img src="https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"
-                                                                            alt="" />
+                                                                        <img src="https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png" alt="" />
                                                                         <br>
-                                                                        <a href="#" class="font-heading text-brand">{{r.user.username|title}}</a>
+                                                                        <a href="#"
+                                                                            class="font-heading text-brand">{{r.user.username|title}}</a>
                                                                     </div>
                                                                     <div class="desc">
-                                                                        <div
-                                                                            class="d-flex justify-content-between mb-10">
+                                                                        <div class="d-flex justify-content-between mb-10">
                                                                             <div class="d-flex align-items-center">
-                                                                                <span
-                                                                                    class="font-xs text-muted">{{r.data|date:"d M, Y" }}</span>
+                                                                                <span class="font-xs text-muted">{{r.data|date:"d M, Y" }}</span>
                                                                             </div>
-                                                                            <!--<div class="product-rate d-inline-block">
-                                                                            </div> -->
                                                                         </div>
-                                                                        <p class="mb-10">{{ r.avaliacao }}</p>
+                                                                        <div>
+                                                                            <div class="rating">
+                                                                                {% for i in range_5 %}
+                                                                                <i class="fas fa-star {% if i <= r.classificacao %}text-warning{% else %}text-secondary{% endif %}"></i>
+                                                                                {% endfor %}
+                                                                                <p class="mb-10">{{ r.avaliacao }}</p>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -322,13 +326,15 @@
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <h4 class="mb-30">Avaliações dos clientes</h4>
-                                                        <div class="d-flex mb-30">
-                                                          <div class="product-rate d-inline-block mr-15">
-                                                               <!-- -- <div class="product-rating" style="width: 90%"></div> -->
-                                                            </div>
-                                                            <h6>{{media_aval.average_classification|floatformat:1}} de
-                                                                5,0</h6>
-                                                        </div>
+                                                                                                                <div class="d-flex mb-30">
+                                                                                                                    <div class="rating">
+                                                                                                                        {% for i in range_5 %}
+                                                                                                                        <i class="fas fa-star {% if i <= media_aval.average_classification %}text-warning{% else %}text-secondary{% endif %}"></i>
+                                                                                                                        {% endfor %}
+                                                                                                                    </div>
+                                                                                                                    <h6>{{media_aval.average_classification|floatformat:1}} de
+                                                                                                                        5,0</h6>
+                                                                                                                </div>
                                                         <div class="progress">
                                                             <span>5 estrelas</span>
                                                             <div class="progress-bar" role="progressbar"
@@ -520,7 +526,8 @@
                                 <img src="{{p.vendedor.imagem.url}}" alt="" style="max-width:25%; height:auto;" />
                                 <div class="vendor-name ml-15">
                                     <h6>
-                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{ p.vendedor.titulo}}</a>
+                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{
+                                            p.vendedor.titulo}}</a>
                                     </h6>
                                 </div>
                             </div>
@@ -556,7 +563,7 @@
                                 {% for c in categorias %}
                                 <li>
                                     <a href="{% url 'core:category-product-list' c.cid %}"> <img
-                                    src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
+                                            src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -627,7 +634,7 @@
                                     <h5><a href="shop-product-detail.html">Chen Cardigan</a></h5>
                                     <p class="price mb-0 mt-5">$99.50</p>
                                     <div class="product-rate">
-                                       <!-- -- <div class="product-rating" style="width: 90%"></div> -->
+                                        <!-- -- <div class="product-rating" style="width: 90%"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -639,7 +646,7 @@
                                     <h6><a href="shop-product-detail.html">Chen Sweater</a></h6>
                                     <p class="price mb-0 mt-5">$89.50</p>
                                     <div class="product-rate">
-                                      <!--  <div class="product-rating" style="width: 80%"></div> -->
+                                        <!--  <div class="product-rating" style="width: 80%"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -651,7 +658,7 @@
                                     <h6><a href="shop-product-detail.html">Colorful Jacket</a></h6>
                                     <p class="price mb-0 mt-5">$25</p>
                                     <div class="product-rate">
-                                       <!-- -- <div class="product-rating" style="width: 60%"></div> -->
+                                        <!-- -- <div class="product-rating" style="width: 60%"></div> -->
                                     </div>
                                 </div>
                             </div>

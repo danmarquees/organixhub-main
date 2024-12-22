@@ -1,85 +1,120 @@
-from django.db.models.aggregates import Avg
-from django.http import JsonResponse
-from django.shortcuts import HttpResponse, render, get_object_or_404, redirect
-from django.db.models import Count, Avg
-from taggit.models import Tag
-from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco
-from core.forms import AvaliacaoProdutoForm
-from userauths.models import User
-from django.utils import timezone
+from django.db.models.aggregates import Avg # Importa a função Avg para calcular a média
+from django.http import JsonResponse # Importa JsonResponse para retornar respostas JSON
+from django.shortcuts import HttpResponse, render, get_object_or_404, redirect # Importa funções para renderizar templates e lidar com requisições
+from django.db.models import Count, Avg # Importa funções para contagem e agregação de dados
+from taggit.models import Tag # Importa o modelo Tag para lidar com tags
+from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco # Importa modelos do aplicativo core
+from core.forms import AvaliacaoProdutoForm # Importa o formulário para avaliações de produtos
+from userauths.models import User # Importa o modelo de usuário
+from django.utils import timezone # Importa funções relacionadas a data e hora
 
 
 def index(request):
+    # Busca produtos publicados e em destaque
     produto = Produto.objects.filter(status_produto="published", destaque=True)
+    # Busca todos os vendedores
     vendedores = Vendedor.objects.all()
 
+    # Cria o contexto para o template
     context = {
         "produtos": produto,
         "vendedores": vendedores,
-        "categorias": Categoria.objects.all()
+        "categorias": Categoria.objects.all() #Busca todas as categorias
     }
+    # Renderiza o template index.html com o contexto
     return render(request, 'core/index.html', context)
 
 
 def lista_produtos(request):
+    # Busca todos os produtos publicados
     produtos = Produto.objects.filter(status_produto="published")
+    # Busca todos os vendedores
     vendedores = Vendedor.objects.all()
 
+    # Cria o contexto para o template
     context = {
         "produtos": produtos,
         "vendedores": vendedores,
-        "categorias": Categoria.objects.all()
+        "categorias": Categoria.objects.all() #Busca todas as categorias
 
     }
+    # Renderiza o template product-list.html com o contexto
     return render(request, 'core/product-list.html', context)
 
 
 def lista_categorias(request):
-    categorias = Categoria.objects.all().annotate(produto_count=Count('categoria', 'produtos'))
+    # Busca todas as categorias e conta a quantidade de produtos em cada categoria
+    categorias = Categoria.objects.all().annotate(produto_count=Count('produtos'))
+    # Cria o contexto para o template
     context = {"categorias": categorias}
+    # Renderiza o template category-list.html com o contexto
     return render(request, 'core/category-list.html', context)
 
 
 def categoria_produtos(request, cid):
+    # Busca a categoria pelo ID
     categoria = Categoria.objects.get(cid=cid)
+    # Busca os produtos publicados que pertencem a categoria
     produtos = Produto.objects.filter(status_produto="published", categoria=categoria)
+    # Cria o contexto para o template
     context = {"categoria": categoria, "produtos": produtos}
+    # Renderiza o template category-product-list.html com o contexto
     return render(request, "core/category-product-list.html", context)
 
 
-def lista_vendedores(request): # Alteração aqui
+def lista_vendedores(request):
+    # Busca todos os vendedores
     vendedores = Vendedor.objects.all()
-    context = {"vendedores": vendedores, "categorias": Categoria.objects.all()} #Passando categorias também
+    # Cria o contexto para o template, incluindo as categorias
+    context = {"vendedores": vendedores, "categorias": Categoria.objects.all()}
+    # Renderiza o template vendor-list.html com o contexto
     return render(request, "core/vendor-list.html", context)
 
 
 def descricao_vendedores(request, vid):
-    vendedor = get_object_or_404(Vendedor, vid=vid) # Utiliza get_object_or_404 para um tratamento de erro 404 mais limpo
+    # Busca o vendedor pelo ID, retorna 404 se não encontrar
+    vendedor = get_object_or_404(Vendedor, vid=vid)
+    # Busca os produtos publicados do vendedor
     produtos = Produto.objects.filter(vendedor=vendedor, status_produto="published")
+    # Busca todas as categorias
     categorias = Categoria.objects.all()
-    vendedores = Vendedor.objects.all() #Adi
+    # Busca todos os vendedores (não parece necessário neste contexto)
+    vendedores = Vendedor.objects.all()
+    # Cria o contexto para o template
     context = {
         "vendedor": vendedor,
         "produtos": produtos,
         "categorias": categorias,
         "vendedores": vendedores,
     }
+    # Renderiza o template vendor-detail.html com o contexto
     return render(request, "core/vendor-detail.html", context)
 
 
 def detalhes_produto(request, pid):
+    # Busca o produto pelo ID, retorna 404 se não encontrar
     produto = get_object_or_404(Produto, pid=pid)
+    # Busca produtos da mesma categoria, excluindo o produto atual
     produtos = Produto.objects.filter(categoria=produto.categoria).exclude(pid=pid)
+    # Busca todas as categorias
     categorias = Categoria.objects.all()
+    # Busca todos os vendedores (não parece necessário neste contexto)
     vendedores = Vendedor.objects.all()
+    # Busca as avaliações do produto, ordenadas pela data
     reviews = AvaliacaoProduto.objects.filter(produto=produto).order_by("-data")
+    avaliacoes = AvaliacaoProduto.objects.filter(produto=produto)
 
-    # Corrected aggregation
+
+
+    # Calcula a média das avaliações
     media_aval = AvaliacaoProduto.objects.filter(produto=produto).aggregate(average_classification=Avg('classificacao'))
 
+    # Cria um formulário de avaliação
     review_form = AvaliacaoProdutoForm()
+    # Busca as imagens do produto
     p_imagem = produto.p_imagem.all()
 
+    # Cria o contexto para o template
     context = {
         "p": produto,
         "review_form": review_form,
@@ -89,39 +124,60 @@ def detalhes_produto(request, pid):
         "categorias": categorias,
         "vendedores": vendedores,
         "produtos": produtos,
+        "avaliacoes": avaliacoes,
     }
+
+    context['range_5'] = range(1, 6)
+
+    # Renderiza o template product-detail.html com o contexto
     return render(request, "core/product-detail.html", context)
 
 
 def tag_list(request, tag_slug=None):
+    # Busca produtos publicados, ordenados pelo ID
     produtos = Produto.objects.filter(status_produto="published").order_by("-id")
 
+    # Inicializa a variável tag como None
     tag = None
+    # Se um slug de tag for fornecido
     if tag_slug:
+        # Busca a tag pelo slug, retorna 404 se não encontrar
         tag = get_object_or_404(Tag, slug=tag_slug)
+        # Filtra os produtos pela tag
         produtos = produtos.filter(tags__in=[tag])
 
+    # Cria o contexto para o template
     context = {
         "produtos": produtos,
         "tag": tag
     }
-
+    # Renderiza o template tag.html com o contexto
     return render(request, "core/tag.html", context)
 
 
 def ajax_add_review(request, pid):
+    # Busca o produto pelo ID, retorna 404 se não encontrar
     produto = get_object_or_404(Produto, pk=pid)
+    # Pega o usuário logado
     user = request.user
 
+    # Se o método da requisição for POST
     if request.method == 'POST':
+        # Cria um formulário de avaliação com os dados da requisição
         review_form = AvaliacaoProdutoForm(request.POST)
+        # Se o formulário for válido
         if review_form.is_valid():
             try:
+                # Salva a avaliação, sem commit inicial
                 review = review_form.save(commit=False)
+                # Define o usuário e o produto da avaliação
                 review.user = user
                 review.produto = produto
+                # Define a data da avaliação
                 review.data = timezone.now()
+                # Salva a avaliação no banco de dados
                 review.save()
+                # Retorna uma resposta JSON com sucesso
                 return JsonResponse({
                     'bool': True,
                     'context': {
@@ -133,6 +189,7 @@ def ajax_add_review(request, pid):
                     },
                     'media_aval': AvaliacaoProduto.objects.filter(produto=produto).aggregate(average_rating=Avg('classificacao'))
                 })
+            # Trata exceções
             except ObjectDoesNotExist:
                 return JsonResponse({'bool': False, 'errors': 'Usuário ou produto não encontrado'}, status=404)
             except IntegrityError:
@@ -141,19 +198,27 @@ def ajax_add_review(request, pid):
                 return JsonResponse({'bool': False, 'errors': f'Erro de valor: {e}'}, status=500)
             except Exception as e:
                 return JsonResponse({'bool': False, 'errors': f'Erro inesperado: {e}'}, status=500)
+        # Se o formulário for inválido
         else:
+            # Retorna uma resposta JSON com os erros do formulário
             return JsonResponse({'bool': False, 'errors': review_form.errors}, status=400)
+    # Se o método da requisição não for POST
     else:
+        # Retorna uma resposta JSON indicando método inválido
         return JsonResponse({'bool': False, 'errors': 'Método de requisição inválido'}, status=405)
 
 
 def search(request):
+    # Pega a query de busca da requisição
     query = request.GET.get("q")
 
+    # Busca produtos com o título contendo a query, ordenados pela data
     produtos = Produto.objects.filter(titulo__icontains=query).order_by("-data")
 
+    # Cria o contexto para o template
     context = {
         "produtos": produtos,
         "query": query,
     }
+    # Renderiza o template search.html com o contexto
     return render(request, "core/search.html", context)
