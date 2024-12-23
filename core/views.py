@@ -271,3 +271,48 @@ def filter_product(request):
 
     data = render_to_string("core/async/product-list.html",{"produtos": produtos})
     return JsonResponse({"data": data})
+
+
+def about(request):
+    # Busca produtos publicados e em destaque
+    produto = Produto.objects.filter(status_produto="published", destaque=True)
+    # Busca todos os vendedores
+    vendedores = Vendedor.objects.all()
+
+    context = {
+        "produtos": produto,
+        "vendedores": vendedores,
+        "categorias": Categoria.objects.all() #Busca todas as categorias
+    }
+    # Renderiza o template index.html com o contexto
+    return render(request, 'core/about.html', context)
+
+
+def privacy_policy(request):
+    # Busca produtos publicados e em destaque
+    produto = Produto.objects.filter(status_produto="published", destaque=True)
+    # Busca todos os vendedores
+    vendedores = Vendedor.objects.all()
+
+    context = {
+        "produtos": produto,
+        "vendedores": vendedores,
+        "categorias": Categoria.objects.all() #Busca todas as categorias
+    }
+    # Renderiza o template index.html com o contexto
+    return render(request, 'core/privacy-policy.html', context)
+
+
+def service_terms(request):
+    # Busca produtos publicados e em destaque
+    produto = Produto.objects.filter(status_produto="published", destaque=True)
+    # Busca todos os vendedores
+    vendedores = Vendedor.objects.all()
+
+    context = {
+        "produtos": produto,
+        "vendedores": vendedores,
+        "categorias": Categoria.objects.all() #Busca todas as categorias
+    }
+    # Renderiza o template index.html com o contexto
+    return render(request, 'core/service-terms.html', context)
