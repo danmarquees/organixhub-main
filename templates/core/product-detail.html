@@ -28,7 +28,7 @@
                                             </figure>
                                             {% for p in p_imagem %}
                                             <figure class="border-radius-10">
-                                                <img src="{{ p.imagens.url }}" alt="product image"
+                                                <img src="{{ p.imagem.url }}" alt="product image"
                                                     style="aspect-ratio: 1/1; object-fit: cover;" />
                                             </figure>
                                             {% endfor %}
@@ -38,7 +38,7 @@
                                             <div><img src="{{ p.imagem.url }}" alt="product image"
                                                     style="aspect-ratio: 1/1; object-fit: cover;" /></div>
                                             {% for p in p_imagem %}
-                                            <div><img src="{{ p.imagens.url }}" alt="product image"
+                                            <div><img src="{{ p.imagem.url }}" alt="product image"
                                                     style="aspect-ratio: 1/1; object-fit: cover;" /></div>
                                             {% endfor %}
                                         </div>
@@ -566,8 +566,7 @@
                                 {% for c in categorias %}
                                 <li>
                                     <a href="{% url 'core:category-product-list' c.cid %}"> <img
-                                            src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{
-                                        c.produtos.count }}</span>
+                                            src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
                                 </li>
                                 {% endfor %}
                             </ul>

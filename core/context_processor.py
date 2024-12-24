@@ -1,6 +1,6 @@
 from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Min, Max
 
 
 def default(request):
@@ -8,15 +8,14 @@ def default(request):
     endereco = Endereco.objects.get(user=request.user)
     vendedores = Vendedor.objects.all()
 
-    return {
-        'categorias': categoria,
-        'endereco': endereco,
-        'vendedores': vendedores
+    min_max_preco = Produto.objects.aggregate(Min("preco"), Max("preco"))
 
+    return{
+        'min_max_preco': min_max_preco,
     }
 
 
-def default(request):
+
     if request.user.is_authenticated:
         try:
             endereco = Endereco.objects.get(user=request.user)
@@ -27,3 +26,11 @@ def default(request):
             return {'endereco': None}  # Ou levantar uma exceção apropriada
     else:
         return {} # Retorna um dicionário vazio se o usuário não estiver autenticado
+
+
+
+    return  {
+        'categorias': categoria,
+        'endereco': endereco,
+        'vendedores': vendedores,
+    }

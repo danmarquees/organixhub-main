@@ -150,4 +150,17 @@ $(document).ready(function () {
       },
     });
   });
+
+  $(#preco_max).on("blur", function() {
+    let preco_min = $(this).attr("min")
+    let preco_max = $(this).attr("max")
+    let preco = $(this).val()
+
+    console.log("O valor atual é de:", preco);
+    console.log("O valor máximo é de:", preco_max);
+    console.log("O valor mínimo é de:", preco_min);
+  })
 });
+
+
+//

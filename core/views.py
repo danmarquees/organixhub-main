@@ -1,7 +1,7 @@
 from django.db.models.aggregates import Avg # Importa a função Avg para calcular a média
 from django.http import JsonResponse # Importa JsonResponse para retornar respostas JSON
 from django.shortcuts import HttpResponse, render, get_object_or_404, redirect # Importa funções para renderizar templates e lidar com requisições
-from django.db.models import Count, Avg # Importa funções para contagem e agregação de dados
+from django.db.models import Count, Avg, Min, Max # Importa funções para contagem e agregação de dados
 from taggit.models import Tag # Importa o modelo Tag para lidar com tags
 from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco # Importa modelos do aplicativo core
 from core.forms import AvaliacaoProdutoForm # Importa o formulário para avaliações de produtos
@@ -316,3 +316,7 @@ def service_terms(request):
     }
     # Renderiza o template index.html com o contexto
     return render(request, 'core/service-terms.html', context)
+
+
+
+

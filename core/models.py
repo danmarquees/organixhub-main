@@ -96,8 +96,8 @@ class Produto(models.Model):
     descricao = CKEditor5Field(null=True, blank=True, default="Este é o produto.")
 
 
-    preco = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
-    preco_antigo = models.DecimalField(max_digits=999999999, decimal_places=2, default=2.99)
+    preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99)
+    preco_antigo = models.DecimalField(max_digits=10, decimal_places=2, default=2.99)
 
     #especificacoes = models.TextField(null=True, blank=True)
     especificacoes = CKEditor5Field(null=True, blank=True)
