@@ -259,7 +259,13 @@ def filter_product(request):
     categorias = request.GET.getlist("categoria[]")
     vendedores = request.GET.getlist("vendedor[]")
 
+    min_price = request.GET['min_price']
+    max_price = request.GET['max_price']
+
     produtos = Produto.objects.filter(status_produto="published").order_by("-id").distinct()
+
+    produtos = produtos.filter(preco__gte=min_price)
+    produtos = produtos.filter(preco__lte=max_price)
 
     if len(categorias) > 0:
         produtos = produtos.filter(categoria__id__in=categorias).distinct()
@@ -316,7 +322,3 @@ def service_terms(request):
     }
     # Renderiza o template index.html com o contexto
     return render(request, 'core/service-terms.html', context)
-
-
-
-
