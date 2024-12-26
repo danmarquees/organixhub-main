@@ -1,6 +1,39 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
+
+<head>
+    <style>
+    input[type="range"]{
+        -webkit-appearance: none;
+        margin-right: 15px;
+        height: 7px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 5px;
+        background-image: linear-gradient(#3bb77e,#3bb77e);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #3bb77e;
+        cursor: ew-resize;
+        box-shadow: 0 0 2px 0 #555;
+        transition: background .3s ease-in-out;
+    }
+
+    input[type="range"]: -webkit-slider-thumb {
+        -webkit-appearance: none;
+        box-shadow:none;
+        border: none;
+        background: transparent;
+    }
+    </style>
+</head>
 <main class="main">
     <div class="container mb-30">
         <div class="row flex-row-reverse">
@@ -36,6 +69,62 @@
                                     </form>
                                 </div>
                             </div>
+                            <div class="single-hero-slider single-animation-wrap"
+                                style="background-image: url({% static 'assets/imgs/slider/slider-3.png' %})">
+                                <div class="slider-content">
+                                    <h1 class="display-2 mb-40">
+                                        Café em Grãos<br />
+                                        Oferta por Tempo Limitado
+                                    </h1>
+                                    <p class="mb-65">Economize até 50% no seu primeiro pedido</p>
+                                    <form class="form-subcriber d-flex">
+                                        <input type="email" placeholder="Seu endereço de email" />
+                                        <button class="btn" type="submit">Inscreva</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="single-hero-slider single-animation-wrap"
+                                style="background-image: url({% static 'assets/imgs/slider/slider-7.png' %})">
+                                <div class="slider-content">
+                                    <h1 class="display-2 mb-40">
+                                        Ofertas Imperdíveis<br />
+                                        em Produtos Sustentáveis
+                                    </h1>
+                                    <p class="mb-65">Economize até 50% no seu primeiro pedido</p>
+                                    <form class="form-subcriber d-flex">
+                                        <input type="email" placeholder="Seu endereço de email" />
+                                        <button class="btn" type="submit">Inscreva</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="single-hero-slider single-animation-wrap"
+                                style="background-image: url({% static 'assets/imgs/slider/slider-4.png' %})">
+                                <div class="slider-content">
+                                    <h1 class="display-2 mb-40">
+                                        Novidades que<br />
+                                        Transformam o Seu Consumo
+                                    </h1>
+                                    <p class="mb-65">Economize até 50% no seu primeiro pedido</p>
+                                    <form class="form-subcriber d-flex">
+                                        <input type="email" placeholder="Seu endereço de email" />
+                                        <button class="btn" type="submit">Inscreva</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="single-hero-slider single-animation-wrap"
+                                style="background-image: url({% static 'assets/imgs/slider/slider-8.png' %})">
+                                <div class="slider-content">
+                                    <h1 class="display-2 mb-40">
+                                        Descubra o Melhor<br />
+                                        Em Sustentabilidade
+                                    </h1>
+                                    <p class="mb-65">Economize até 50% no seu primeiro pedido</p>
+                                    <form class="form-subcriber d-flex">
+                                        <input type="email" placeholder="Seu endereço de email" />
+                                        <button class="btn" type="submit">Inscreva</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <div class="slider-arrow hero-slider-1-arrow"></div>
                     </div>
@@ -46,7 +135,7 @@
                     <div class="container wow animate__animated animate__fadeIn">
                         <div class="section-title">
                             <div class="title">
-                                <h3>Categorias em Destaque</h3>
+                                <h3>Produtos em Destaque</h3>
                                 <ul class="list-inline nav nav-tabs links">
                                     <li class="list-inline-item nav-item"><a class="nav-link"
                                             href="shop-grid-right.html">{{categoria.titulo}}</a></li>
@@ -210,7 +299,7 @@
                                                         class="fas fa-star {% if i <= p.media_avaliacoes %}text-warning{% else %}text-secondary{% endif %}"></i>
                                                     {% endfor %}
                                                 </div>
-                                                <span class="font-small ml-5 text-muted">({{ p.media_avaliacoes }})</span>
+                                                <span class="font-small ml-5 text-muted">({{ p.media_avaliacoes|floatformat:2 }})</span>
                                             </div>
                                             <div>
                                                 <span class="font-small text-muted">Por <a
@@ -529,51 +618,16 @@
                     <h5 class="section-title style-1 mb-30">Filtrar por preço</h5>
                     <div class="price-filter">
                         <div class="price-filter-inner">
-                            <div id="slider-range" class="mb-20"></div>
+                            <!--<div id="slider-range" class="mb-20"></div> -->
+                            <input type="range" name="range" value="{{ min_max_preco.preco__min|floatformat:2 }}" id="range" class="slider-range" min="{{ min_max_preco.preco__min}}" max="{{ min_max_preco.preco__max}}" oninput="max_price.value=this.value">
                             <div class="d-flex justify-content-between">
-                                <div class="caption">De: <strong id="slider-range-value1" class="text-brand"></strong>
-                                </div>
-                                <div class="caption">Até: <strong id="slider-range-value2" class="text-brand"></strong>
-                                </div>
+                                <div class="caption">De: <strong id="slider-range-value1" class="text-brand">R${{ min_max_preco.preco__min|floatformat:2 }}</strong></div>
+                                <div class="caption">Até: <strong id="slider-range-value2" class="text-brand">R${{ min_max_preco.preco__max|floatformat:2 }}</strong></div>
                             </div>
+                            <input type="number" name="" value="{{ min_max_preco.preco__min|floatformat:2 }}"  id="max_price" min="{{ min_max_preco.preco__min }}" max="{{ min_max_preco.preco__max }}" placeholder="Preço Atual" onkeyup="range.value=this.value" />
                         </div>
                     </div>
-                    <div class="list-group">
-                        <div class="list-group-item mb-10 mt-10">
-                            <label class="fw-900">Cor</label>
-                            <div class="custome-checkbox">
-                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1"
-                                    value="" />
-                                <label class="form-check-label" for="exampleCheckbox1"><span>Vermelho
-                                        (56)</span></label>
-                                <br />
-                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox2"
-                                    value="" />
-                                <label class="form-check-label" for="exampleCheckbox2"><span>Verde (78)</span></label>
-                                <br />
-                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox3"
-                                    value="" />
-                                <label class="form-check-label" for="exampleCheckbox3"><span>Azul (54)</span></label>
-                            </div>
-                            <label class="fw-900 mt-15">Condição do Item</label>
-                            <div class="custome-checkbox">
-                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11"
-                                    value="" />
-                                <label class="form-check-label" for="exampleCheckbox11"><span>Novo (1506)</span></label>
-                                <br />
-                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox21"
-                                    value="" />
-                                <label class="form-check-label" for="exampleCheckbox21"><span>Renovado
-                                        (27)</span></label>
-                                <br />
-                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox31"
-                                    value="" />
-                                <label class="form-check-label" for="exampleCheckbox31"><span>Usado (45)</span></label>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="shop-grid-right.html" class="btn btn-sm btn-default"><i class="fi-rs-filter mr-5"></i>
-                        Filtrar</a>
+                    <button class="btn mt-20 w-100" type="button" id="price-filter-btn">Filtrar por Preço</button>
                 </div>
                 <!-- Product sidebar Widget -->
                 <div class="sidebar-widget product-sidebar mb-30 p-30 bg-grey border-radius-10">

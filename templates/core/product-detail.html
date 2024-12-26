@@ -75,13 +75,17 @@
                                             </ul>
                                         </div> -->
                                         <div class="detail-extralink mb-50">
-                                            <div class="detail-qty border radius">
+                                           <!-- -- <div class="detail-qty border radius">
                                                 <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div>
+                                            </div> -->
+                                                <input type="number" value="1" name="" id="product-quantity" class="w-25 mb-10">
+                                                <br>
                                             <div class="product-extra-link2">
-                                                <button type="submit" class="button button-add-to-cart"><i
+                                                <input type="hidden" value="{{p.id}}" class="product-id">
+                                                <input type="hidden" value="{{p.titulo}}" class="product-title">
+                                                <button type="submit" class="button button-add-to-cart" id="add-to-cart-btn"><i
                                                         class="fi-rs-shopping-cart"></i>Adicionar ao carrinho</button>
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up"
                                                     href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
@@ -257,8 +261,7 @@
                                                     style="max-width:10%; height:auto;" />
                                                 <div class="vendor-name ml-15">
                                                     <h6>
-                                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{
-                                                            p.vendedor.titulo }}</a>
+                                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{endereco.vendedor.titulo }}</a>
                                                     </h6>
                                                 </div>
                                             </div>
@@ -495,7 +498,7 @@
                                 <li>
                                     <i class="fi fi-rs-marker mr-10 text-brand"></i>
                                     <span>
-                                        {{ endereco.endereco }} <br />
+                                        {{endereco.endereco}} <br />
                                         <br />
                                         {% if endereco.status == True %}
                                         <span class="text-success">Endereço Verificado</span>
@@ -503,7 +506,7 @@
                                         <span class="text-danger">Endereço Não Verificado</span>
                                         {% endif %}
                                     </span>
-                                    <a href="#" class="change float-end">Change</a>
+                                    <a href="#" class="change float-end">Trocar</a>
                                 </li>
                                 <li class="hr"><span></span></li>
                             </ul>
