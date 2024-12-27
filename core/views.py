@@ -25,6 +25,7 @@ def index(request):
             p.media_avaliacoes = 0
 
 
+
     # Cria o contexto para o template
     context = {
         "produtos": produto,

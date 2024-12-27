@@ -28,18 +28,21 @@
                                             </figure>
                                             {% for p in p_imagem %}
                                             <figure class="border-radius-10">
-                                                <img src="{{ p.imagem.url }}" alt="product image"
+                                                <img src="{{ p.imagens.url }}" alt="product image"
                                                     style="aspect-ratio: 1/1; object-fit: cover;" />
                                             </figure>
                                             {% endfor %}
                                         </div>
                                         <!-- THUMBNAILS -->
                                         <div class="slider-nav-thumbnails">
-                                            <div><img src="{{ p.imagem.url }}" alt="product image"
-                                                    style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+
+                                            <div>
+                                                <img src="{{ p.imagem.url }}" alt="product image"style="aspect-ratio: 1/1; object-fit: cover;" />
+                                            </div>
                                             {% for p in p_imagem %}
-                                            <div><img src="{{ p.imagem.url }}" alt="product image"
-                                                    style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                                            <div>
+                                                <img src="{{ p.imagens.url }}" alt="product image"style="aspect-ratio: 1/1; object-fit: cover;" />
+                                            </div>
                                             {% endfor %}
                                         </div>
                                     </div>
@@ -261,7 +264,7 @@
                                                     style="max-width:10%; height:auto;" />
                                                 <div class="vendor-name ml-15">
                                                     <h6>
-                                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{endereco.vendedor.titulo }}</a>
+                                                        <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{p.vendedor.titulo}}</a>
                                                     </h6>
                                                 </div>
                                             </div>
@@ -335,8 +338,7 @@
                                                         <div class="d-flex mb-30">
                                                             <div class="rating">
                                                                 {% for i in range_5 %}
-                                                                <i
-                                                                    class="fas fa-star {% if i <= media_aval.average_classification %}text-warning{% else %}text-secondary{% endif %}"></i>
+                                                                <i class="fas fa-star {% if i <= media_aval.average_classification %}text-warning{% else %}text-secondary{% endif %}"></i>
                                                                 {% endfor %}
                                                             </div>
                                                             <h6>{{media_aval.average_classification|floatformat:1}} de
@@ -496,16 +498,15 @@
                             <h5 class="section-title style-3 mb-20">Endereço de Entrega</h5>
                             <ul>
                                 <li>
-                                    <i class="fi fi-rs-marker mr-10 text-brand"></i>
-                                    <span>
-                                        {{endereco.endereco}} <br />
-                                        <br />
-                                        {% if endereco.status == True %}
-                                        <span class="text-success">Endereço Verificado</span>
-                                        {% else %}
-                                        <span class="text-danger">Endereço Não Verificado</span>
-                                        {% endif %}
-                                    </span>
+                                     <i class="fi fi-rs-marker mr-10 text-brand"></i>
+                                        <span>{{addres.addres}} <br />
+                                            <br />
+                                          {% if endereco.status %}
+                                            <span class="text-success">Endereço Verificado</span>
+                                          {% else %}
+                                            <span class="text-danger">Endereço Não Verificado</span>
+                                          {% endif %}
+                                        </span>
                                     <a href="#" class="change float-end">Trocar</a>
                                 </li>
                                 <li class="hr"><span></span></li>

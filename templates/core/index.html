@@ -293,13 +293,12 @@
                                             <h2><a href="{% url 'core:product-detail' p.pid %}">{{ p.titulo }}</a></h2>
                                             <div class="product-rate-cover">
                                                 <div class="product-rate d-inline-block">
-                                                    <div class="rating" style="width: {{ p.media_avaliacoes }}%"></div>
                                                     {% for i in range_5 %}
-                                                    <i
-                                                        class="fas fa-star {% if i <= p.media_avaliacoes %}text-warning{% else %}text-secondary{% endif %}"></i>
+                                                    <div class="rating" style="width: {{ p.media_avaliacoes }}%"></div>
+                                                    <i class="fas fa-star {% if i <= p.media_avaliacoes %}text-warning{% else %}text-secondary{% endif %}"></i>
                                                     {% endfor %}
                                                 </div>
-                                                <span class="font-small ml-5 text-muted">({{ p.media_avaliacoes|floatformat:2 }})</span>
+                                                <span class="font-small ml-5 text-muted">({{ p.media_avaliacoes|floatformat:1 }})</span>
                                             </div>
                                             <div>
                                                 <span class="font-small text-muted">Por <a
