@@ -190,4 +190,78 @@ $(document).ready(function () {
   });
 });
 
-//
+$(".add-to-cart-btn").on("click", function () {
+  let this_val = $(this);
+  let index = this_val.attr("data-index");
+  let quantity = $(".product-quantity-" + index).val();
+  let product_title = $(".product-title-" + index).val();
+  let product_image = $(".product-image-" + index).val();
+  let product_pid = $(".product-pid-" + index).val();
+  let product_id = $(".product-id-" + index).val();
+  let product_price = $(".current-product-price-" + index).text();
+
+  console.log("Quantidade:", quantity);
+  console.log("Id:", product_id);
+  console.log("PID:", product_pid);
+  console.log("Titulo:", product_title);
+  console.log("Imagem:", product_image);
+  console.log("Index:", index);
+  console.log("Preço:", product_price);
+  console.log("Esse é:", this_val);
+
+    $.ajax({
+      url: "/add-to-cart",
+      data: {
+        id: product_id,
+        pid: product_pid,
+        image: product_image,
+        qty: quantity,
+        title: product_title,
+        price: product_price,
+      },
+      dataType: "json",
+      beforeSend: () => {
+        console.log("Adicionando produtos ao Carrinho...");
+      },
+      success: (res) => {
+        this_val.html("✔");
+        console.log("Produtos adicionados ao Carrinho.");
+        $(".cart-items-count").text(res.totalcartitems);
+        this_val.attr("disabled", false);
+      },
+    });
+});
+
+//$(".add-to-cart-btn").on("click", function () {
+//  let quantity = $("#product-quantity").val();
+//  let product_title = $(".product-title").val();
+//  let product_id = $(".product-id").val();
+//  let product_price = $("#current-product-price").text();
+//  let this_val = $(this);
+
+//  console.log("Quantidade:", quantity);
+//  console.log("Id:", product_id);
+//  console.log("Titulo:", product_title);
+//  console.log("Preço:", product_price);
+//  console.log("Esse é:", this_val);
+
+//  $.ajax({
+//    url: "/add-to-cart",
+//    data: {
+//      id: product_id,
+//      qty: quantity,
+//      title: product_title,
+//      price: product_price,
+//    },
+//    dataType: "json",
+//    beforeSend: function () {
+//      console.log("Adicionando produtos ao Carrinho...");
+//    },
+//    success: function (res) {
+//      this_val.html("Item adicionado ao carrinho.");
+//      console.log("Produtos adicionados ao Carrinho.");
+//      $(".cart-items-count").text(response.totalcartitems);
+//      this_val.attr("disabled", false);
+//    },
+//  });
+//});

@@ -238,21 +238,21 @@
                                 <div class="header-action-icon-2">
                                     <a href="shop-compare.html">
                                         <img class="svgInject" alt="Organyx" src="{% static 'assets/imgs/theme/icons/icon-compare.svg' %}" />
-                                        <span class="pro-count blue">3</span>
+                                        <span class="pro-count blue cart-items-count"></span>
                                     </a>
                                     <a href="shop-compare.html"><span class="lable ml-0">Comparar</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a href="shop-wishlist.html">
                                         <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
-                                        <span class="pro-count blue">6</span>
+                                        <span class="pro-count blue cart-items-count"></span>
                                     </a>
                                     <a href="shop-wishlist.html"><span class="lable">Wishlist</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="shop-cart.html">
                                         <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                        <span class="pro-count blue">2</span>
+                                        <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                     </a>
                                     <a href="shop-cart.html"><span class="lable">Carrinho</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2">
@@ -547,7 +547,7 @@
                             <div class="header-action-icon-2">
                                 <a class="mini-cart-icon" href="#">
                                     <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                    <span class="pro-count white">2</span>
+                                    <span class="pro-count white cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                 </a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                     <ul>

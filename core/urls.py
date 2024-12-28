@@ -1,6 +1,6 @@
 from django.urls import path
 from django import views
-from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms
+from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart
 
 
 app_name = "core"
@@ -20,4 +20,5 @@ urlpatterns = [
     path("sobre-nos/", about, name='about' ),
     path("politica-de-privacidade/", privacy_policy, name='privacy-policy'),
     path("termos-de-servico/", service_terms, name='service-terms'),
+    path("add-to-cart/", add_to_cart, name="add-to-cart"),
 ]

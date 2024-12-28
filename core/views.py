@@ -323,3 +323,41 @@ def service_terms(request):
     }
     # Renderiza o template index.html com o contexto
     return render(request, 'core/service-terms.html', context)
+
+
+def add_to_cart(request):
+    cart_product = {}
+    try:
+        product_id = request.GET['id'],
+        product_title = request.GET['title'],
+        product_qty = int(request.GET['qty']),
+        product_price = request.GET['price'],
+        product_image = request.GET['image'],
+        pid = request.GET['pid'],
+
+    except KeyError as e:
+        return JsonResponse({'error': f'Missing parameter: {e}'}, status=400)
+
+
+    cart_product[str(product_id)] = {
+        'title': product_title,
+        'qty': product_qty,
+        'price': product_price,
+        'image': product_image,
+        'pid': pid,
+    }
+
+    if 'cart_data_obj' in request.session:
+        if str(product_id) in request.session['cart_data_obj']:
+            cart_data = request.session['cart_data_obj']
+            cart_data[str(product_id)]['qty'] = product_qty
+            request.session['cart_data_obj'] = cart_data
+        else:
+            cart_data = request.session['cart_data_obj']
+            cart_data.update(cart_product)
+            request.session['cart_data_obj'] = cart_data
+
+    else:
+        request.session['cart_data_obj'] = cart_product
+    request.session.modified = True
+    return JsonResponse({"data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj'])})
