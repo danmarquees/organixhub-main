@@ -232,54 +232,29 @@ $(".add-to-cart-btn").on("click", function () {
   });
 });
 
-$(document).ready(function () {
-  loadMiniCart(); // Carrega o mini-carrinho ao carregar a página
+$(".delete-product").on("click", function () {
+  let product_id = $(this).attr("data-product");
+  let this_val = $(this);
 
-  // Event listener para remover itens
-  $(document).on("click", ".remove-from-cart", function (event) {
-    event.preventDefault();
-    let productId = $(this).data("product-id");
-    removeFromCart(productId);
+  $.ajax({
+    url: "/delete-from-cart",
+    data: {
+      id: product_id,
+    },
+    dataType: "json",
+    beforeSend: () => {
+      this_val.hide();
+    },
+    success: (response) => {
+      // Atualiza TODO o conteúdo do carrinho.
+      $("#cart-list").html(response.data);
+      $(".cart-items-count").text(response.totalcartitems); // Atualiza o contador
+      this_val.show();
+    },
+    error: (error) => {
+      console.error("Erro ao deletar item:", error);
+      alert("Ocorreu um erro ao deletar o item do carrinho.");
+      this_val.show();
+    },
   });
 });
-
-function loadMiniCart() {
-  console.log("Chamando loadMiniCart");
-  $.ajax({
-    url: "{% url 'core:load_mini_cart' %}",
-    dataType: "json",
-    success: function (response) {
-      console.log("Resposta de loadMiniCart:", response);
-      $("#mini-cart-content").html(response.html);
-    },
-    error: function (error) {
-      console.error("Erro ao carregar o mini-carrinho:", error);
-      $("#mini-cart-content").html("<p>Erro ao carregar o carrinho.</p>");
-    },
-  });
-}
-
-function removeFromCart(productId) {
-  $.ajax({
-    url: "{% url 'core:remove_from_cart' %}",
-    type: "GET",
-    data: { id: productId },
-    dataType: "json",
-    success: function (response) {
-      if (response.success) {
-        loadMiniCart();
-        updateCartItemCount(response.totalcartitems);
-      } else {
-        alert(response.error);
-      }
-    },
-    error: function (response) {
-      console.error("Error removing item:", response);
-      alert("Erro ao remover item.");
-    },
-  });
-}
-
-function updateCartItemCount(count) {
-  $(".cart-items-count").text(count);
-}
