@@ -8,16 +8,22 @@ from core.forms import AvaliacaoProdutoForm # Importa o formulário para avalia�
 from userauths.models import User # Importa o modelo de usuário
 from django.utils import timezone # Importa funções relacionadas a data e hora
 from django.template.loader import render_to_string
+from django.contrib import messages
+
+
 
 
 def index(request):
     # Busca produtos publicados e em destaque
-    produto = Produto.objects.filter(status_produto="published", destaque=True)
+    produtos = Produto.objects.filter(status_produto="published", destaque=True)
     # Busca todos os vendedores
     vendedores = Vendedor.objects.all()
+    categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
+    # Cria o contexto para o template
+
 
     # Calcula a média das avaliações para cada produto
-    for p in produto:
+    for p in produtos:
         media_aval = AvaliacaoProduto.objects.filter(produto=p).aggregate(average_classification=Avg('classificacao'))
         if media_aval['average_classification'] is not None:
             p.media_avaliacoes = media_aval['average_classification']
@@ -28,9 +34,10 @@ def index(request):
 
     # Cria o contexto para o template
     context = {
-        "produtos": produto,
+        "produtos": produtos,
         "vendedores": vendedores,
-        "categorias": Categoria.objects.all() #Busca todas as categorias
+        "categorias": categorias,
+        #Busca todas as categorias
     }
     # Renderiza o template index.html com o contexto
     return render(request, 'core/index.html', context)
@@ -76,7 +83,7 @@ def lista_produtos(request):
 
 def lista_categorias(request):
     # Busca todas as categorias e conta a quantidade de produtos em cada categoria
-    categorias = Categoria.objects.all().annotate(produto_count=Count('produtos'))
+    categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
     # Cria o contexto para o template
     context = {"categorias": categorias}
     # Renderiza o template category-list.html com o contexto
@@ -135,6 +142,8 @@ def detalhes_produto(request, pid):
     # Busca as avaliações do produto, ordenadas pela data
     reviews = AvaliacaoProduto.objects.filter(produto=produto).order_by("-data")
     avaliacoes = AvaliacaoProduto.objects.filter(produto=produto)
+
+    categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
 
 
 
@@ -326,20 +335,26 @@ def service_terms(request):
 
 
 def add_to_cart(request):
-    cart_product = {}
     try:
-        product_id = request.GET['id'],
-        product_title = request.GET['title'],
-        product_qty = int(request.GET['qty']),
-        product_price = request.GET['price'],
-        product_image = request.GET['image'],
-        pid = request.GET['pid'],
+        product_id = request.GET['id']
+        product_title = request.GET['title']
+        product_qty = int(request.GET['qty'])
+        product_price_str = request.GET['price'] # Recebe o preço como string
+        product_price = float(product_price_str.replace(',', '.')) # Converte para float APÓS substituir a vírgula
+
+        product_image = request.GET['image']
+        pid = request.GET['pid']
+
+        if product_qty <= 0:
+            return JsonResponse({'error': 'Quantidade deve ser maior que zero'}, status=400)
 
     except KeyError as e:
         return JsonResponse({'error': f'Missing parameter: {e}'}, status=400)
+    except ValueError as e:
+        return JsonResponse({'error': f'Preço inválido: {e}'}, status=400) # Mensagem de erro mais informativa
 
 
-    cart_product[str(product_id)] = {
+    cart_item = {
         'title': product_title,
         'qty': product_qty,
         'price': product_price,
@@ -347,17 +362,86 @@ def add_to_cart(request):
         'pid': pid,
     }
 
-    if 'cart_data_obj' in request.session:
-        if str(product_id) in request.session['cart_data_obj']:
-            cart_data = request.session['cart_data_obj']
-            cart_data[str(product_id)]['qty'] = product_qty
-            request.session['cart_data_obj'] = cart_data
-        else:
-            cart_data = request.session['cart_data_obj']
-            cart_data.update(cart_product)
-            request.session['cart_data_obj'] = cart_data
+    cart = request.session.get('cart_data_obj', {})
 
+    if str(product_id) in cart:
+        cart[str(product_id)]['qty'] += product_qty
     else:
-        request.session['cart_data_obj'] = cart_product
+        cart[str(product_id)] = cart_item
+
+    request.session['cart_data_obj'] = cart
     request.session.modified = True
-    return JsonResponse({"data": request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj'])})
+
+    return JsonResponse({"data": cart, 'totalcartitems': len(cart)})
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+def cart_view(request):
+    cart_total_amount = 0
+    cart_data_formatted = {}
+    errors = [] # Lista para armazenar mensagens de erro
+
+    if 'cart_data_obj' in request.session:
+        print(f"Cart data from session: {request.session['cart_data_obj']}")
+
+        for p_id, item in request.session['cart_data_obj'].items():
+            try:
+                qty = int(item['qty'])
+                price = float(item['price'])
+                if qty <= 0 or price <= 0:
+                    errors.append(f"Invalid quantity or price for item {item['title']}.")
+                    continue # Pula para o próximo item se houver um erro
+
+                subtotal = qty * price
+                cart_total_amount += subtotal
+                cart_data_formatted[p_id] = {
+                    'title': item['title'],
+                    'qty': qty,
+                    'price': "{:.2f}".format(price),
+                    'image': item['image'],
+                    'pid': item['pid'],
+                    'subtotal': "{:.2f}".format(subtotal)
+                }
+            except (ValueError, TypeError) as e:
+                errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
+            except KeyError as e:
+                errors.append(f"Missing key '{e}' in cart item {item.get('title', 'unknown')}.")
+
+        # Exibe a página do carrinho, mesmo com erros
+        return render(request, "core/cart.html", {
+            "cart_data": cart_data_formatted,
+            'totalcartitems': len(request.session['cart_data_obj']),
+            'cart_total_amount': "{:.2f}".format(cart_total_amount),
+            'errors': errors, # Passa a lista de erros para o template
+        })
+    else:
+        messages.warning(request, "Seu Carrinho Está Vazio.")
+        return redirect("core:index")
+
+
+def load_mini_cart(request):
+    cart_data = request.session.get('cart_data_obj', {})
+    cart_total_amount = sum(float(item['price']) * int(item['qty']) for item in cart_data.values() if 'price' in item and 'qty' in item)
+    context = {
+        "cart_data": cart_data,
+        "cart_total_amount": "{:.2f}".format(cart_total_amount),
+    }
+    html = render_to_string('core/mini_cart.html', context)
+    return JsonResponse({'html': html, 'totalcartitems': len(cart_data)})
+
+
+def remove_from_cart(request):
+    try:
+        product_id = request.GET['id']
+        cart = request.session.get('cart_data_obj', {})
+        if str(product_id) in cart:
+            del cart[str(product_id)]
+            request.session['cart_data_obj'] = cart
+            request.session.modified = True
+            return JsonResponse({'success': True, 'totalcartitems': len(cart)})
+        else:
+            return JsonResponse({'success': False, 'error': 'Item não encontrado no carrinho.'})
+    except KeyError:
+        return JsonResponse({'success': False, 'error': 'Parâmetro "id" faltando.'})

@@ -209,59 +209,77 @@ $(".add-to-cart-btn").on("click", function () {
   console.log("Preço:", product_price);
   console.log("Esse é:", this_val);
 
-    $.ajax({
-      url: "/add-to-cart",
-      data: {
-        id: product_id,
-        pid: product_pid,
-        image: product_image,
-        qty: quantity,
-        title: product_title,
-        price: product_price,
-      },
-      dataType: "json",
-      beforeSend: () => {
-        console.log("Adicionando produtos ao Carrinho...");
-      },
-      success: (res) => {
-        this_val.html("✔");
-        console.log("Produtos adicionados ao Carrinho.");
-        $(".cart-items-count").text(res.totalcartitems);
-        this_val.attr("disabled", false);
-      },
-    });
+  $.ajax({
+    url: "/add-to-cart",
+    data: {
+      id: product_id,
+      pid: product_pid,
+      image: product_image,
+      qty: quantity,
+      title: product_title,
+      price: product_price,
+    },
+    dataType: "json",
+    beforeSend: () => {
+      console.log("Adicionando produtos ao Carrinho...");
+    },
+    success: (res) => {
+      this_val.html("✔");
+      console.log("Produtos adicionados ao Carrinho.");
+      $(".cart-items-count").text(res.totalcartitems);
+      this_val.attr("disabled", false);
+    },
+  });
 });
 
-//$(".add-to-cart-btn").on("click", function () {
-//  let quantity = $("#product-quantity").val();
-//  let product_title = $(".product-title").val();
-//  let product_id = $(".product-id").val();
-//  let product_price = $("#current-product-price").text();
-//  let this_val = $(this);
+$(document).ready(function () {
+  loadMiniCart(); // Carrega o mini-carrinho ao carregar a página
 
-//  console.log("Quantidade:", quantity);
-//  console.log("Id:", product_id);
-//  console.log("Titulo:", product_title);
-//  console.log("Preço:", product_price);
-//  console.log("Esse é:", this_val);
+  // Event listener para remover itens
+  $(document).on("click", ".remove-from-cart", function (event) {
+    event.preventDefault();
+    let productId = $(this).data("product-id");
+    removeFromCart(productId);
+  });
+});
 
-//  $.ajax({
-//    url: "/add-to-cart",
-//    data: {
-//      id: product_id,
-//      qty: quantity,
-//      title: product_title,
-//      price: product_price,
-//    },
-//    dataType: "json",
-//    beforeSend: function () {
-//      console.log("Adicionando produtos ao Carrinho...");
-//    },
-//    success: function (res) {
-//      this_val.html("Item adicionado ao carrinho.");
-//      console.log("Produtos adicionados ao Carrinho.");
-//      $(".cart-items-count").text(response.totalcartitems);
-//      this_val.attr("disabled", false);
-//    },
-//  });
-//});
+function loadMiniCart() {
+  console.log("Chamando loadMiniCart");
+  $.ajax({
+    url: "{% url 'core:load_mini_cart' %}",
+    dataType: "json",
+    success: function (response) {
+      console.log("Resposta de loadMiniCart:", response);
+      $("#mini-cart-content").html(response.html);
+    },
+    error: function (error) {
+      console.error("Erro ao carregar o mini-carrinho:", error);
+      $("#mini-cart-content").html("<p>Erro ao carregar o carrinho.</p>");
+    },
+  });
+}
+
+function removeFromCart(productId) {
+  $.ajax({
+    url: "{% url 'core:remove_from_cart' %}",
+    type: "GET",
+    data: { id: productId },
+    dataType: "json",
+    success: function (response) {
+      if (response.success) {
+        loadMiniCart();
+        updateCartItemCount(response.totalcartitems);
+      } else {
+        alert(response.error);
+      }
+    },
+    error: function (response) {
+      console.error("Error removing item:", response);
+      alert("Erro ao remover item.");
+    },
+  });
+}
+
+function updateCartItemCount(count) {
+  $(".cart-items-count").text(count);
+}

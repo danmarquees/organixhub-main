@@ -250,45 +250,18 @@
                                     <a href="shop-wishlist.html"><span class="lable">Wishlist</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="shop-cart.html">
+                                    <a class="mini-cart-icon" href="{% url 'core:cart' %}">
                                         <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
                                         <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                     </a>
                                     <a href="shop-cart.html"><span class="lable">Carrinho</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                        <ul>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" /></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Bolsa Casual Daisy</a></h4>
-                                                    <h4><span>1 × </span>R$800.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-2.jpg' %}" /></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Camisas de Veludo</a></h4>
-                                                    <h4><span>1 × </span>R$3200.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                        </ul>
+
                                         <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span>R$4000.00</span></h4>
-                                            </div>
+
                                             <div class="shopping-cart-button">
-                                                <a href="shop-cart.html" class="outline">Carrinho</a>
-                                                <a href="shop-checkout.html">Finalizar</a>
+                                                <a href="{% url 'core:cart' %}" class="outline">Carrinho</a>
+                                                <a href="#">Finalizar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -545,45 +518,34 @@
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="#">
+                                <a class="mini-cart-icon" id="mini-cart-content" href="{% url 'core:cart' %}">
                                     <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
                                     <span class="pro-count white cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                 </a>
-                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                    <ul>
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2" id="mini-cart-content">
+                                   <ul>
+                                        {% for product_id, item in cart_data.items %}
                                         <li>
                                             <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" /></a>
+                                                <a href="{% url 'core:product-detail' item.pid %}"><img alt="{{ item.title }}" src="{{ item.image }}" /></a>
                                             </div>
                                             <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Camisas Listradas</a></h4>
-                                                <h3><span>1 × </span>R$800,00</h3>
+                                                <h4><a href="{% url 'core:product-detail' item.pid %}">{{ item.title }}</a></h4>
+                                                <h3><span>{{ item.qty }} × </span>R${{ item.price }}</h3>
                                             </div>
                                             <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                <a href="#" data-product-id="{{ product_id }}" class="remove-from-cart"><i class="fi-rs-cross-small"></i></a>
                                             </div>
                                         </li>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" /></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
-                                                <h3><span>1 × </span>R$3500,00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
+                                        {% endfor %}
                                     </ul>
                                     <div class="shopping-cart-footer">
                                         <div class="shopping-cart-total">
-                                            <h4>Total <span>R$4300,00</span></h4>
+                                            <h4>Total <span>R${{ cart_total_amount }}</span></h4>
                                         </div>
                                         <div class="shopping-cart-button">
-                                            <a href="shop-cart.html">Carrinho</a>
-                                            <a href="shop-checkout.html">Finalizar</a>
-                                        </div>
+                                            <a href="{% url 'core:cart' %}" class="outline">Carrinho</a>
+                                            <a href="{% url 'core:cart' %}">Finalizar</a> </div>
                                     </div>
                                 </div>
                             </div>
