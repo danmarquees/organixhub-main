@@ -422,37 +422,45 @@ def cart_view(request):
 
 
 def delete_item_from_cart(request):
-    product_id = str(request.GET['id'])
+    product_id = str(request.GET.get('id'))
     if 'cart_data_obj' in request.session:
         if product_id in request.session['cart_data_obj']:
             del request.session['cart_data_obj'][product_id]
+            request.session.modified = True
 
-    cart_total_amount = 0
-    cart_data_formatted = {}  # Criar um dicionário formatado para o template
-    for p_id, item in request.session.get('cart_data_obj', {}).items():
-        try:
-            qty = int(item['qty'])
-            price = float(item['price'])
-            if qty <= 0 or price <= 0:
-                continue  # Ignora itens com erro de preço ou quantidade
+            # Recalculate cart totals and format data for the template
+            cart_total_amount = 0
+            cart_data_formatted = {}
+            for p_id, item in request.session.get('cart_data_obj', {}).items():
+                try:
+                    qty = int(item['qty'])
+                    price = float(item['price'])
+                    if qty <= 0 or price <= 0:
+                        continue  # Skip items with invalid quantity or price
 
-            subtotal = qty * price
-            cart_total_amount += subtotal
-            cart_data_formatted[p_id] = {
-                'title': item['title'],
-                'qty': qty,
-                'price': "{:.2f}".format(price),
-                'image': item['image'],
-                'pid': item['pid'],
-                'subtotal': "{:.2f}".format(subtotal)
+                    subtotal = qty * price
+                    cart_total_amount += subtotal
+                    cart_data_formatted[p_id] = {
+                        'title': item['title'],
+                        'qty': qty,
+                        'price': "{:.2f}".format(price),
+                        'image': item['image'],
+                        'pid': item['pid'],
+                        'subtotal': "{:.2f}".format(subtotal)
+                    }
+                except (ValueError, TypeError, KeyError) as e:
+                    print(f"Error processing cart item {item}: {e}") # Log the error
+                    pass  # Handle errors gracefully
+
+            context = {
+                "cart_data": cart_data_formatted,
+                'totalcartitems': len(request.session.get('cart_data_obj', {})),
+                'cart_total_amount': "{:.2f}".format(cart_total_amount),
+                'errors': []
             }
-        except (ValueError, TypeError, KeyError):
-            pass # Ignorar erros de processamento de itens individuais.
+            return JsonResponse({"data": render_to_string("core/async/cart-list.html", context), 'totalcartitems': len(request.session.get('cart_data_obj',{}))})
 
-    context = render_to_string("core/async/cart-list.html", {
-        "cart_data": cart_data_formatted,
-        'totalcartitems': len(request.session.get('cart_data_obj',{})),
-        'cart_total_amount': "{:.2f}".format(cart_total_amount),
-        'errors': [] # Adicione aqui para tratamento de erro consistente.
-    })
-    return JsonResponse({"data": context, 'totalcartitems': len(request.session.get('cart_data_obj',{}))})
+        else:
+            return JsonResponse({"error": "Product not found in cart."}, status=404)
+    else:
+        return JsonResponse({"error": "Cart is empty."}, status=404)

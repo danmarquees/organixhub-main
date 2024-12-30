@@ -232,29 +232,31 @@ $(".add-to-cart-btn").on("click", function () {
   });
 });
 
-$(".delete-product").on("click", function () {
-  let product_id = $(this).attr("data-product");
-  let this_val = $(this);
+$(document).ready(function () {
+  $("#cart-list").on("click", ".delete-product", function (event) {
+    event.preventDefault();
+    const product_id = $(this).data("product");
+    const $thisRow = $(this).closest("tr");
 
-  $.ajax({
-    url: "/delete-from-cart",
-    data: {
-      id: product_id,
-    },
-    dataType: "json",
-    beforeSend: () => {
-      this_val.hide();
-    },
-    success: (response) => {
-      // Atualiza TODO o conteúdo do carrinho.
-      $("#cart-list").html(response.data);
-      $(".cart-items-count").text(response.totalcartitems); // Atualiza o contador
-      this_val.show();
-    },
-    error: (error) => {
-      console.error("Erro ao deletar item:", error);
-      alert("Ocorreu um erro ao deletar o item do carrinho.");
-      this_val.show();
-    },
+    $.ajax({
+      url: "/delete-item-from-cart",
+      method: "GET",
+      data: { id: product_id },
+      dataType: "json",
+      beforeSend: () => {
+        $thisRow.fadeOut();
+      },
+      success: (response) => {
+        $("#cart-list").html(response.data);
+        $(".cart-items-count").text(response.totalcartitems);
+      },
+      error: (error) => {
+        console.error("Error deleting item:", error);
+        alert(
+          "Erro ao deletar item. Tente novamente. Detalhes do erro no console.",
+        );
+        $thisRow.fadeIn();
+      },
+    });
   });
 });

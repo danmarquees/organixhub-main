@@ -22,6 +22,5 @@ urlpatterns = [
     path("termos-de-servico/", service_terms, name='service-terms'),
     path("add-to-cart/", add_to_cart, name="add-to-cart"),
     path("carrinho/", cart_view, name="cart"),
-    path("delete-from-cart/", delete_item_from_cart, name="delete-from-cart"),
-
+    path('delete-item-from-cart/', delete_item_from_cart, name='delete-item-from-cart'),
 ]
