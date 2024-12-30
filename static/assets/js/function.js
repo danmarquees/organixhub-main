@@ -260,3 +260,70 @@ $(document).ready(function () {
     });
   });
 });
+
+$(document).ready(function () {
+  $("#cart-list").on("click", ".qty-up, .qty-down", function (event) {
+    event.preventDefault();
+    const $button = $(this);
+    const $row = $button.closest("tr");
+    const $qtyInput = $row.find(".qty-val");
+    const productId = $qtyInput.data("product-id");
+    let quantity = parseInt($qtyInput.val(), 10);
+
+    if ($button.hasClass("qty-up")) {
+      quantity++;
+    } else {
+      quantity = Math.max(1, quantity - 1);
+    }
+
+    $qtyInput.val(quantity);
+
+    $.ajax({
+      url: "/update-cart/",
+      method: "POST",
+      data: { id: productId, quantity: quantity },
+      dataType: "json",
+      beforeSend: function (xhr) {
+        const csrftoken = getCookie("csrftoken");
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      },
+      success: function (response) {
+        const subtotalElement = $(`#subtotal-${response.product_id}`);
+        const cartTotalElement = $(".cart_total_amount h4");
+        const cartItemCountElement = $(".cart-items-count");
+
+        if (
+          subtotalElement.length &&
+          cartTotalElement.length &&
+          cartItemCountElement.length
+        ) {
+          subtotalElement.text(`R$ ${response.subtotal.toFixed(2)}`);
+          cartTotalElement.text(`R$ ${response.cart_total_amount.toFixed(2)}`);
+          cartItemCountElement.text(response.totalcartitems);
+        } else {
+          console.error("Error: Could not find elements to update.");
+          alert("An unexpected error occurred. Please try again.");
+        }
+      },
+      error: function (error) {
+        console.error("Error updating cart:", error);
+        alert("Error updating cart item.");
+      },
+    });
+  });
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+});

@@ -9,6 +9,7 @@ from userauths.models import User # Importa o modelo de usuário
 from django.utils import timezone # Importa funções relacionadas a data e hora
 from django.template.loader import render_to_string
 from django.contrib import messages
+from decimal import Decimal, InvalidOperation
 
 
 
@@ -464,3 +465,68 @@ def delete_item_from_cart(request):
             return JsonResponse({"error": "Product not found in cart."}, status=404)
     else:
         return JsonResponse({"error": "Cart is empty."}, status=404)
+
+
+
+
+import logging
+logger = logging.getLogger(__name__)
+def update_from_cart(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    try:
+        product_id = request.POST['id']
+        quantity = int(request.POST['quantity'])
+        if quantity <= 0:
+            return JsonResponse({'error': 'Quantity must be greater than zero'}, status=400)
+
+    except (KeyError, ValueError) as e:
+        return JsonResponse({'error': f'Invalid request data: {str(e)}'}, status=400)
+
+    if 'cart_data_obj' not in request.session:
+        return JsonResponse({'error': 'Cart is empty'}, status=404)
+
+    cart_data = request.session['cart_data_obj']
+    if product_id not in cart_data:
+        return JsonResponse({'error': 'Product not found in cart'}, status=404)
+
+    try:
+        cart_data[product_id]['qty'] = quantity
+
+        # Convert Decimal values to float WITHIN cart_data
+        for p_id, item in cart_data.items():
+            if 'price' in item and isinstance(item['price'], Decimal):
+                item['price'] = float(item['price'])
+            if 'subtotal' in item and isinstance(item['subtotal'], Decimal):
+                item['subtotal'] = float(item['subtotal'])
+
+        request.session['cart_data_obj'] = cart_data
+        request.session.modified = True
+
+        cart_total_amount = 0.0 # Initialize as float
+        for p_id, item in cart_data.items():
+            qty = int(item.get('qty', 0))
+            price = float(item.get('price', 0))
+            if qty > 0 and price > 0:
+                subtotal = qty * price
+                cart_total_amount += subtotal # += works with floats
+
+        updated_product = cart_data[product_id]
+        product_subtotal = updated_product['qty'] * updated_product['price']
+
+        return JsonResponse({
+            "totalcartitems": len(cart_data),
+            "cart_total_amount": cart_total_amount,
+            "subtotal": product_subtotal,
+            "product_id": product_id,
+            "quantity": quantity,
+            "errors": []
+        })
+
+    except (KeyError, ValueError, TypeError) as e:
+        logger.exception(f"Error updating cart: {e}")
+        return JsonResponse({'error': f'Error updating cart: {e}'}, status=500)
+    except Exception as e:
+        logger.exception(f"Error updating cart: {e}")
+        return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
