@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'taggit',
     'django_ckeditor_5',
 
+    #Paypal Integration
+    'paypal.standard.ipn',
+
     #Custom Apps
     'core',
     'userauths',
@@ -170,6 +173,7 @@ JAZZMIN_SETTINGS = {
     },
 }
 
+LOGIN_URL = "userauths:sign-in"
 
 AUTH_USER_MODEL = 'userauths.User'
 
@@ -241,3 +245,7 @@ CKEDITOR_5_CONFIGS = {
         }
     }
 }
+
+
+PAYPAL_RECEIVER_EMAIL = 'organyxhub@business.example.com'
+PAYPAL_TEST = True

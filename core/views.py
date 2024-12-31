@@ -10,6 +10,11 @@ from django.utils import timezone # Importa funções relacionadas a data e hora
 from django.template.loader import render_to_string
 from django.contrib import messages
 from decimal import Decimal, InvalidOperation
+from django.urls import reverse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from paypal.standard.forms import PayPalPaymentsForm
 
 
 
@@ -532,8 +537,9 @@ def update_from_cart(request):
 
 
 
-
+@login_required
 def checkout(request):
+    host = request.get_host()
     cart_total_amount = 0.0  # Initialize as float
     cart_data = request.session.get('cart_data_obj', {})
     errors = []  # Lista para armazenar mensagens de erro
@@ -561,9 +567,32 @@ def checkout(request):
         except KeyError as e:
             errors.append(f"Missing key '{e}' in cart item {item.get('title', 'unknown')}.")
 
+    paypal_dict = {
+        'business': settings.PAYPAL_RECEIVER_EMAIL,
+        'amount': "{:.2f}".format(cart_total_amount), # Use cart total amount
+        'item_name': "Order",
+        'invoice': "INVOICE-{}".format(request.user.id), # more dynamic invoice
+        'currency_code': "BRL",
+        'notify_url': 'http://{}{}'.format(host, reverse("core:paypal-ipn")),
+        'return_url': 'http://{}{}'.format(host, reverse("core:payment-completed")),
+        'cancel_url': 'http://{}{}'.format(host, reverse("core:payment-failed")),
+    }
+
+    paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
+
     return render(request, "core/checkout.html", {
         "cart_data": cart_data_formatted,
         'totalcartitems': len(cart_data),
         'cart_total_amount': "{:.2f}".format(cart_total_amount),
         'errors': errors, # Passa a lista de erros para o template
+        'paypal_payment_button': paypal_payment_button, # Include the button
     })
+
+
+
+def pagamento_efetuado(request):
+    return render(request, 'core/payment-completed.html')
+
+
+def pagamento_falha(request):
+    return render(request, 'core/payment-failed.html')
