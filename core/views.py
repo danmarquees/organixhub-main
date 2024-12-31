@@ -467,8 +467,6 @@ def delete_item_from_cart(request):
         return JsonResponse({"error": "Cart is empty."}, status=404)
 
 
-
-
 import logging
 logger = logging.getLogger(__name__)
 def update_from_cart(request):
@@ -530,3 +528,42 @@ def update_from_cart(request):
     except Exception as e:
         logger.exception(f"Error updating cart: {e}")
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
+
+
+
+
+
+def checkout(request):
+    cart_total_amount = 0.0  # Initialize as float
+    cart_data = request.session.get('cart_data_obj', {})
+    errors = []  # Lista para armazenar mensagens de erro
+    cart_data_formatted = {}
+    for p_id, item in cart_data.items():
+        try:
+            qty = int(item['qty'])
+            price = float(item['price'])
+            if qty <= 0 or price <= 0:
+                errors.append(f"Invalid quantity or price for item {item['title']}.")
+                continue  # Pula para o próximo item se houver um erro
+
+            subtotal = qty * price
+            cart_total_amount += subtotal
+            cart_data_formatted[p_id] = {
+                'title': item['title'],
+                'qty': qty,
+                'price': "{:.2f}".format(price),
+                'image': item['image'],
+                'pid': item['pid'],
+                'subtotal': "{:.2f}".format(subtotal)
+            }
+        except (ValueError, TypeError) as e:
+            errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
+        except KeyError as e:
+            errors.append(f"Missing key '{e}' in cart item {item.get('title', 'unknown')}.")
+
+    return render(request, "core/checkout.html", {
+        "cart_data": cart_data_formatted,
+        'totalcartitems': len(cart_data),
+        'cart_total_amount': "{:.2f}".format(cart_total_amount),
+        'errors': errors, # Passa a lista de erros para o template
+    })

@@ -1,6 +1,6 @@
 from django.urls import path
 from django import views
-from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart
+from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout
 
 
 app_name = "core"
@@ -15,13 +15,14 @@ urlpatterns = [
     path("vendedor/<vid>", descricao_vendedores, name="vendor-detail"), #Página de um vendedor específico selecionado
     path("produtos/tag/<slug:tag_slug>/", tag_list, name="tags"), #Pagina de Tags selecionadas
     path("ajax-add-review/<int:pid>/", ajax_add_review, name="ajax-add-review"), #Reviews e Estrelas
-    path("search/", search, name="search"),
-    path("filter-products", filter_product, name='filter-product'),
-    path("sobre-nos/", about, name='about' ),
-    path("politica-de-privacidade/", privacy_policy, name='privacy-policy'),
-    path("termos-de-servico/", service_terms, name='service-terms'),
-    path("add-to-cart/", add_to_cart, name="add-to-cart"),
-    path("carrinho/", cart_view, name="cart"),
-    path('delete-item-from-cart/', delete_item_from_cart, name='delete-item-from-cart'),
-    path("update-cart/", update_from_cart, name='update-from-cart'),
-]
+    path("search/", search, name="search"), # Rota para a página de busca
+    path("filter-products", filter_product, name='filter-product'), # Rota para filtragem de produtos via AJAX
+    path("sobre-nos/", about, name='about' ), # Rota para a página "Sobre Nós"
+    path("politica-de-privacidade/", privacy_policy, name='privacy-policy'), # Rota para a página de política de privacidade
+    path("termos-de-servico/", service_terms, name='service-terms'), # Rota para a página de termos de serviço
+    path("add-to-cart/", add_to_cart, name="add-to-cart"), # Rota para adicionar um produto ao carrinho
+    path("carrinho/", cart_view, name="cart"), # Rota para visualizar o carrinho de compras
+    path('delete-item-from-cart/', delete_item_from_cart, name='delete-item-from-cart'), # Rota para remover um item do carrinho
+    path("update-cart/", update_from_cart, name='update-from-cart'), # Rota para atualizar a quantidade de um item no carrinho
+    path("checkout/", checkout, name="checkout"), # Rota para a página de checkout
+    ]
