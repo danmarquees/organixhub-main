@@ -19,7 +19,9 @@ from paypal.standard.forms import PayPalPaymentsForm
 
 
 
+
 def index(request):
+
     # Busca produtos publicados e em destaque
     produtos = Produto.objects.filter(status_produto="published", destaque=True)
     # Busca todos os vendedores
@@ -539,10 +541,51 @@ def update_from_cart(request):
 
 @login_required
 def checkout(request):
+    cart_total_amount = 0.0
+    total_amount = 0.0
+    errors = []
+
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            try:
+                qty = int(item['qty'])
+                price = float(item['price'])
+                if qty <= 0 or price <= 0:
+                    errors.append(f"Invalid quantity or price for item {item['title']}.")
+                    continue
+                total_amount += qty * price
+            except (ValueError, TypeError, KeyError) as e:
+                errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
+
+        order = PedidoCarrinho.objects.create(
+            user=request.user,
+            preco=total_amount,
+        )
+
+        for p_id, item in request.session['cart_data_obj'].items():
+            try:
+                qty = int(item['qty'])
+                price = float(item['price'])
+                if qty <= 0 or price <= 0:
+                    errors.append(f"Invalid quantity or price for item {item['title']}.")
+                    continue
+                ItensPedidoCarrinho.objects.create(
+                    pedido=order.user,
+                    num_fatura="INVOICE_NO" + str(order.id),
+                    status_produto="published",
+                    item=item['title'],
+                    imagem=item['image'],
+                    qtd=qty,
+                    preco=Decimal(str(price)),
+                    total=Decimal(str(qty * price))
+                )
+            except (ValueError, TypeError, KeyError) as e:
+                errors.append(f"Error creating cart item: {e}")
+
+
     host = request.get_host()
     cart_total_amount = 0.0  # Initialize as float
     cart_data = request.session.get('cart_data_obj', {})
-    errors = []  # Lista para armazenar mensagens de erro
     cart_data_formatted = {}
     for p_id, item in cart_data.items():
         try:
@@ -550,7 +593,7 @@ def checkout(request):
             price = float(item['price'])
             if qty <= 0 or price <= 0:
                 errors.append(f"Invalid quantity or price for item {item['title']}.")
-                continue  # Pula para o próximo item se houver um erro
+                continue
 
             subtotal = qty * price
             cart_total_amount += subtotal
@@ -569,9 +612,9 @@ def checkout(request):
 
     paypal_dict = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': "{:.2f}".format(cart_total_amount), # Use cart total amount
-        'item_name': "Order",
-        'invoice': "INVOICE-{}".format(request.user.id), # more dynamic invoice
+        'amount': cart_total_amount,
+        'item_name': "Order-Item-No-" + str(order.id),
+        'invoice': "INVOICE-{}" + str(order.id),
         'currency_code': "BRL",
         'notify_url': 'http://{}{}'.format(host, reverse("core:paypal-ipn")),
         'return_url': 'http://{}{}'.format(host, reverse("core:payment-completed")),
@@ -584,9 +627,13 @@ def checkout(request):
         "cart_data": cart_data_formatted,
         'totalcartitems': len(cart_data),
         'cart_total_amount': "{:.2f}".format(cart_total_amount),
-        'errors': errors, # Passa a lista de erros para o template
-        'paypal_payment_button': paypal_payment_button, # Include the button
+        'errors': errors,
+        'paypal_payment_button': paypal_payment_button,
     })
+
+
+
+
 
 
 @login_required
@@ -623,6 +670,6 @@ def pagamento_efetuado(request):
     })
 
 
-
+@login_required
 def pagamento_falha(request):
     return render(request, 'core/payment-failed.html')

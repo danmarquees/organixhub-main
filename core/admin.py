@@ -18,11 +18,12 @@ class VendedorAdmin(admin.ModelAdmin):
 
 
 class PedidoCarrinhoAdmin(admin.ModelAdmin):
+    list_editable = ['status_pagamento', 'status_produto']
     list_display = ['user', 'preco', 'status_pagamento','data_pedido', 'status_produto']
 
 
 class ItensPedidoCarrinhoAdmin(admin.ModelAdmin):
-    list_display = ['pedido', 'num_fatura', 'item','qtd', 'preco', 'total']
+    list_display = ['pedido', 'num_fatura', 'item','imagem', 'qtd', 'preco', 'total']
 
 
 class AvaliacaoProdutoAdmin(admin.ModelAdmin):

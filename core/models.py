@@ -171,6 +171,9 @@ class ItensPedidoCarrinho(models.Model):
     class Meta:
          verbose_name_plural = "Itens do Pedido do Carrinho"
 
+    def imagem_produto(self):
+            return mark_safe('<img src= "%s" width="50" height="50" />' % (self.imagem.url))
+
     def imagem_pedido(self):
             return mark_safe('<img src= "/media/%s" width="50" height="50" />' % (self.imagem))
 
