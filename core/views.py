@@ -589,9 +589,39 @@ def checkout(request):
     })
 
 
-
+@login_required
 def pagamento_efetuado(request):
-    return render(request, 'core/payment-completed.html')
+    cart_data = request.session.get('cart_data_obj', {})
+    cart_total_amount = 0.0
+    cart_data_formatted = {}
+    errors = []
+    for p_id, item in cart_data.items():
+        try:
+            qty = int(item['qty'])
+            price = float(item['price'])
+            if qty <= 0 or price <= 0:
+                errors.append(f"Invalid quantity or price for item {item['title']}.")
+                continue
+            subtotal = qty * price
+            cart_total_amount += subtotal
+            cart_data_formatted[p_id] = {
+                'title': item['title'],
+                'qty': qty,
+                'price': "{:.2f}".format(price),
+                'image': item['image'],
+                'pid': item['pid'],
+                'subtotal': "{:.2f}".format(subtotal)
+            }
+        except (ValueError, TypeError, KeyError) as e:
+            errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
+
+    return render(request, 'core/payment-completed.html', {
+        "cart_data": cart_data_formatted,
+        'totalcartitems': len(cart_data),
+        'cart_total_amount': "{:.2f}".format(cart_total_amount),
+        'errors': errors,
+    })
+
 
 
 def pagamento_falha(request):
