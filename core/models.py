@@ -159,7 +159,7 @@ class PedidoCarrinho(models.Model):
          verbose_name_plural = "Pedidos do Carrinho"
 
 class ItensPedidoCarrinho(models.Model):
-    pedido = models.ForeignKey(User, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(PedidoCarrinho, on_delete=models.CASCADE)
     num_fatura = models.CharField(max_length=200)
     status_produto = models.CharField(max_length=200)
     item = models.CharField(max_length=200)

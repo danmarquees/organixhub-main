@@ -15,7 +15,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from paypal.standard.forms import PayPalPaymentsForm
-
+from django.http import HttpResponseNotFound
 
 
 
@@ -538,7 +538,6 @@ def update_from_cart(request):
 
 
 
-
 @login_required
 def checkout(request):
     cart_total_amount = 0.0
@@ -570,7 +569,7 @@ def checkout(request):
                     errors.append(f"Invalid quantity or price for item {item['title']}.")
                     continue
                 ItensPedidoCarrinho.objects.create(
-                    pedido=order.user,
+                    pedido=order,
                     num_fatura="INVOICE_NO" + str(order.id),
                     status_produto="published",
                     item=item['title'],
@@ -633,9 +632,6 @@ def checkout(request):
 
 
 
-
-
-
 @login_required
 def pagamento_efetuado(request):
     cart_data = request.session.get('cart_data_obj', {})
@@ -673,3 +669,31 @@ def pagamento_efetuado(request):
 @login_required
 def pagamento_falha(request):
     return render(request, 'core/payment-failed.html')
+
+
+@login_required
+def customer_dashboard(request):
+    orders = PedidoCarrinho.objects.filter(user=request.user).order_by("-id")
+    context = {
+        "orders": orders,
+    }
+
+    return render(request, 'core/dashboard.html', context)
+
+
+def order_detail(request, id):
+    try:
+        order = get_object_or_404(PedidoCarrinho, user=request.user, id=id)
+        order_items = ItensPedidoCarrinho.objects.filter(pedido=order)  # Corrected line
+
+        context = {
+            "order": order,
+            "order_items": order_items,
+        }
+        return render(request, 'core/order-detail.html', context)
+    except PedidoCarrinho.DoesNotExist:
+        logger.warning(f"Order with id {id} not found for user {request.user.id}")
+        return HttpResponseNotFound("Pedido não encontrado.")
+    except Exception as e:
+        logger.exception(f"An error occurred while retrieving order details: {e}")
+        return HttpResponseNotFound("Ocorreu um erro.")

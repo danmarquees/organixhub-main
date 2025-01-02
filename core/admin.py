@@ -22,6 +22,8 @@ class PedidoCarrinhoAdmin(admin.ModelAdmin):
     list_display = ['user', 'preco', 'status_pagamento','data_pedido', 'status_produto']
 
 
+
+
 class ItensPedidoCarrinhoAdmin(admin.ModelAdmin):
     list_display = ['pedido', 'num_fatura', 'item','imagem', 'qtd', 'preco', 'total']
 
