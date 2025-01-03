@@ -684,7 +684,6 @@ logger = logging.getLogger(__name__)
 def customer_dashboard(request):
     orders = PedidoCarrinho.objects.filter(user=request.user).order_by("-id")
     addresses = Endereco.objects.filter(user=request.user).order_by("-id")
-  # Lida com múltiplos endereços
 
     if request.method == "POST":
         try:
@@ -703,15 +702,9 @@ def customer_dashboard(request):
                     'user': request.user,
                     'status': False,
                 }
-
-                # Validação de campos obrigatórios
-                required_fields = ['cep', 'logradouro', 'bairro', 'localidade', 'uf']
-                missing_fields = [field for field in required_fields if not address_data.get(field)]
-                if missing_fields:
-                    messages.error(request, f"Os seguintes campos são obrigatórios: {', '.join(missing_fields)}")
-                    return redirect('core:dashboard')
-
-                new_address = Endereco.objects.create(**address_data)
+                new_address = Endereco(**address_data)
+                new_address.full_clean()  # This will raise ValidationError if any errors
+                new_address.save()
                 created_addresses.append(new_address)
                 logger.info(f"Endereço criado com sucesso: {new_address.id}")
 
@@ -723,13 +716,17 @@ def customer_dashboard(request):
             messages.error(request, "Erro de integridade no banco de dados. Verifique os dados e tente novamente.")
             logger.exception(f"IntegrityError: {e}")
         except ValidationError as e:
-            messages.error(request, f"Erro de validação: {e.message}")
+            error_messages = []
+            for field, errors in e.message_dict.items():
+                for error in errors:
+                    error_messages.append(f"{field}: {error}")
+            messages.error(request, "Erro de validação: " + ", ".join(error_messages))
             logger.exception(f"ValidationError: {e}")
         except Exception as e:
             messages.error(request, "Ocorreu um erro inesperado. Tente novamente.")
             logger.exception(f"Erro inesperado: {e}")
 
-        return redirect('core:dashboard')
+        return redirect('core:dashboard') # Redirect back to the dashboard after POST
 
     context = {
         "orders": orders,
@@ -737,11 +734,6 @@ def customer_dashboard(request):
     }
     return render(request, 'core/dashboard.html', context)
 
-    context = {
-        "orders": orders,
-        "addresses": addresses,
-    }
-    return render(request, 'core/dashboard.html', context)
 
 
 

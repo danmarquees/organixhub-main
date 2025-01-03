@@ -131,50 +131,51 @@
                                                         </button>
                                                     </h5>
                                                 </div>
-                                                <div class="collapse" id="collapseAddAddress">
-                                                    <div class="card-body">
-                                                        <form class="eb-4" method="POST">
-                                                            {% csrf_token %}
-                                                            <div class="row">
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="logradouro">Logradouro</label>
-                                                                    <input placeholder="Digite o logradouro" required class="form-control" name="logradouro" id="logradouro" autocomplete="address-line1" type="text" />
+                                                    <div class="collapse" id="collapseAddAddress">
+                                                        <div class="card-body">
+                                                            <form method="POST">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="num_addresses" value="1">
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label for="logradouro_0">Logradouro</label>
+                                                                        <input type="text" class="form-control" name="logradouro_0" id="logradouro_0" placeholder="Logradouro" required>
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label for="numero_0">Número</label>
+                                                                        <input type="text" class="form-control" name="numero_0" id="numero_0" placeholder="Número">
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label for="complemento_0">Complemento</label>
+                                                                        <input type="text" class="form-control" name="complemento_0" id="complemento_0" placeholder="Complemento">
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label for="bairro_0">Bairro</label>
+                                                                        <input type="text" class="form-control" name="bairro_0" id="bairro_0" placeholder="Bairro" required>
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label for="localidade_0">Localidade</label>
+                                                                        <input type="text" class="form-control" name="localidade_0" id="localidade_0" placeholder="Localidade" required>
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label for="uf_0">UF</label>
+                                                                        <input type="text" class="form-control" name="uf_0" id="uf_0" placeholder="UF" required>
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label for="cep_0">CEP</label>
+                                                                        <input type="text" class="form-control" name="cep_0" id="cep_0" placeholder="CEP" required>
+                                                                    </div>
+                                                                    <div class="form-group col-md-6">
+                                                                        <label for="celular_0">Celular</label>
+                                                                        <input type="tel" class="form-control" name="celular_0" id="celular_0" placeholder="Celular">
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <button type="submit" class="btn btn-fill-out submit font-weight-bold">Salvar endereço</button>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="numero">Número</label>
-                                                                    <input placeholder="Digite o número" class="form-control" name="numero" id="numero" type="text" />
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="complemento">Complemento</label>
-                                                                    <input placeholder="Digite o complemento" class="form-control" name="complemento" id="complemento" type="text" />
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="bairro">Bairro</label>
-                                                                    <input placeholder="Digite o bairro" required class="form-control" name="bairro" id="bairro" autocomplete="address-level2" type="text" />
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="localidade">Localidade</label>
-                                                                    <input placeholder="Digite a localidade" required class="form-control" name="localidade" id="localidade" autocomplete="address-level1" type="text" />
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="uf">UF</label>
-                                                                    <input placeholder="Digite a UF" required class="form-control" name="uf" id="uf" minlength="2" maxlength="2" pattern="[A-Za-z]{2}" title="Insira uma UF válida (ex: SP)" type="text" />
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="cep">CEP</label>
-                                                                    <input placeholder="Digite o CEP" required class="form-control" name="cep" id="cep" minlength="8" maxlength="9" pattern="\d{5}-?\d{3}" title="Por favor, insira um CEP válido (ex: 12345-678)" type="text" />
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="celular">Celular</label>
-                                                                    <input placeholder="Digite o celular" class="form-control" name="celular" id="celular" type="tel" pattern="\(\d{2}\)\s?\d{4,5}-\d{4}" title="Formato esperado: (00) 00000-0000" />
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <button type="submit" class="btn btn-fill-out submit font-weight-bold" name="submit" value="Submit">Salvar endereço</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                                                            </form>
+                                                        </div>
                                                     </div>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
@@ -198,8 +199,8 @@
                                                     {% else %}
                                                         <p>Você não possui endereços cadastrados.</p>
                                                     {% endif %}
-                                                 </div>
-                                            </div>
+                                                </div>
+                                        </div>
                                         <div class="col-lg-6">
                                             <div class="card">
                                                 <div class="card-header">
