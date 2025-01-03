@@ -14,7 +14,7 @@ def default(request):
     }
     if request.user.is_authenticated:
         try:
-            endereco = Endereco.objects.get(user=request.user.id)
+            endereco = Endereco.objects.filter(user=request.user.id).first()
             context['endereco'] = endereco
         except Endereco.DoesNotExist:
             context['endereco'] = None

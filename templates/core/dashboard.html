@@ -122,22 +122,84 @@
                                 </div>
                                 <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="card mb-3 mb-lg-0">
+                                        <div class="col-lg-12">
+                                            <div class="card">
                                                 <div class="card-header">
-                                                    <h3 class="mb-0">Endereço de cobrança</h3>
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddAddress" aria-expanded="false" aria-controls="collapseAddAddress">
+                                                            Adicionar endereço
+                                                        </button>
+                                                    </h5>
                                                 </div>
-                                                <div class="card-body">
-                                                    <address>
-                                                        3522 Interstate<br />
-                                                        75 Business Spur,<br />
-                                                        Sault Ste. <br />Marie, MI 49783
-                                                    </address>
-                                                    <p>Nova Iorque</p>
-                                                    <a href="#" class="btn-small">Editar</a>
+                                                <div class="collapse" id="collapseAddAddress">
+                                                    <div class="card-body">
+                                                        <form class="eb-4" method="POST">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="logradouro">Logradouro</label>
+                                                                    <input placeholder="Digite o logradouro" required class="form-control" name="logradouro" id="logradouro" autocomplete="address-line1" type="text" />
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="numero">Número</label>
+                                                                    <input placeholder="Digite o número" class="form-control" name="numero" id="numero" type="text" />
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="complemento">Complemento</label>
+                                                                    <input placeholder="Digite o complemento" class="form-control" name="complemento" id="complemento" type="text" />
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="bairro">Bairro</label>
+                                                                    <input placeholder="Digite o bairro" required class="form-control" name="bairro" id="bairro" autocomplete="address-level2" type="text" />
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="localidade">Localidade</label>
+                                                                    <input placeholder="Digite a localidade" required class="form-control" name="localidade" id="localidade" autocomplete="address-level1" type="text" />
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="uf">UF</label>
+                                                                    <input placeholder="Digite a UF" required class="form-control" name="uf" id="uf" minlength="2" maxlength="2" pattern="[A-Za-z]{2}" title="Insira uma UF válida (ex: SP)" type="text" />
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="cep">CEP</label>
+                                                                    <input placeholder="Digite o CEP" required class="form-control" name="cep" id="cep" minlength="8" maxlength="9" pattern="\d{5}-?\d{3}" title="Por favor, insira um CEP válido (ex: 12345-678)" type="text" />
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="celular">Celular</label>
+                                                                    <input placeholder="Digite o celular" class="form-control" name="celular" id="celular" type="tel" pattern="\(\d{2}\)\s?\d{4,5}-\d{4}" title="Formato esperado: (00) 00000-0000" />
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <button type="submit" class="btn btn-fill-out submit font-weight-bold" name="submit" value="Submit">Salvar endereço</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-lg-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="mb-0">Endereço de cobrança</h3>
+                                                </div>
+                                                    {% if addresses %}
+                                                        {% for address in addresses %}
+                                                            <div class="card-body border rounded">
+                                                                <address>
+                                                                    <p><strong>Logradouro:</strong> {{ address.logradouro }}, <strong>Número:</strong> {{ address.numero }}</p>
+                                                                    <p><strong>Bairro:</strong> {{ address.bairro }}, <strong>Localidade:</strong> {{ address.localidade }}, <strong>UF:</strong> {{ address.uf }}</p>
+                                                                    <p><strong>CEP:</strong> {{ address.cep }}</p>
+                                                                    <p><strong>Celular:</strong> {{ address.celular }}</p>
+                                                                </address>
+                                                                <button class="btn set-default-address" data-address-id="{{ address.id }}">Tornar Padrão</button>
+                                                                <button class="btn btn-danger delete-address" data-address-id="{{ address.id }}">Deletar</button>
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <p>Você não possui endereços cadastrados.</p>
+                                                    {% endif %}
+                                                 </div>
+                                            </div>
                                         <div class="col-lg-6">
                                             <div class="card">
                                                 <div class="card-header">
@@ -155,51 +217,64 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>Detalhes da conta</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <p>Já possui uma conta? <a href="page-login.html">Faça login!</a></p>
-                                            <form method="post" name="enq">
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label>Primeiro nome <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="name" type="text" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label>Sobrenome <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="phone" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Nome de exibição <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="dname" type="text" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Endereço de e-mail <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="email" type="email" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Senha atual <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="password" type="password" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Nova senha <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="npassword" type="password" />
-                                                    </div>
-                                                    <div class="form-group col-md-12">
-                                                        <label>Confirme a senha <span class="required">*</span></label>
-                                                        <input required="" class="form-control" name="cpassword" type="password" />
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <button type="submit" class="btn btn-fill-out submit font-weight-bold" name="submit" value="Submit">Salvar alterações</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                                                                      <div class="row">
+                                                                                        <div class="col-lg-12">
+                                                                                          <div class="card">
+                                                                                            <div class="card-header">
+                                                                                              <h5 class="mb-0">
+                                                                                                <button class="btn btn-link" type="button" id="addAddressButton">
+                                                                                                  Adicionar endereço
+                                                                                                </button>
+                                                                                              </h5>
+                                                                                            </div>
+                                                                                            <div class="card-body">
+                                                                                              <form method="POST" id="addressForm">
+                                                                                                {% csrf_token %}
+                                                                                                <div id="addressFields">
+                                                                                                  <div class="address-group" id="address-group-0">
+                                                                                                    <div class="row">
+                                                                                                      <div class="form-group col-md-6">
+                                                                                                        <label for="logradouro_0">Logradouro</label>
+                                                                                                        <input type="text" id="logradouro_0" name="logradouro_0" placeholder="Logradouro" required>
+                                                                                                      </div>
+                                                                                                      <div class="form-group col-md-6">
+                                                                                                        <label for="numero_0">Número</label>
+                                                                                                        <input type="text" id="numero_0" name="numero_0" placeholder="Número">
+                                                                                                      </div>
+                                                                                                      <div class="form-group col-md-6">
+                                                                                                        <label for="complemento_0">Complemento</label>
+                                                                                                        <input type="text" id="complemento_0" name="complemento_0" placeholder="Complemento">
+                                                                                                      </div>
+                                                                                                      <div class="form-group col-md-6">
+                                                                                                        <label for="bairro_0">Bairro</label>
+                                                                                                        <input type="text" id="bairro_0" name="bairro_0" placeholder="Bairro" required>
+                                                                                                      </div>
+                                                                                                      <div class="form-group col-md-6">
+                                                                                                        <label for="localidade_0">Localidade</label>
+                                                                                                        <input type="text" id="localidade_0" name="localidade_0" placeholder="Localidade" required>
+                                                                                                      </div>
+                                                                                                      <div class="form-group col-md-6">
+                                                                                                        <label for="uf_0">UF</label>
+                                                                                                        <input type="text" id="uf_0" name="uf_0" placeholder="UF" required>
+                                                                                                      </div>
+                                                                                                      <div class="form-group col-md-6">
+                                                                                                        <label for="cep_0">CEP</label>
+                                                                                                        <input type="text" id="cep_0" name="cep_0" placeholder="CEP" required>
+                                                                                                      </div>
+                                                                                                      <div class="form-group col-md-6">
+                                                                                                        <label for="celular_0">Celular</label>
+                                                                                                        <input type="tel" id="celular_0" name="celular_0" placeholder="Celular">
+                                                                                                      </div>
+                                                                                                    </div>
+                                                                                                  </div>
+                                                                                                </div>
+                                                                                                <input type="hidden" name="num_addresses" value="1" id="numAddresses">
+                                                                                                <button type="submit" class="btn btn-fill-out submit font-weight-bold">Salvar endereços</button>
+                                                                                              </form>
+                                                                                            </div>
+                                                                                          </div>
+                                                                                        </div>
                             </div>
                         </div>
                     </div>

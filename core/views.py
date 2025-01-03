@@ -16,7 +16,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from paypal.standard.forms import PayPalPaymentsForm
 from django.http import HttpResponseNotFound
-
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
+from django.forms import modelformset_factory
+from .models import PedidoCarrinho, Endereco
 
 
 
@@ -559,6 +562,7 @@ def checkout(request):
         order = PedidoCarrinho.objects.create(
             user=request.user,
             preco=total_amount,
+            status_pagamento=True # Adiciona o status de pagamento como pendente
         )
 
         for p_id, item in request.session['cart_data_obj'].items():
@@ -671,14 +675,75 @@ def pagamento_falha(request):
     return render(request, 'core/payment-failed.html')
 
 
+
+import logging
+
+logger = logging.getLogger(__name__)
+
 @login_required
 def customer_dashboard(request):
     orders = PedidoCarrinho.objects.filter(user=request.user).order_by("-id")
+    addresses = Endereco.objects.filter(user=request.user).order_by("-id")
+  # Lida com múltiplos endereços
+
+    if request.method == "POST":
+        try:
+            num_addresses = int(request.POST.get('num_addresses', 1))
+            created_addresses = []
+            for i in range(num_addresses):
+                address_data = {
+                    'cep': request.POST.get(f'cep_{i}', '').strip(),
+                    'logradouro': request.POST.get(f'logradouro_{i}', '').strip(),
+                    'complemento': request.POST.get(f'complemento_{i}', '').strip(),
+                    'bairro': request.POST.get(f'bairro_{i}', '').strip(),
+                    'localidade': request.POST.get(f'localidade_{i}', '').strip(),
+                    'uf': request.POST.get(f'uf_{i}', '').strip(),
+                    'numero': request.POST.get(f'numero_{i}', '').strip(),
+                    'celular': request.POST.get(f'celular_{i}', '').strip(),
+                    'user': request.user,
+                    'status': False,
+                }
+
+                # Validação de campos obrigatórios
+                required_fields = ['cep', 'logradouro', 'bairro', 'localidade', 'uf']
+                missing_fields = [field for field in required_fields if not address_data.get(field)]
+                if missing_fields:
+                    messages.error(request, f"Os seguintes campos são obrigatórios: {', '.join(missing_fields)}")
+                    return redirect('core:dashboard')
+
+                new_address = Endereco.objects.create(**address_data)
+                created_addresses.append(new_address)
+                logger.info(f"Endereço criado com sucesso: {new_address.id}")
+
+            messages.success(request, f"{len(created_addresses)} endereços adicionados com sucesso!")
+        except ValueError as e:
+            messages.error(request, f"Erro de valor: {e}")
+            logger.exception(f"ValueError ao criar endereços: {e}")
+        except IntegrityError as e:
+            messages.error(request, "Erro de integridade no banco de dados. Verifique os dados e tente novamente.")
+            logger.exception(f"IntegrityError: {e}")
+        except ValidationError as e:
+            messages.error(request, f"Erro de validação: {e.message}")
+            logger.exception(f"ValidationError: {e}")
+        except Exception as e:
+            messages.error(request, "Ocorreu um erro inesperado. Tente novamente.")
+            logger.exception(f"Erro inesperado: {e}")
+
+        return redirect('core:dashboard')
+
     context = {
         "orders": orders,
+        "addresses": addresses,
     }
-
     return render(request, 'core/dashboard.html', context)
+
+    context = {
+        "orders": orders,
+        "addresses": addresses,
+    }
+    return render(request, 'core/dashboard.html', context)
+
+
 
 
 def order_detail(request, id):

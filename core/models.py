@@ -217,8 +217,16 @@ class Wishlist(models.Model):
 
 class Endereco(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    endereco = models.CharField(max_length=100, null=True)
+    cep = models.CharField(max_length=9, null=True)
+    logradouro = models.CharField(max_length=255, null=True)
+    complemento = models.CharField(max_length=255, null=True, blank=True)
+    bairro = models.CharField(max_length=255, null=True)
+    localidade = models.CharField(max_length=255, null=True)
+    uf = models.CharField(max_length=2, null=True)
+    numero = models.CharField(max_length=10, null=True, blank=True)
+    celular = models.CharField(max_length=20, null=True, blank=True) # Added cellphone field
     status = models.BooleanField(default=False)
+
 
     class Meta:
             verbose_name_plural = "Endereço"

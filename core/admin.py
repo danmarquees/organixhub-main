@@ -37,7 +37,8 @@ class WishlistAdmin(admin.ModelAdmin):
 
 
 class EnderecoAdmin(admin.ModelAdmin):
-    list_display = ['user', 'endereco', 'status' ]
+    list_display = ['user', 'cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf', 'numero', 'status', 'celular' ]
+
 
 
 
