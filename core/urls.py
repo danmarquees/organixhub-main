@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django import views
-from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail
+from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail, make_address_default, delete_address,  buscar_endereco
 
 
 app_name = "core"
@@ -30,4 +30,7 @@ urlpatterns = [
     path("pagamento-falha/", pagamento_falha, name="payment-failed"),
     path("dashboard/", customer_dashboard, name="dashboard"),
     path("dashboard/pedido/<int:id>", order_detail, name="order-detail"),
+    path("make-address-default/", make_address_default, name="make-default-address"),
+    path("delete-address/", delete_address, name="delete-address"),
+    path('buscar-endereco/', buscar_endereco, name='buscar_endereco')
     ]

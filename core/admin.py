@@ -37,6 +37,7 @@ class WishlistAdmin(admin.ModelAdmin):
 
 
 class EnderecoAdmin(admin.ModelAdmin):
+    list_editable = ['cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf', 'numero', 'status', 'celular']
     list_display = ['user', 'cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf', 'numero', 'status', 'celular' ]
 
 

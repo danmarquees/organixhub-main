@@ -15,12 +15,12 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from paypal.standard.forms import PayPalPaymentsForm
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, JsonResponse
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.forms import modelformset_factory
 from .models import PedidoCarrinho, Endereco
-
+from brazilcep import get_address_from_cep, WebService, exceptions
 
 
 def index(request):
@@ -754,3 +754,69 @@ def order_detail(request, id):
     except Exception as e:
         logger.exception(f"An error occurred while retrieving order details: {e}")
         return HttpResponseNotFound("Ocorreu um erro.")
+
+
+def make_address_default(request):
+    if request.method == 'POST':
+        try:
+            id = request.POST.get('id')
+            if id is None:
+                return JsonResponse({"success": False, "error": "Missing 'id' parameter"}, status=400)
+            try:
+                id = int(id)
+            except ValueError:
+                return JsonResponse({"success": False, "error": "Invalid 'id' parameter"}, status=400)
+
+            user = request.user
+
+            try:
+                address = Endereco.objects.get(pk=id, user=user)
+                # Only one address can be default, so set all others to False first
+                Endereco.objects.filter(user=user, status=True).update(status=False)
+                address.status = True
+                address.save()
+                return JsonResponse({"success": True})
+            except Endereco.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Address not found"}, status=404)
+            except Exception as e:
+                return JsonResponse({"success": False, "error": f"An unexpected error occurred: {e}"}, status=500)
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": f"An unexpected error occurred: {e}"}, status=500)
+    else:
+        return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
+
+
+
+@login_required
+def delete_address(request):
+    if request.method == 'POST':
+        try:
+            address_id = request.POST.get('id')
+            if address_id is None:
+                return JsonResponse({"success": False, "error": "Missing 'id' parameter"}, status=400)
+            try:
+                address_id = int(address_id)
+            except ValueError:
+                return JsonResponse({"success": False, "error": "Invalid 'id' parameter"}, status=400)
+
+            address = get_object_or_404(Endereco, pk=address_id, user=request.user)
+            address.delete()
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": f"An unexpected error occurred: {e}"}, status=500)
+    else:
+        return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
+
+
+def buscar_endereco(request):
+    cep = request.GET.get('cep', '').replace('-', '').strip()
+
+    if len(cep) != 8 or not cep.isdigit():
+        return JsonResponse({'erro': 'CEP inválido!'}, status=400)
+
+    try:
+        endereco = get_address_from_cep(cep, webservice=WebService.VIACEP)
+        return JsonResponse(endereco)
+    except Exception as e:
+        return JsonResponse({'erro': str(e)}, status=500)

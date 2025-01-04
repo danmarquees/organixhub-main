@@ -20,37 +20,53 @@
                             <div class="dashboard-menu">
                                 <ul class="nav flex-column" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                        <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab"
+                                            href="#dashboard" role="tab" aria-controls="dashboard"
+                                            aria-selected="false"><i
+                                                class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Pedidos</a>
+                                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders"
+                                            role="tab" aria-controls="orders" aria-selected="false"><i
+                                                class="fi-rs-shopping-bag mr-10"></i>Pedidos</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Rastreie seu pedido</a>
+                                        <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab"
+                                            href="#track-orders" role="tab" aria-controls="track-orders"
+                                            aria-selected="false"><i
+                                                class="fi-rs-shopping-cart-check mr-10"></i>Rastreie seu pedido</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>Meu endereço</a>
+                                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address"
+                                            role="tab" aria-controls="address" aria-selected="true"><i
+                                                class="fi-rs-marker mr-10"></i>Meu endereço</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Detalhes da conta</a>
+                                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab"
+                                            href="#account-detail" role="tab" aria-controls="account-detail"
+                                            aria-selected="true"><i class="fi-rs-user mr-10"></i>Detalhes da conta</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="page-login.html"><i class="fi-rs-sign-out mr-10"></i>Sair</a>
+                                        <a class="nav-link" href="page-login.html"><i
+                                                class="fi-rs-sign-out mr-10"></i>Sair</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-md-9">
                             <div class="tab-content account dashboard-content pl-50">
-                                <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                <div class="tab-pane fade active show" id="dashboard" role="tabpanel"
+                                    aria-labelledby="dashboard-tab">
                                     <div class="card">
                                         <div class="card-header">
                                             <h3 class="mb-0">Olá {{request.user|title}}!</h3>
                                         </div>
                                         <div class="card-body">
                                             <p>
-                                                Do seu painel de conta, você pode facilmente verificar e visualizar seus <a href="#">pedidos recentes</a>,<br />
-                                                gerenciar seus <a href="#">endereços de envio e cobrança</a> e <a href="#">editar sua senha e detalhes da conta.</a>
+                                                Do seu painel de conta, você pode facilmente verificar e visualizar seus
+                                                <a href="#">pedidos recentes</a>,<br />
+                                                gerenciar seus <a href="#">endereços de envio e cobrança</a> e <a
+                                                    href="#">editar sua senha e detalhes da conta.</a>
                                             </p>
                                         </div>
                                     </div>
@@ -81,12 +97,14 @@
                                                             <td>{{o.data_pedido}}</td>
                                                             <td>{{o.status_produto|title}}</td>
                                                             {% if o.status_pagamento == True%}
-                                                            <td ><i class="fas fa-check-circle text-success"></i></i></td>
+                                                            <td><i class="fas fa-check-circle text-success"></i></i>
+                                                            </td>
                                                             {% else %}
                                                             <td class="fas fa-times text-danger"></td>
                                                             {% endif %}
                                                             <td>R${{o.preco}}</td>
-                                                            <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">Ver</a></td>
+                                                            <td><a href="{% url 'core:order-detail' o.id %}"
+                                                                    class="btn-small d-block">Ver</a></td>
                                                         </tr>
                                                         {% endfor %}
                                                     </tbody>
@@ -95,25 +113,34 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
+                                <div class="tab-pane fade" id="track-orders" role="tabpanel"
+                                    aria-labelledby="track-orders-tab">
                                     <div class="card">
                                         <div class="card-header">
                                             <h3 class="mb-0">Rastreio de pedidos</h3>
                                         </div>
                                         <div class="card-body contact-from-area">
-                                            <p>Para rastrear seu pedido, insira seu ID de pedido na caixa abaixo e pressione o botão "Rastrear". Isso foi fornecido a você em seu recibo e no e-mail de confirmação que você deve ter recebido.</p>
+                                            <p>Para rastrear seu pedido, insira seu ID de pedido na caixa abaixo e
+                                                pressione o botão "Rastrear". Isso foi fornecido a você em seu recibo e
+                                                no e-mail de confirmação que você deve ter recebido.</p>
                                             <div class="row">
                                                 <div class="col-lg-8">
-                                                    <form class="contact-form-style mt-30 mb-50" action="#" method="post">
+                                                    <form class="contact-form-style mt-30 mb-50" action="#"
+                                                        method="post">
                                                         <div class="input-style mb-20">
                                                             <label>ID do pedido</label>
-                                                            <input name="order-id" placeholder="Encontrado no seu e-mail de confirmação de pedido" type="text" />
+                                                            <input name="order-id"
+                                                                placeholder="Encontrado no seu e-mail de confirmação de pedido"
+                                                                type="text" />
                                                         </div>
                                                         <div class="input-style mb-20">
                                                             <label>E-mail de cobrança</label>
-                                                            <input name="billing-email" placeholder="E-mail usado durante o checkout" type="email" />
+                                                            <input name="billing-email"
+                                                                placeholder="E-mail usado durante o checkout"
+                                                                type="email" />
                                                         </div>
-                                                        <button class="submit submit-auto-width" type="submit">Rastrear</button>
+                                                        <button class="submit submit-auto-width"
+                                                            type="submit">Rastrear</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -126,163 +153,191 @@
                                             <div class="card">
                                                 <div class="card-header">
                                                     <h5 class="mb-0">
-                                                        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddAddress" aria-expanded="false" aria-controls="collapseAddAddress">
+                                                        <button class="btn btn-link" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#collapseAddAddress" aria-expanded="false"
+                                                            aria-controls="collapseAddAddress">
                                                             Adicionar endereço
                                                         </button>
                                                     </h5>
                                                 </div>
-                                                    <div class="collapse" id="collapseAddAddress">
-                                                        <div class="card-body">
-                                                            <form method="POST">
-                                                                {% csrf_token %}
-                                                                <input type="hidden" name="num_addresses" value="1">
+                                                <div class="collapse" id="collapseAddAddress">
+                                                    <div class="card-body">
+                                                        <form method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="num_addresses" value="1">
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="logradouro_0">Logradouro</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="logradouro_0" id="logradouro_0"
+                                                                        placeholder="Logradouro" required>
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="numero_0">Número</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="numero_0" id="numero_0"
+                                                                        placeholder="Número">
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="complemento_0">Complemento</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="complemento_0" id="complemento_0"
+                                                                        placeholder="Complemento">
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="bairro_0">Bairro</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="bairro_0" id="bairro_0"
+                                                                        placeholder="Bairro" required>
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="localidade_0">Localidade</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="localidade_0" id="localidade_0"
+                                                                        placeholder="Localidade" required>
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="uf_0">UF</label>
+                                                                    <input type="text" class="form-control" name="uf_0"
+                                                                        id="uf_0" placeholder="UF" required>
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="cep_0">CEP</label>
+                                                                    <input type="text" class="form-control" name="cep_0"
+                                                                        id="cep_0" placeholder="CEP" required>
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="celular_0">Celular</label>
+                                                                    <input type="tel" class="form-control"
+                                                                        name="celular_0" id="celular_0"
+                                                                        placeholder="Celular">
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <button type="submit"
+                                                                        class="btn btn-fill-out submit font-weight-bold">Salvar
+                                                                        endereço</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            {% for address in addresses %}
+                                            <div class="col-lg-6">
+                                                <div class="card mb-3">
+                                                    <div class="card-header">
+                                                        <h4 class="mb-0">Endereço de Entrega {{forloop.counter}}</h4>
+                                                    </div>
+                                                    <div class="card-body border rounded">
+                                                        <address>
+                                                            <p><strong>Logradouro:</strong> {{ address.logradouro }},
+                                                                <strong>Número:</strong> {{ address.numero }}</p>
+                                                            <p><strong>Bairro:</strong> {{ address.bairro }},
+                                                                <strong>Localidade:</strong> {{ address.localidade }},
+                                                                <strong>UF:</strong> {{ address.uf }}</p>
+                                                            <p><strong>CEP:</strong> {{ address.cep }}</p>
+                                                            <p><strong>Celular:</strong> {{ address.celular }}</p>
+                                                        </address>
+                                                        <br>
+                                                        {% if address.status %}
+                                                        <i data-address-id="{{address.id}}" class="fa fa-check-circle text-success check{{address.id}}"></i>
+                                                        <button data-address-id="{{address.id}}" style="display: none;" class="btn make-default-address button{{address.id}} action_btn">Tornar Padrão</button>
+                                                        <button data-address-id="{{address.id}}" class="btn btn-danger delete-address action_btn">Deletar</button>
+                                                        {% else %}
+                                                        <i data-address-id="{{address.id}}" style="display: none;" class="fa fa-check-circle text-success check{{address.id}}" style="display:none;"></i>
+                                                        <button data-address-id="{{address.id}}" class="btn make-default-address button{{address.id}} action_btn">Tornar Padrão</button>
+                                                        <button data-address-id="{{address.id}}" class="btn btn-danger delete-address action_btn">Deletar</button>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link" type="button"
+                                                            id="addAddressButton">
+                                                            Adicionar endereço
+                                                        </button>
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form method="POST" id="addressForm">
+                                                        {% csrf_token %}
+                                                        <div id="addressFields">
+                                                            <div class="address-group" id="address-group-0">
                                                                 <div class="row">
                                                                     <div class="form-group col-md-6">
                                                                         <label for="logradouro_0">Logradouro</label>
-                                                                        <input type="text" class="form-control" name="logradouro_0" id="logradouro_0" placeholder="Logradouro" required>
+                                                                        <input type="text" id="logradouro_0"
+                                                                            name="logradouro_0" placeholder="Logradouro"
+                                                                            required>
                                                                     </div>
                                                                     <div class="form-group col-md-6">
                                                                         <label for="numero_0">Número</label>
-                                                                        <input type="text" class="form-control" name="numero_0" id="numero_0" placeholder="Número">
+                                                                        <input type="text" id="numero_0" name="numero_0"
+                                                                            placeholder="Número">
                                                                     </div>
                                                                     <div class="form-group col-md-6">
                                                                         <label for="complemento_0">Complemento</label>
-                                                                        <input type="text" class="form-control" name="complemento_0" id="complemento_0" placeholder="Complemento">
+                                                                        <input type="text" id="complemento_0"
+                                                                            name="complemento_0"
+                                                                            placeholder="Complemento">
                                                                     </div>
                                                                     <div class="form-group col-md-6">
                                                                         <label for="bairro_0">Bairro</label>
-                                                                        <input type="text" class="form-control" name="bairro_0" id="bairro_0" placeholder="Bairro" required>
+                                                                        <input type="text" id="bairro_0" name="bairro_0"
+                                                                            placeholder="Bairro" required>
                                                                     </div>
                                                                     <div class="form-group col-md-6">
                                                                         <label for="localidade_0">Localidade</label>
-                                                                        <input type="text" class="form-control" name="localidade_0" id="localidade_0" placeholder="Localidade" required>
+                                                                        <input type="text" id="localidade_0"
+                                                                            name="localidade_0" placeholder="Localidade"
+                                                                            required>
                                                                     </div>
                                                                     <div class="form-group col-md-6">
                                                                         <label for="uf_0">UF</label>
-                                                                        <input type="text" class="form-control" name="uf_0" id="uf_0" placeholder="UF" required>
+                                                                        <input type="text" id="uf_0" name="uf_0"
+                                                                            placeholder="UF" required>
                                                                     </div>
                                                                     <div class="form-group col-md-6">
                                                                         <label for="cep_0">CEP</label>
-                                                                        <input type="text" class="form-control" name="cep_0" id="cep_0" placeholder="CEP" required>
+                                                                        <input type="text" id="cep_0" name="cep_0"
+                                                                            placeholder="CEP" required>
                                                                     </div>
                                                                     <div class="form-group col-md-6">
                                                                         <label for="celular_0">Celular</label>
-                                                                        <input type="tel" class="form-control" name="celular_0" id="celular_0" placeholder="Celular">
-                                                                    </div>
-                                                                    <div class="col-md-12">
-                                                                        <button type="submit" class="btn btn-fill-out submit font-weight-bold">Salvar endereço</button>
+                                                                        <input type="tel" id="celular_0"
+                                                                            name="celular_0" placeholder="Celular">
                                                                     </div>
                                                                 </div>
-                                                            </form>
+</div>
                                                         </div>
-                                                    </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h3 class="mb-0">Endereço de cobrança</h3>
-                                                </div>
-                                                    {% if addresses %}
-                                                        {% for address in addresses %}
-                                                            <div class="card-body border rounded">
-                                                                <address>
-                                                                    <p><strong>Logradouro:</strong> {{ address.logradouro }}, <strong>Número:</strong> {{ address.numero }}</p>
-                                                                    <p><strong>Bairro:</strong> {{ address.bairro }}, <strong>Localidade:</strong> {{ address.localidade }}, <strong>UF:</strong> {{ address.uf }}</p>
-                                                                    <p><strong>CEP:</strong> {{ address.cep }}</p>
-                                                                    <p><strong>Celular:</strong> {{ address.celular }}</p>
-                                                                </address>
-                                                                <button class="btn set-default-address" data-address-id="{{ address.id }}">Tornar Padrão</button>
-                                                                <button class="btn btn-danger delete-address" data-address-id="{{ address.id }}">Deletar</button>
-                                                            </div>
-                                                        {% endfor %}
-                                                    {% else %}
-                                                        <p>Você não possui endereços cadastrados.</p>
-                                                    {% endif %}
-                                                </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h5 class="mb-0">Endereço de envio</h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <address>
-                                                        4299 Express Lane<br />
-                                                        Sarasota, <br />FL 34249 USA <br />Telefone: 1.941.227.4444
-                                                    </address>
-                                                    <p>Sarasota</p>
-                                                    <a href="#" class="btn-small">Editar</a>
+                                                        <input type="hidden" name="num_addresses" value="1"
+                                                            id="numAddresses">
+                                                        <button type="submit"
+                                                            class="btn btn-fill-out submit font-weight-bold">Salvar
+                                                            endereços</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                                                                      <div class="row">
-                                                                                        <div class="col-lg-12">
-                                                                                          <div class="card">
-                                                                                            <div class="card-header">
-                                                                                              <h5 class="mb-0">
-                                                                                                <button class="btn btn-link" type="button" id="addAddressButton">
-                                                                                                  Adicionar endereço
-                                                                                                </button>
-                                                                                              </h5>
-                                                                                            </div>
-                                                                                            <div class="card-body">
-                                                                                              <form method="POST" id="addressForm">
-                                                                                                {% csrf_token %}
-                                                                                                <div id="addressFields">
-                                                                                                  <div class="address-group" id="address-group-0">
-                                                                                                    <div class="row">
-                                                                                                      <div class="form-group col-md-6">
-                                                                                                        <label for="logradouro_0">Logradouro</label>
-                                                                                                        <input type="text" id="logradouro_0" name="logradouro_0" placeholder="Logradouro" required>
-                                                                                                      </div>
-                                                                                                      <div class="form-group col-md-6">
-                                                                                                        <label for="numero_0">Número</label>
-                                                                                                        <input type="text" id="numero_0" name="numero_0" placeholder="Número">
-                                                                                                      </div>
-                                                                                                      <div class="form-group col-md-6">
-                                                                                                        <label for="complemento_0">Complemento</label>
-                                                                                                        <input type="text" id="complemento_0" name="complemento_0" placeholder="Complemento">
-                                                                                                      </div>
-                                                                                                      <div class="form-group col-md-6">
-                                                                                                        <label for="bairro_0">Bairro</label>
-                                                                                                        <input type="text" id="bairro_0" name="bairro_0" placeholder="Bairro" required>
-                                                                                                      </div>
-                                                                                                      <div class="form-group col-md-6">
-                                                                                                        <label for="localidade_0">Localidade</label>
-                                                                                                        <input type="text" id="localidade_0" name="localidade_0" placeholder="Localidade" required>
-                                                                                                      </div>
-                                                                                                      <div class="form-group col-md-6">
-                                                                                                        <label for="uf_0">UF</label>
-                                                                                                        <input type="text" id="uf_0" name="uf_0" placeholder="UF" required>
-                                                                                                      </div>
-                                                                                                      <div class="form-group col-md-6">
-                                                                                                        <label for="cep_0">CEP</label>
-                                                                                                        <input type="text" id="cep_0" name="cep_0" placeholder="CEP" required>
-                                                                                                      </div>
-                                                                                                      <div class="form-group col-md-6">
-                                                                                                        <label for="celular_0">Celular</label>
-                                                                                                        <input type="tel" id="celular_0" name="celular_0" placeholder="Celular">
-                                                                                                      </div>
-                                                                                                    </div>
-                                                                                                  </div>
-                                                                                                </div>
-                                                                                                <input type="hidden" name="num_addresses" value="1" id="numAddresses">
-                                                                                                <button type="submit" class="btn btn-fill-out submit font-weight-bold">Salvar endereços</button>
-                                                                                              </form>
-                                                                                            </div>
-                                                                                          </div>
-                                                                                        </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </main>
 
 {% endblock content %}

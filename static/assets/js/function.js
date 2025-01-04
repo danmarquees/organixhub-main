@@ -327,3 +327,162 @@ $(document).ready(function () {
     return cookieValue;
   }
 });
+
+$(document).on("click", ".make-default-address", function () {
+  const id = $(this).data("address-id");
+  if (id) {
+    console.log("The ID is:", id);
+    console.log("The element is:", this);
+
+    // Update visual selection *before* AJAX request
+    $(".address-item").removeClass("default-address");
+    $(`.address-item[data-address-id="${id}"]`).addClass("default-address");
+    $(".current-default").text("");
+    $(`.address-item[data-address-id="${id}"] .current-default`).text(
+      "Default Address",
+    );
+    $(`.check${id}`).show();
+    $(`.button${id}`).hide();
+
+    $.ajax({
+      url: "/make-address-default/",
+      type: "POST",
+      data: { id: id },
+      dataType: "json",
+      beforeSend: (xhr) => {
+        const csrftoken = getCookie("csrftoken");
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      },
+      success: (response) => {
+        console.log("Address set as default:", response);
+        if (!response.success) {
+          // Handle unsuccessful response: Show an error message.
+          alert(
+            response.error ||
+              "Failed to set address as default. Please try again.",
+          );
+        }
+      },
+      error: (error) => {
+        let errorMessage =
+          "Failed to set address as default. Please try again.";
+        if (error.responseJSON?.error) {
+          errorMessage = error.responseJSON.error;
+        } else if (error.status === 404) {
+          errorMessage = "Address not found";
+        } else if (error.status === 400) {
+          errorMessage = "Invalid 'id' parameter or missing 'id' parameter";
+        } else if (error.status === 405) {
+          errorMessage = "Invalid request method";
+        }
+        console.error("Error setting default address:", error);
+        // Handle AJAX errors: Show an error message.
+        alert(errorMessage);
+      },
+    });
+  } else {
+    console.error("Data attribute 'data-address-id' is missing!");
+  }
+});
+
+$(document).on("click", ".delete-address", function () {
+  const id = $(this).data("address-id");
+  if (id) {
+    if (confirm("Tem certeza que deseja deletar este endereço?")) {
+      $.ajax({
+        url: "/delete-address/",
+        type: "POST",
+        data: { id: id },
+        dataType: "json",
+        beforeSend: (xhr) => {
+          const csrftoken = getCookie("csrftoken");
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: (response) => {
+          if (response.success) {
+            $(`.address-item[data-address-id="${id}"]`).fadeOut(
+              300,
+              function () {
+                $(this).remove();
+              },
+            );
+            alert("Endereço deletado com sucesso!");
+          } else {
+            alert(
+              response.error || "Erro ao deletar endereço. Tente novamente.",
+            );
+          }
+        },
+        error: (error) => {
+          console.error("Error deleting address:", error);
+          alert(
+            "Erro ao deletar endereço. Verifique sua conexão com a internet.",
+          );
+        },
+      });
+    }
+  } else {
+    console.error("Data attribute 'data-address-id' is missing!");
+  }
+});
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === `${name}=`) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+$(document).ready(() => {
+  $("#cep_0").on("blur", () => {
+    const postalCode = $("#cep_0").val().replace("-", "").trim();
+    const isValidPostalCode =
+      postalCode.length === 8 && /^\d+$/.test(postalCode);
+
+    if (!isValidPostalCode) {
+      alert("CEP inválido! Deve conter 8 dígitos.");
+      $("#cep_0").val("");
+      return;
+    }
+
+    $("#cep_0").addClass("loading"); // Add a loading class for visual feedback (requires CSS styling)
+    $.ajax({
+      url: "/buscar-endereco/",
+      data: { cep: postalCode },
+      dataType: "json",
+      success: (response) => {
+        $("#cep_0").removeClass("loading"); // Remove loading class
+        if (response.erro) {
+          alert(`Erro ao buscar endereço: ${response.erro}`);
+          return;
+        }
+        $("#logradouro_0").val(response.logradouro);
+        $("#bairro_0").val(response.bairro);
+        $("#localidade_0").val(response.localidade);
+        $("#uf_0").val(response.uf);
+        $("#complemento_0").val(response.complemento);
+      },
+      error: (error) => {
+        $("#cep_0").removeClass("loading"); // Remove loading class
+        console.error("Erro ao buscar endereço:", error);
+        let errorMessage =
+          "Erro ao buscar endereço. Por favor, tente novamente mais tarde.";
+        if (error.status === 404) {
+          errorMessage = "CEP não encontrado.";
+        } else if (error.status === 500) {
+          errorMessage =
+            "Erro no servidor. Por favor, tente novamente mais tarde.";
+        }
+        alert(errorMessage);
+      },
+    });
+  });
+});
