@@ -1,7 +1,6 @@
 from django.urls import path, include
 from django import views
-from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail, make_address_default, delete_address,  buscar_endereco
-
+from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail, make_address_default, delete_address,  buscar_endereco, product_quickview,  add_to_wishlist, wishlist, delete_item_from_wishlist
 
 app_name = "core"
 
@@ -32,5 +31,9 @@ urlpatterns = [
     path("dashboard/pedido/<int:id>", order_detail, name="order-detail"),
     path("make-address-default/", make_address_default, name="make-default-address"),
     path("delete-address/", delete_address, name="delete-address"),
-    path('buscar-endereco/', buscar_endereco, name='buscar_endereco')
+    path('buscar-endereco/', buscar_endereco, name='buscar_endereco'),
+    path('quickview/<int:pid>/', product_quickview, name='product_quickview'),
+    path("add-to-wishlist/", add_to_wishlist, name="add-to-wishlist"),
+    path("wishlist/", wishlist, name="wishlist"),
+    path('delete-item-from-wishlist/', delete_item_from_wishlist, name='delete-item-from-wishlist'),
     ]

@@ -153,11 +153,8 @@ def detalhes_produto(request, pid):
     # Busca as avaliações do produto, ordenadas pela data
     reviews = AvaliacaoProduto.objects.filter(produto=produto).order_by("-data")
     avaliacoes = AvaliacaoProduto.objects.filter(produto=produto)
-
+    endereco = Endereco.objects.get(user=request.user, status=True)
     categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
-
-
-
     # Calcula a média das avaliações
     media_aval = AvaliacaoProduto.objects.filter(produto=produto).aggregate(average_classification=Avg('classificacao'))
 
@@ -170,6 +167,7 @@ def detalhes_produto(request, pid):
     context = {
         "p": produto,
         "review_form": review_form,
+        "endereco": endereco,
         "p_imagem": p_imagem,
         "media_aval": media_aval,
         "reviews": reviews,
@@ -820,3 +818,78 @@ def buscar_endereco(request):
         return JsonResponse(endereco)
     except Exception as e:
         return JsonResponse({'erro': str(e)}, status=500)
+
+
+def product_quickview(request, pid):
+    if request.method == 'GET':
+        produto = get_object_or_404(Produto, pid=pid)  # Fetch the product
+        # Prepare data for JSON response.  Include only necessary fields for efficiency.
+        context = {
+            'pid': produto.pid,
+            'titulo': produto.titulo,
+            'preco': str(produto.preco),
+            'preco_antigo': str(produto.preco_antigo),
+            'descricao': produto.descricao,
+            'imagem': produto.imagem.url,
+            'vendedor': produto.vendedor.titulo if produto.vendedor else None,
+            'categoria': produto.categoria.titulo if produto.categoria else None,
+
+        }
+        return JsonResponse(context)  # Return JSON data
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@login_required
+def wishlist(request):
+    wishlist = Wishlist.objects.all()
+    context = {
+        "w": wishlist
+    }
+    return render(request, 'core/wishlist.html', context)
+
+
+
+def add_to_wishlist(request):
+    if request.method == 'GET':
+        try:
+            product_id = request.GET['id']
+            product = get_object_or_404(Produto, pk=product_id)
+            user = request.user
+
+            wishlist_count = Wishlist.objects.filter(produto=product, user=user).count()
+            if wishlist_count > 0:
+                return JsonResponse({"bool": False, "message": "Produto já adicionado à lista de desejos."})
+            else:
+                media_aval = AvaliacaoProduto.objects.filter(produto=product).aggregate(average_classification=Avg('classificacao'))
+                average_rating = media_aval['average_classification'] if media_aval['average_classification'] is not None else 0
+                Wishlist.objects.create(produto=product, user=user, average_rating=average_rating)
+                return JsonResponse({"bool": True, "message": "Produto adicionado à lista de desejos com sucesso!", "average_rating": average_rating})
+        except KeyError:
+            return JsonResponse({"bool": False, "message": "Parâmetro 'id' ausente."}, status=400)
+        except Exception as e:
+            return JsonResponse({"bool": False, "message": f"Erro ao adicionar à lista de desejos: {e}"}, status=500)
+    else:
+        return JsonResponse({"bool": False, "message": "Método de requisição inválido."}, status=405)
+
+
+
+
+logger = logging.getLogger(__name__)
+
+@login_required
+def delete_item_from_wishlist(request):
+    if request.method == 'POST':
+        try:
+            wishlist_id = int(request.POST.get('id'))  # Ensure it's an integer
+            wishlist_item = get_object_or_404(Wishlist, pk=wishlist_id, user=request.user)
+            wishlist_item.delete()
+            return JsonResponse({'success': True, 'message': 'Item removido com sucesso!'}) #More informative success message
+        except (KeyError, ValueError):
+            return JsonResponse({'success': False, 'error': 'Dados de solicitação inválidos'}) #Clearer error message
+        except ObjectDoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Item da Wishlist não encontrado'}) #Clearer error message
+        except Exception as e:
+            logger.exception(f"Erro ao excluir item da Wishlist: {e}")
+            return JsonResponse({'success': False, 'error': 'Ocorreu um erro inesperado'}) #General error message
+    else:
+        return JsonResponse({'success': False, 'error': 'Método de solicitação inválido'}, status=405)

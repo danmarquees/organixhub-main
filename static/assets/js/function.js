@@ -338,7 +338,7 @@ $(document).on("click", ".make-default-address", function () {
     $(".address-item").removeClass("default-address");
     $(`.address-item[data-address-id="${id}"]`).addClass("default-address");
     $(".current-default").text("");
-    $(`.address-item[data-address-id="${id}"] .current-default`).text(
+    $(`.address-item[data-address-id="${id}"i] .current-default`).text(
       "Default Address",
     );
     $(`.check${id}`).show();
@@ -482,6 +482,130 @@ $(document).ready(() => {
             "Erro no servidor. Por favor, tente novamente mais tarde.";
         }
         alert(errorMessage);
+      },
+    });
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const quickviewButtons = document.querySelectorAll(".quickview-button");
+
+  quickviewButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const pid = button.dataset.pid;
+
+      fetch(`/quickview/${pid}/`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              `HTTP error! status: ${response.status} - ${response.statusText}`,
+            );
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Construindo o HTML dinamicamente - adaptado para o seu layout
+          const productHTML = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="${data.imagem}" alt="${data.titulo}" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-6">
+                                <h3>${data.titulo}</h3>
+                                <p>Preço: R$ ${data.preco}</p>
+                                <p>Preço Antigo: R$ ${data.preco_antigo}</p>
+                                <p>Vendedor: ${data.vendedor}</p>
+                                <p>Categoria: ${data.categoria}</p>
+                                <p>${data.descricao}</p>
+                                <button type="button" class="btn btn-primary">Adicionar ao Carrinho</button>
+                            </div>
+                        </div>
+                    `;
+          const modalBody = $("#quickViewModal .modal-body");
+          modalBody.html(productHTML);
+          $("#quickViewModal").modal("show");
+        })
+        .catch((error) => {
+          console.error("Error fetching product details:", error);
+          const modalBody = $("#quickViewModal .modal-body");
+          modalBody.html(
+            `<p class="text-danger">Erro ao carregar a visualização rápida: ${error.message}</p>`,
+          );
+          $("#quickViewModal").modal("show");
+        });
+    });
+  });
+});
+
+$(document).on("click", ".add-to-wishlist", function () {
+  let product_id = $(this).attr("data-product-item");
+  let this_val = $(this);
+
+  console.log("O ID é:", product_id);
+  console.log("O Elemento é:", this_val);
+
+  // Input validation: Check if product_id is a valid number
+  if (!/^\d+$/.test(product_id)) {
+    console.error("Invalid product ID:", product_id);
+    alert("Invalid product ID. Please try again.");
+    return; // Stop further execution
+  }
+
+  $.ajax({
+    url: "add-to-wishlist/",
+    data: { id: parseInt(product_id, 10) }, // Parse product_id as integer
+    method: "GET",
+    success: function (response) {
+      if (response.bool) {
+        console.log("Produto adicionado à lista de desejos:", response.message);
+        this_val.html("✔");
+      } else {
+        console.error(
+          "Erro ao adicionar produto à lista de desejos:",
+          response.message,
+        );
+        alert(response.message);
+      }
+    },
+    error: function (error) {
+      console.error("Erro ao adicionar produto à lista de desejos:", error);
+      // Provide a more user-friendly error message
+      alert(
+        "Erro ao adicionar produto à lista de desejos. Tente novamente mais tarde.",
+      );
+    },
+  });
+});
+
+$(document).ready(() => {
+  $("#wishlist-list").on("click", ".delete-product", function (event) {
+    event.preventDefault();
+    const wishlist_id = $(this).data("wishlist-item");
+    const $thisRow = $(this).closest("tr");
+
+    $.ajax({
+      url: "delete-item-from-wishlist/",
+      method: "POST",
+      data: { id: wishlist_id },
+      dataType: "json",
+      beforeSend: (xhr) => {
+        const csrftoken = getCookie("csrftoken");
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      },
+      success: (response) => {
+        if (response.success) {
+          $thisRow.remove();
+          alert("Item removido da lista de desejos!");
+        } else {
+          alert(response.error || "Erro ao remover item. Tente novamente.");
+          $thisRow.fadeIn();
+        }
+      },
+      error: (error) => {
+        console.error("Error deleting item:", error);
+        alert("Erro ao remover item. Tente novamente. Detalhes no console.");
+        $thisRow.fadeIn();
       },
     });
   });

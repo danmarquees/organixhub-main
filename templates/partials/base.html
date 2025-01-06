@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html class="o-js" lang="pt-BR">
+
 <head>
     <meta charset="utf-8" />
     <title>Organyxhub Marketplace - As Melhores Ofertas</title>
@@ -18,80 +19,84 @@
     <link rel="stylesheet" href="{% static 'assets/css/plugins/animate.min.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 
 <body>
     <!-- Quick view -->
+    {% for p in produto %}
     <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
                             <div class="detail-gallery">
                                 <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                <!-- SLIDES PRINCIPAIS -->
+                                <!-- MAIN SLIDES -->
                                 <div class="product-image-slider">
                                     <figure class="border-radius-10">
-                                        <img src="{% static 'assets/imgs/shop/product-16-2.jpg' %}" alt="imagem do produto" />
+                                        <img src="assets/imgs/shop/product-16-2.jpg" alt="product image" />
                                     </figure>
                                     <figure class="border-radius-10">
-                                        <img src="{% static 'assets/imgs/shop/product-16-1.jpg' %}" alt="imagem do produto" />
+                                        <img src="assets/imgs/shop/product-16-1.jpg" alt="product image" />
                                     </figure>
                                     <figure class="border-radius-10">
-                                        <img src="{% static 'assets/imgs/shop/product-16-3.jpg' %}" alt="imagem do produto" />
+                                        <img src="assets/imgs/shop/product-16-3.jpg" alt="product image" />
                                     </figure>
                                     <figure class="border-radius-10">
-                                        <img src="{% static 'assets/imgs/shop/product-16-4.jpg' %}" alt="imagem do produto" />
+                                        <img src="assets/imgs/shop/product-16-4.jpg" alt="product image" />
                                     </figure>
                                     <figure class="border-radius-10">
-                                        <img src="{% static 'assets/imgs/shop/product-16-5.jpg' %}" alt="imagem do produto" />
+                                        <img src="assets/imgs/shop/product-16-5.jpg" alt="product image" />
                                     </figure>
                                     <figure class="border-radius-10">
-                                        <img src="{% static 'assets/imgs/shop/product-16-6.jpg' %}" alt="imagem do produto" />
+                                        <img src="assets/imgs/shop/product-16-6.jpg" alt="product image" />
                                     </figure>
                                     <figure class="border-radius-10">
-                                        <img src="{% static 'assets/imgs/shop/product-16-7.jpg' %}" alt="imagem do produto" />
+                                        <img src="assets/imgs/shop/product-16-7.jpg" alt="product image" />
                                     </figure>
                                 </div>
                                 <!-- THUMBNAILS -->
                                 <div class="slider-nav-thumbnails">
-                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" alt="imagem do produto" /></div>
-                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" alt="imagem do produto" /></div>
-                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-5.jpg' %}" alt="imagem do produto" /></div>
-                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-6.jpg' %}" alt="imagem do produto" /></div>
-                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-7.jpg' %}" alt="imagem do produto" /></div>
-                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-8.jpg' %}" alt="imagem do produto" /></div>
-                                    <div><img src="{% static 'assets/imgs/shop/thumbnail-9.jpg' %}" alt="imagem do produto" /></div>
+                                    <div><img src="assets/imgs/shop/thumbnail-3.jpg" alt="product image" /></div>
+                                    <div><img src="assets/imgs/shop/thumbnail-4.jpg" alt="product image" /></div>
+                                    <div><img src="assets/imgs/shop/thumbnail-5.jpg" alt="product image" /></div>
+                                    <div><img src="assets/imgs/shop/thumbnail-6.jpg" alt="product image" /></div>
+                                    <div><img src="assets/imgs/shop/thumbnail-7.jpg" alt="product image" /></div>
+                                    <div><img src="assets/imgs/shop/thumbnail-8.jpg" alt="product image" /></div>
+                                    <div><img src="assets/imgs/shop/thumbnail-9.jpg" alt="product image" /></div>
                                 </div>
                             </div>
                             <!-- End Gallery -->
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="detail-info pr-30 pl-30">
-                                {% for p in produtos %}
-                                <span class="stock-status out-stock"> Promoção </span>
-                                    <h3 class="title-detail"><a href="{% url 'core:product-detail' p.pid %}" class="text-heading">{{ p.titulo}}</a></h3>
+                                <span class="stock-status out-stock"> Sale Off </span>
+                                <h3 class="title-detail"><a href="shop-product-right.html" class="text-heading">Seeds of Change Organic Quinoa, Brown</a></h3>
                                 <div class="product-detail-rating">
                                     <div class="product-rate-cover text-end">
                                         <div class="product-rate d-inline-block">
                                             <div class="product-rating" style="width: 90%"></div>
                                         </div>
-                                        <span class="font-small ml-5 text-muted">({{p.media_avaliacao}})</span>
+                                        <span class="font-small ml-5 text-muted"> (32 reviews)</span>
                                     </div>
                                 </div>
                                 <div class="clearfix product-price-cover">
                                     <div class="product-price primary-color float-left">
-                                        <span class="current-price text-brand">R${{p.preco}}</span>
+                                        <span class="current-price text-brand">$38</span>
                                         <span>
                                             <span class="save-price font-md color3 ml-15">26% Off</span>
-                                            <span class="old-price font-md ml-15">R${{p.preco_antigo}}</span>
+                                            <span class="old-price font-md ml-15">$52</span>
                                         </span>
                                     </div>
                                 </div>
@@ -102,16 +107,15 @@
                                         <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                     </div>
                                     <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart"><i class="fi-rs-shopping-cart"></i>Adicionar ao carrinho</button>
+                                        <button type="submit" class="button button-add-to-cart"><i class="fi-rs-shopping-cart"></i>Add to cart</button>
                                     </div>
                                 </div>
                                 <div class="font-xs">
                                     <ul>
-                                        <li class="mb-5">Vendedor: <span class="text-brand">{{p.vendedor.titulo}}</span></li>
-                                        <li class="mb-5">Fabricação:<span class="text-brand"> 4 Jun 2022</span></li>
+                                        <li class="mb-5">Vendor: <span class="text-brand">Nest</span></li>
+                                        <li class="mb-5">MFG:<span class="text-brand"> Jun 4.2022</span></li>
                                     </ul>
                                 </div>
-                                {% endfor %}
                             </div>
                             <!-- Detail Info -->
                         </div>
@@ -120,9 +124,11 @@
             </div>
         </div>
     </div>
+    {% endfor %}
     <header class="header-area header-style-1 header-height-2">
         <div class="mobile-promotion">
-            <span>Grande inauguração, <strong>até 15%</strong> de desconto em todos os itens. Apenas <strong>3 dias</strong> restantes</span>
+            <span>Grande inauguração, <strong>até 15%</strong> de desconto em todos os itens. Apenas <strong>3
+                    dias</strong> restantes</span>
         </div>
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
             <div class="container">
@@ -132,7 +138,7 @@
                             <ul>
                                 <li><a href="page-about.htlm">Sobre Nós</a></li>
                                 <li><a href="page-account.html">Conta</a></li>
-                                <li><a href="shop-wishlist.html">Wishlist</a></li>
+                                <li><a href="{% url 'core:wishlist' %}">Wishlist</a></li>
                                 <li><a href="shop-order.html">Rastreamento de Pedido</a></li>
                             </ul>
                         </div>
@@ -153,32 +159,26 @@
                             <ul>
                                 <li>Precisa de ajuda? Ligue: <strong class="text-brand">08007775000</strong></li>
                                 <li>
-                                    <a class="language-dropdown-active" href="#">Português <i class="fi-rs-angle-small-down"></i></a>
+                                    <a class="language-dropdown-active" href="#">Português <i
+                                            class="fi-rs-angle-small-down"></i></a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-fr.png' %}" alt="" />Français</a>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-fr.png' %}"
+                                                    alt="" />Français</a>
                                         </li>
                                         <li>
-                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-dt.png' %}" alt="" />Deutsch</a>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-dt.png' %}"
+                                                    alt="" />Deutsch</a>
                                         </li>
                                         <li>
-                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-ru.png' %}" alt="" />Pусский</a>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-ru.png' %}"
+                                                    alt="" />Pусский</a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li>
-                                    <a class="language-dropdown-active" href="#">BRL <i class="fi-rs-angle-small-down"></i></a>
-                                    <ul class="language-dropdown">
-                                        <li>
-                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-fr.png' %}" alt="" />INR</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-dt.png' %}" alt="" />MBP</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-ru.png' %}" alt="" />EU</a>
-                                        </li>
-                                    </ul>
+                                    <a class="language-dropdown-active" href="#">BRL <i
+                                            class="fi-rs-angle-small-down"></i></a>
                                 </li>
                             </ul>
                         </div>
@@ -190,7 +190,8 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="{% url 'core:index' %}"><img src="{% static 'assets/imgs/theme/logo.png' %}" alt="logo" /></a>
+                        <a href="{% url 'core:index' %}"><img src="{% static 'assets/imgs/theme/logo.png' %}"
+                                alt="logo" /></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -209,8 +210,8 @@
                                     <option>Sorvete</option>
                                 </select>
                                 <div>
-                                      <input type="text" placeholder="Buscar itens..." name="q"/>
-                                      <button type="submit"><i class="fas fa-search"></i></button>
+                                    <input type="text" placeholder="Buscar itens..." name="q" />
+                                    <button type="submit"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
                         </div>
@@ -238,28 +239,50 @@
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a href="shop-compare.html">
-                                        <img class="svgInject" alt="Organyx" src="{% static 'assets/imgs/theme/icons/icon-compare.svg' %}" />
+                                        <img class="svgInject" alt="Organyx"
+                                            src="{% static 'assets/imgs/theme/icons/icon-compare.svg' %}" />
                                         <span class="pro-count blue cart-items-count"></span>
                                     </a>
                                     <a href="shop-compare.html"><span class="lable ml-0">Comparar</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
-                                        <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
+                                    <a href="{% url 'core:wishlist' %}">
+                                        <img class="svgInject" alt="Nest"
+                                            src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
                                         <span class="pro-count blue cart-items-count"></span>
                                     </a>
-                                    <a href="shop-wishlist.html"><span class="lable">Wishlist</span></a>
+                                    <a href="{% url 'core:wishlist' %}"><span class="lable">Wishlist</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="{% url 'core:cart' %}">
                                         <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
                                         <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                     </a>
-                                    <a href="shop-cart.html"><span class="lable">Carrinho</span></a>
+                                    <a href="{% url 'core:cart' %}"><span class="lable">Carrinho</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2">
-
+                                        <ul>
+                                            {% for product_id, item in request.session.cart_data_obj.items %}
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="{% url 'core:product-detail' item.pid %}"><img
+                                                            alt="{{ item.title }}" src="{{ item.image }}"
+                                                            style="aspect-ratio: 1/1;" /></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="{% url 'core:product-detail' item.pid %}">{{ item.title }}</a></h4>
+                                                    <h3><span>{{ item.qty }} × </span>R${{ item.price }}</h3>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#" data-product="{{ product_id }}"
+                                                        class="delete-product"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
                                         <div class="shopping-cart-footer">
-
+                                            <div class="shopping-cart-total">
+                                                <h4>Total <span>R${{ request.session.cart_data_obj.total_amount }}</span></h4>
+                                            </div>
                                             <div class="shopping-cart-button">
                                                 <a href="{% url 'core:cart' %}" class="outline">Carrinho</a>
                                                 <a href="{% url 'core:checkout' %}">Finalizar</a>
@@ -269,31 +292,39 @@
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a href="page-account.html">
-                                        <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-user.svg' %}" />
+                                        <img class="svgInject" alt="Nest"
+                                            src="{% static 'assets/imgs/theme/icons/icon-user.svg' %}" />
                                     </a>
                                     <a href="page-account.html"><span class="lable ml-0">Conta</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                         <ul>
                                             <li>
-                                                <a href="{% url 'core:dashboard' %}"><i class="fi fi-rs-user mr-10"></i>Minha Conta</a>
+                                                <a href="{% url 'core:dashboard' %}"><i
+                                                        class="fi fi-rs-user mr-10"></i>Minha Conta</a>
                                             </li>
                                             <li>
-                                                <a href="page-account.html"><i class="fi fi-rs-location-alt mr-10"></i>Rastrear Pedido</a>
+                                                <a href="page-account.html"><i
+                                                        class="fi fi-rs-location-alt mr-10"></i>Rastrear Pedido</a>
                                             </li>
                                             <li>
-                                                <a href="page-account.html"><i class="fi fi-rs-label mr-10"></i>Meus Cupons</a>
+                                                <a href="page-account.html"><i class="fi fi-rs-label mr-10"></i>Meus
+                                                    Cupons</a>
                                             </li>
                                             <li>
-                                                <a href="shop-wishlist.html"><i class="fi fi-rs-heart mr-10"></i>Lista de Desejos</a>
+                                                <a href="shop-wishlist.html"><i class="fi fi-rs-heart mr-10"></i>Lista
+                                                    de Desejos</a>
                                             </li>
                                             <li>
-                                                <a href="page-account.html"><i class="fi fi-rs-settings-sliders mr-10"></i>Configurações</a>
+                                                <a href="page-account.html"><i
+                                                        class="fi fi-rs-settings-sliders mr-10"></i>Configurações</a>
                                             </li>
                                             {% if request.user.is_authenticated %}
-                                            <li><a href="{% url 'userauths:sign-out' %}"><i class="fi fi-rs-sign-out mr-10"></i>Sair</a></li>
+                                            <li><a href="{% url 'userauths:sign-out' %}"><i
+                                                        class="fi fi-rs-sign-out mr-10"></i>Sair</a></li>
                                             {% else %}
                                             <li>
-                                                <a href="{% url 'userauths:sign-in' %}"><i class="fi fi-rs-sign-in mr-10"></i>Entrar</a>
+                                                <a href="{% url 'userauths:sign-in' %}"><i
+                                                        class="fi fi-rs-sign-in mr-10"></i>Entrar</a>
                                             </li>
                                             {% endif %}
                                         </ul>
@@ -323,79 +354,82 @@
 
                                         {% for c in categorias %}
                                         <li>
-                                            <a href="{% url 'core:category-product-list' c.cid %}">  <img src="{% static '{{ c.imagem.url }}' %}" alt="" />{{ c.titulo }}</a>
+                                            <a href="{% url 'core:category-product-list' c.cid %}"> <img
+                                                    src="{% static '{{ c.imagem.url }}' %}" alt="" />{{ c.titulo }}</a>
                                         </li>
-                                            {% endfor%}
+                                        {% endfor%}
 
 
-                                    <ul class="end">
+                                        <ul class="end">
 
-                                    </ul>
+                                        </ul>
                                 </div>
                                 <div class="more_slide_open" style="display: none">
                                     <div class="d-flex categori-dropdown-inner">
                                         <ul>
                                             <li>
-                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/icon-1.svg' %}" alt="" />Leites e Laticínios</a>
+                                                <a href="shop-grid-right.html"> <img
+                                                        src="{% static 'assets/imgs/theme/icons/icon-1.svg' %}"
+                                                        alt="" />Leites e Laticínios</a>
                                             </li>
                                             <li>
-                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/icon-2.svg' %}" alt="" />Roupas & Beleza</a>
+                                                <a href="shop-grid-right.html"> <img
+                                                        src="{% static 'assets/imgs/theme/icons/icon-2.svg' %}"
+                                                        alt="" />Roupas & Beleza</a>
                                             </li>
                                         </ul>
                                         <ul class="end">
                                             <li>
-                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/icon-3.svg' %}" alt="" />Vinhos & Bebidas</a>
+                                                <a href="shop-grid-right.html"> <img
+                                                        src="{% static 'assets/imgs/theme/icons/icon-3.svg' %}"
+                                                        alt="" />Vinhos & Bebidas</a>
                                             </li>
                                             <li>
-                                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/icon-4.svg' %}" alt="" />Frutos do Mar Frescos</a>
+                                                <a href="shop-grid-right.html"> <img
+                                                        src="{% static 'assets/imgs/theme/icons/icon-4.svg' %}"
+                                                        alt="" />Frutos do Mar Frescos</a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="more_categories"><span class="icon"></span> <span class="heading-sm-1">Mostrar mais...</span></div>
+                                <div class="more_categories"><span class="icon"></span> <span
+                                        class="heading-sm-1">Mostrar mais...</span></div>
                             </div>
                         </div>
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                             <nav>
                                 <ul>
-                                    <li class="hot-deals"><img src="{% static 'assets/imgs/theme/icons/icon-hot.svg' %}" alt="ofertas" /><a href="shop-grid-right.html">Ofertas</a></li>
+                                    <li class="hot-deals"><img src="{% static 'assets/imgs/theme/icons/icon-hot.svg' %}"
+                                            alt="ofertas" /><a href="{% url 'core:product-list' %}">Ofertas</a></li>
                                     <li>
-                                        <a class="active" href="index.html">Início <i class="fi-rs-angle-down"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="index.html">Início 1</a></li>
-                                            <li><a href="index-2.html">Início 2</a></li>
-                                            <li><a href="index-3.html">Início 3</a></li>
-                                            <li><a href="index-4.html">Início 4</a></li>
-                                            <li><a href="index-5.html">Início 5</a></li>
-                                            <li><a href="index-6.html">Início 6</a></li>
-                                        </ul>
+                                        <a class="active" href="{% url 'core:index' %}">Início <i class="#"></i></a>
                                     </li>
-
-
                                     <li>
                                         <a href="shop-grid-right.html">Categorias<i class="fi-rs-angle-down"></i></a>
-                                            <ul class="sub-menu">
-                                                {% for c in categorias %}
-                                                <li><a href="{% url 'core:category-product-list' c.cid %}">{{ c.titulo }}</a></li>
-                                                {% endfor %}
-                                                <hr>
-                                                <li><a href="{% url 'core:category-list' %}">Todas as Categorias</a></li>
-                                            </ul>
+                                        <ul class="sub-menu">
+                                            {% for c in categorias %}
+                                            <li><a href="{% url 'core:category-product-list' c.cid %}">{{ c.titulo
+                                                    }}</a></li>
+                                            {% endfor %}
+                                            <hr>
+                                            <li><a href="{% url 'core:category-list' %}">Todas as Categorias</a></li>
+                                        </ul>
                                     </li>
 
                                     <li>
                                         <a href="{% url 'core:product-list' %}">Loja</a>
                                     </li>
-                                        <li>
-                                         <a href="#">Vendedores <i class="fi-rs-angle-down"></i></a>
-                                            <ul class="sub-menu">
-                                                {% for vendedor in vendedores %}
-                                                <li><a href="{% url 'core:vendor-detail' vendedor.vid %}">{{ vendedor.titulo }}</a></li>
-                                                {% endfor %}
-                                                <hr>
-                                                <li><a href="{% url 'core:vendor-list' %}">Lista de Vendedores</a></li>
+                                    <li>
+                                        <a href="#">Vendedores <i class="fi-rs-angle-down"></i></a>
+                                        <ul class="sub-menu">
+                                            {% for vendedor in vendedores %}
+                                            <li><a href="{% url 'core:vendor-detail' vendedor.vid %}">{{ vendedor.titulo
+                                                    }}</a></li>
+                                            {% endfor %}
+                                            <hr>
+                                            <li><a href="{% url 'core:vendor-list' %}">Lista de Vendedores</a></li>
 
-                                            </ul>
+                                        </ul>
                                     </li>
                                     <li class="position-static">
                                         <a href="#">Mega menu <i class="fi-rs-angle-down"></i></a>
@@ -407,14 +441,16 @@
                                                     <li><a href="shop-product-right.html">Legumes Frescos</a></li>
                                                     <li><a href="shop-product-right.html">Ervas & Temperos</a></li>
                                                     <li><a href="shop-product-right.html">Cortes & Brotos</a></li>
-                                                    <li><a href="shop-product-right.html">Frutas & Legumes Exóticos</a></li>
+                                                    <li><a href="shop-product-right.html">Frutas & Legumes Exóticos</a>
+                                                    </li>
                                                     <li><a href="shop-product-right.html">Produtos Embalados</a></li>
                                                 </ul>
                                             </li>
                                             <li class="sub-mega-menu sub-mega-menu-width-22">
                                                 <a class="menu-title" href="#">Café da Manhã & Laticínios</a>
                                                 <ul>
-                                                    <li><a href="shop-product-right.html">Leite & Leites Saborizados</a></li>
+                                                    <li><a href="shop-product-right.html">Leite & Leites Saborizados</a>
+                                                    </li>
                                                     <li><a href="shop-product-right.html">Manteiga e Margarina</a></li>
                                                     <li><a href="shop-product-right.html">Substitutos de Ovos</a></li>
                                                     <li><a href="shop-product-right.html">Geléias</a></li>
@@ -425,17 +461,22 @@
                                             <li class="sub-mega-menu sub-mega-menu-width-22">
                                                 <a class="menu-title" href="#">Carnes & Frutos do Mar</a>
                                                 <ul>
-                                                    <li><a href="shop-product-right.html">Linguiça para Café da Manhã</a></li>
+                                                    <li><a href="shop-product-right.html">Linguiça para Café da
+                                                            Manhã</a></li>
                                                     <li><a href="shop-product-right.html">Linguiça para Jantar</a></li>
                                                     <li><a href="shop-product-right.html">Frango</a></li>
                                                     <li><a href="shop-product-right.html">Frios Fatiados</a></li>
-                                                    <li><a href="shop-product-right.html">Filés de Peixe Selvagem</a></li>
-                                                    <li><a href="shop-product-right.html">Caranguejo e Frutos do Mar</a></li>
+                                                    <li><a href="shop-product-right.html">Filés de Peixe Selvagem</a>
+                                                    </li>
+                                                    <li><a href="shop-product-right.html">Caranguejo e Frutos do Mar</a>
+                                                    </li>
                                                 </ul>
                                             </li>
                                             <li class="sub-mega-menu sub-mega-menu-width-34">
                                                 <div class="menu-banner-wrap">
-                                                    <a href="shop-product-right.html"><img src="{% static 'assets/imgs/banner/banner-menu.png' %}" alt="Nest" /></a>
+                                                    <a href="shop-product-right.html"><img
+                                                            src="{% static 'assets/imgs/banner/banner-menu.png' %}"
+                                                            alt="Nest" /></a>
                                                     <div class="menu-banner-content">
                                                         <h4>Ofertas Quentes</h4>
                                                         <h3>
@@ -443,7 +484,8 @@
                                                             Tendências
                                                         </h3>
                                                         <div class="menu-banner-price">
-                                                            <span class="new-price text-success">Economize até 50%</span>
+                                                            <span class="new-price text-success">Economize até
+                                                                50%</span>
                                                         </div>
                                                         <div class="menu-banner-btn">
                                                             <a href="shop-product-right.html">Comprar agora</a>
@@ -465,7 +507,8 @@
                                             <li><a href="blog-category-grid.html">Blog Categoria Grid</a></li>
                                             <li><a href="blog-category-list.html">Blog Categoria Lista</a></li>
                                             <li><a href="blog-category-big.html">Blog Categoria Grande</a></li>
-                                            <li><a href="blog-category-fullwidth.html">Blog Categoria Largura Total</a></li>
+                                            <li><a href="blog-category-fullwidth.html">Blog Categoria Largura Total</a>
+                                            </li>
                                             <li>
                                                 <a href="#">Post Único <i class="fi-rs-angle-right"></i></a>
                                                 <ul class="level-menu level-menu-modify">
@@ -487,7 +530,8 @@
                                             <li><a href="page-forgot-password.html">Esqueci a senha</a></li>
                                             <li><a href="page-reset-password.html">Redefinir senha</a></li>
                                             <li><a href="page-purchase-guide.html">Guia de Compra</a></li>
-                                            <li><a href="{% url 'core:privacy-policy'%}">Política de Privacidade</a></li>
+                                            <li><a href="{% url 'core:privacy-policy'%}">Política de Privacidade</a>
+                                            </li>
                                             <li><a href="{% url 'core:service-terms'%}">Termos de Serviço</a></li>
                                             <li><a href="page-404.html">Página 404</a></li>
                                         </ul>
@@ -521,21 +565,25 @@
                             <div class="header-action-icon-2">
                                 <a class="mini-cart-icon" id="mini-cart-content" href="{% url 'core:cart' %}">
                                     <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                    <span class="pro-count white cart-items-count">{{ request.session.cart_data_obj|length }}</span>
+                                    <span class="pro-count white cart-items-count">{{
+                                        request.session.cart_data_obj|length }}</span>
                                 </a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2" id="mini-cart-content">
-                                   <ul>
+                                    <ul>
                                         {% for product_id, item in cart_data.items %}
                                         <li>
                                             <div class="shopping-cart-img">
-                                                <a href="{% url 'core:product-detail' item.pid %}"><img alt="{{ item.title }}" src="{{ item.image }}" /></a>
+                                                <a href="{% url 'core:product-detail' item.pid %}"><img
+                                                        alt="{{ item.title }}" src="{{ item.image }}" /></a>
                                             </div>
                                             <div class="shopping-cart-title">
-                                                <h4><a href="{% url 'core:product-detail' item.pid %}">{{ item.title }}</a></h4>
+                                                <h4><a href="{% url 'core:product-detail' item.pid %}">{{ item.title
+                                                        }}</a></h4>
                                                 <h3><span>{{ item.qty }} × </span>R${{ item.price }}</h3>
                                             </div>
                                             <div class="shopping-cart-delete">
-                                                <a href="#" data-product-id="{{ product_id }}" class="remove-from-cart"><i class="fi-rs-cross-small"></i></a>
+                                                <a href="#" data-product-id="{{ product_id }}"
+                                                    class="remove-from-cart"><i class="fi-rs-cross-small"></i></a>
                                             </div>
                                         </li>
                                         {% endfor %}
@@ -546,7 +594,8 @@
                                         </div>
                                         <div class="shopping-cart-button">
                                             <a href="{% url 'core:cart' %}" class="outline">Carrinho</a>
-                                            <a href="{% url 'core:checkout' %}">Checkout</a> </div>
+                                            <a href="{% url 'core:checkout' %}">Checkout</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -554,19 +603,19 @@
                     </div>
                 </div>
                 {% if messages %}
-                    {% for message in  messages  %}
-                       <div class="alert alert-{{message.tags}}">
-                         <strong>{{ message }}</strong>
-                       </div>
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}}">
+                    <strong>{{ message }}</strong>
+                </div>
 
-                    {% endfor  %}
+                {% endfor %}
                 {% endif %}
                 <script>
-                  setTimeout(() => {
-                    $(".alert").fadeOut("slow", function() {
-                      $(this).alert('close');
-                    });
-                  }, 6000);
+                    setTimeout(() => {
+                        $(".alert").fadeOut("slow", function () {
+                            $(this).alert('close');
+                        });
+                    }, 6000);
                 </script>
             </div>
         </div>
@@ -617,8 +666,10 @@
                                     <li class="menu-item-has-children">
                                         <a href="#">Produto Único</a>
                                         <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Produto - Barra Lateral Direita</a></li>
-                                            <li><a href="shop-product-left.html">Produto - Barra Lateral Esquerda</a></li>
+                                            <li><a href="shop-product-right.html">Produto - Barra Lateral Direita</a>
+                                            </li>
+                                            <li><a href="shop-product-left.html">Produto - Barra Lateral Esquerda</a>
+                                            </li>
                                             <li><a href="shop-product-full.html">Produto - Sem barra lateral</a></li>
                                             <li><a href="shop-product-vendor.html">Produto - Info do Vendedor</a></li>
                                         </ul>
@@ -749,14 +800,15 @@
                     <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-pinterest-white.svg' %}" alt="" /></a>
                     <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-youtube-white.svg' %}" alt="" /></a>
                 </div>
-                <div class="site-copyright">Copyright 2023 © Organyxhub. Todos os direitos reservados. Desenvolvido por Dan Marques.</div>
+                <div class="site-copyright">Copyright 2023 © Organyxhub. Todos os direitos reservados. Desenvolvido por
+                    Dan Marques.</div>
             </div>
         </div>
     </div>
     <!--End header-->
-{% block content %}
+    {% block content %}
 
-{%endblock content %}
+    {%endblock content %}
 
     <section class="newsletter mb-15 wow animate__animated animate__fadeIn">
         <div class="container">
@@ -768,7 +820,8 @@
                                 Fique em casa e receba suas<br />
                                 necessidades diárias da nossa loja
                             </h2>
-                            <p class="mb-45">Comece suas compras diárias com <span class="text-brand">Organyxhub</span></p>
+                            <p class="mb-45">Comece suas compras diárias com <span class="text-brand">Organyxhub</span>
+                            </p>
                             <form class="form-subcriber d-flex">
                                 <input type="email" placeholder="Seu endereço de email" />
                                 <button class="btn" type="submit">Inscrever</button>
@@ -784,7 +837,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-1-5 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0">
-                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay="0">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+                        data-wow-delay="0">
                         <div class="banner-icon">
                             <img src="{% static 'assets/imgs/theme/icons/icon-1.svg' %}" alt="" />
                         </div>
@@ -795,7 +849,8 @@
                     </div>
                 </div>
                 <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
-                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".1s">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+                        data-wow-delay=".1s">
                         <div class="banner-icon">
                             <img src="{% static 'assets/imgs/theme/icons/icon-2.svg' %}" alt="" />
                         </div>
@@ -806,7 +861,8 @@
                     </div>
                 </div>
                 <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
-                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".2s">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+                        data-wow-delay=".2s">
                         <div class="banner-icon">
                             <img src="{% static 'assets/imgs/theme/icons/icon-3.svg' %}" alt="" />
                         </div>
@@ -817,7 +873,8 @@
                     </div>
                 </div>
                 <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
-                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".3s">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+                        data-wow-delay=".3s">
                         <div class="banner-icon">
                             <img src="{% static 'assets/imgs/theme/icons/icon-4.svg' %}" alt="" />
                         </div>
@@ -828,7 +885,8 @@
                     </div>
                 </div>
                 <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
-                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".4s">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+                        data-wow-delay=".4s">
                         <div class="banner-icon">
                             <img src="{% static 'assets/imgs/theme/icons/icon-5.svg' %}" alt="" />
                         </div>
@@ -839,7 +897,8 @@
                     </div>
                 </div>
                 <div class="col-lg-1-5 col-md-4 col-12 col-sm-6 d-xl-none">
-                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp" data-wow-delay=".5s">
+                    <div class="banner-left-icon d-flex align-items-center wow animate__animated animate__fadeInUp"
+                        data-wow-delay=".5s">
                         <div class="banner-icon">
                             <img src="{% static 'assets/imgs/theme/icons/icon-6.svg' %}" alt="" />
                         </div>
@@ -856,16 +915,23 @@
         <div class="container pt-15 pb-20">
             <div class="row">
                 <div class="col">
-                    <div class="widget-about font-md mb-md-3 mb-lg-3 mb-xl-0 wow animate__animated animate__fadeInUp" data-wow-delay="0">
+                    <div class="widget-about font-md mb-md-3 mb-lg-3 mb-xl-0 wow animate__animated animate__fadeInUp"
+                        data-wow-delay="0">
                         <div class="logo mb-30">
-                            <a href="index.html" class="mb-15"><img src="{% static 'assets/imgs/theme/logo.png' %}" alt="logo" /></a>
+                            <a href="index.html" class="mb-15"><img src="{% static 'assets/imgs/theme/logo.png' %}"
+                                    alt="logo" /></a>
                             <p class="font-lg text-heading">Onde a Consciência e o Consumo Andam Juntos</p>
                         </div>
                         <ul class="contact-infor">
-                            <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Endereço: </strong> <span>Rua Augusta, 1500, Jardim Paulista, São Paulo, SP, 01304-001, Brasil</span></li>
-                            <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Ligue para:</strong><span>(11) 3456-7890</span></li>
-                            <li><img src="{% static 'assets/imgs/theme/icons/icon-email-2.svg' %}" alt="" /><strong>Email:</strong><span>vendas@organyxhub.com</span></li>
-                            <li><img src="{% static 'assets/imgs/theme/icons/icon-clock.svg' %}" alt="" /><strong>Horário:</strong><span>10:00 - 18:00, Seg - Sáb</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}"
+                                    alt="" /><strong>Endereço: </strong> <span>Rua Augusta, 1500, Jardim Paulista, São
+                                    Paulo, SP, 01304-001, Brasil</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}"
+                                    alt="" /><strong>Ligue para:</strong><span>(11) 3456-7890</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-email-2.svg' %}"
+                                    alt="" /><strong>Email:</strong><span>vendas@organyxhub.com</span></li>
+                            <li><img src="{% static 'assets/imgs/theme/icons/icon-clock.svg' %}"
+                                    alt="" /><strong>Horário:</strong><span>10:00 - 18:00, Seg - Sáb</span></li>
                         </ul>
                     </div>
                 </div>
@@ -917,12 +983,15 @@
                         <li><a href="#">Queijos</a></li>
                     </ul>
                 </div>
-                <div class="footer-link-widget widget-install-app col wow animate__animated animate__fadeInUp" data-wow-delay=".5s">
+                <div class="footer-link-widget widget-install-app col wow animate__animated animate__fadeInUp"
+                    data-wow-delay=".5s">
                     <h4 class="widget-title">Instalar App</h4>
                     <p class="">Da App Store ou Google Play</p>
                     <div class="download-app">
-                        <a href="#" class="hover-up mb-sm-2 mb-lg-0"><img class="active" src="{% static 'assets/imgs/theme/app-store.jpg' %}" alt="" /></a>
-                        <a href="#" class="hover-up mb-sm-2"><img src="{% static 'assets/imgs/theme/google-play.jpg' %}" alt="" /></a>
+                        <a href="#" class="hover-up mb-sm-2 mb-lg-0"><img class="active"
+                                src="{% static 'assets/imgs/theme/app-store.jpg' %}" alt="" /></a>
+                        <a href="#" class="hover-up mb-sm-2"><img src="{% static 'assets/imgs/theme/google-play.jpg' %}"
+                                alt="" /></a>
                     </div>
                     <p class="mb-20">Gateways de Pagamento Seguros</p>
                     <img class="" src="{% static 'assets/imgs/theme/payment-method.png' %}" alt="" />
@@ -935,15 +1004,19 @@
                 <div class="footer-bottom"></div>
             </div>
             <div class="col-xl-4 col-lg-6 col-md-6">
-                <p class="font-sm mb-0">&copy; 2023, <strong class="text-brand">Organyxhub</strong> - Marketpace <br />Todos os direitos reservados</p>
+                <p class="font-sm mb-0">&copy; 2023, <strong class="text-brand">Organyxhub</strong> - Marketpace
+                    <br />Todos os direitos reservados
+                </p>
             </div>
             <div class="col-xl-4 col-lg-6 text-center d-none d-xl-block">
                 <div class="hotline d-lg-inline-flex mr-30">
-                    <img src="{% static 'assets/imgs/theme/icons/phone-call.svg' %}" alt="hotline" style="width: 20px; height: 20px;" />
+                    <img src="{% static 'assets/imgs/theme/icons/phone-call.svg' %}" alt="hotline"
+                        style="width: 20px; height: 20px;" />
                     <p>0800-777-5000<span>Funcionamento 8:00 - 22:00</span></p>
                 </div>
                 <div class="hotline d-lg-inline-flex">
-                    <img src="{% static 'assets/imgs/theme/icons/phone-call.svg' %}" alt="hotline" style="width: 20px; height: 20px;" />
+                    <img src="{% static 'assets/imgs/theme/icons/phone-call.svg' %}" alt="hotline"
+                        style="width: 20px; height: 20px;" />
                     <p>0800-777-5000<span>Suporte 24/7</span></p>
                 </div>
             </div>
@@ -960,7 +1033,7 @@
             </div>
         </div>
     </div>
-</footer>
+    </footer>
 
     <!-- Preloader Start -->
     <div id="preloader-active">
