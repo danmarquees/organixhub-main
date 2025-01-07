@@ -249,7 +249,7 @@
                                     <a href="{% url 'core:wishlist' %}">
                                         <img class="svgInject" alt="Nest"
                                             src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
-                                        <span class="pro-count blue cart-items-count"></span>
+                                        <span class="pro-count blue cart-items-count">{{wishlist.count}}</span>
                                     </a>
                                     <a href="{% url 'core:wishlist' %}"><span class="lable">Wishlist</span></a>
                                 </div>
@@ -408,8 +408,7 @@
                                         <a href="shop-grid-right.html">Categorias<i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             {% for c in categorias %}
-                                            <li><a href="{% url 'core:category-product-list' c.cid %}">{{ c.titulo
-                                                    }}</a></li>
+                                            <li><a href="{% url 'core:category-product-list' c.cid %}">{{ c.titulo }}</a></li>
                                             {% endfor %}
                                             <hr>
                                             <li><a href="{% url 'core:category-list' %}">Todas as Categorias</a></li>
@@ -423,8 +422,7 @@
                                         <a href="#">Vendedores <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             {% for vendedor in vendedores %}
-                                            <li><a href="{% url 'core:vendor-detail' vendedor.vid %}">{{ vendedor.titulo
-                                                    }}</a></li>
+                                            <li><a href="{% url 'core:vendor-detail' vendedor.vid %}">{{ vendedor.titulo }}</a></li>
                                             {% endfor %}
                                             <hr>
                                             <li><a href="{% url 'core:vendor-list' %}">Lista de Vendedores</a></li>
@@ -557,9 +555,9 @@
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="{% url 'core:wishlist' %}">
                                     <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
-                                    <span class="pro-count white">4</span>
+                                    <span class="pro-count white">{{wishlist_count}}</span>
                                 </a>
                             </div>
                             <div class="header-action-icon-2">

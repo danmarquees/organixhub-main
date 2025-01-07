@@ -578,35 +578,35 @@ $(document).on("click", ".add-to-wishlist", function () {
   });
 });
 
-$(document).ready(() => {
-  $("#wishlist-list").on("click", ".delete-product", function (event) {
-    event.preventDefault();
-    const wishlist_id = $(this).data("wishlist-item");
-    const $thisRow = $(this).closest("tr");
+$(document).on("click", ".delete-wishlist-item", function () {
+  const wishlist_id = $(this).attr("data-wishlist-product");
 
-    $.ajax({
-      url: "delete-item-from-wishlist/",
-      method: "POST",
-      data: { id: wishlist_id },
-      dataType: "json",
-      beforeSend: (xhr) => {
-        const csrftoken = getCookie("csrftoken");
-        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-      },
-      success: (response) => {
-        if (response.success) {
-          $thisRow.remove();
-          alert("Item removido da lista de desejos!");
-        } else {
-          alert(response.error || "Erro ao remover item. Tente novamente.");
-          $thisRow.fadeIn();
-        }
-      },
-      error: (error) => {
-        console.error("Error deleting item:", error);
-        alert("Erro ao remover item. Tente novamente. Detalhes no console.");
-        $thisRow.fadeIn();
-      },
-    });
+  console.log("wishlist_id is:", wishlist_id);
+  $.ajax({
+    url: "delete-wishlist-item/",
+    data: { id: wishlist_id },
+    method: "GET",
+    success: function (response) {
+      if (response.bool) {
+        console.log("Produto removido da lista de desejos:", response.message);
+        $(this)
+          .closest(".product-item")
+          .fadeOut(300, function () {
+            $(this).remove();
+          });
+      } else {
+        console.error(
+          "Erro ao remover produto da lista de desejos:",
+          response.message,
+        );
+        alert(response.message);
+      }
+    },
+    error: (error) => {
+      console.error("Erro ao remover produto da lista de desejos:", error);
+      alert(
+        "Erro ao remover produto da lista de desejos. Tente novamente mais tarde.",
+      );
+    },
   });
 });
