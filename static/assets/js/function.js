@@ -578,35 +578,46 @@ $(document).on("click", ".add-to-wishlist", function () {
   });
 });
 
-$(document).on("click", ".delete-wishlist-item", function () {
-  const wishlist_id = $(this).attr("data-wishlist-product");
-
-  console.log("wishlist_id is:", wishlist_id);
-  $.ajax({
-    url: "delete-wishlist-item/",
-    data: { id: wishlist_id },
-    method: "GET",
-    success: function (response) {
-      if (response.bool) {
-        console.log("Produto removido da lista de desejos:", response.message);
-        $(this)
-          .closest(".product-item")
-          .fadeOut(300, function () {
-            $(this).remove();
-          });
-      } else {
-        console.error(
-          "Erro ao remover produto da lista de desejos:",
-          response.message,
-        );
-        alert(response.message);
-      }
-    },
-    error: (error) => {
-      console.error("Erro ao remover produto da lista de desejos:", error);
-      alert(
-        "Erro ao remover produto da lista de desejos. Tente novamente mais tarde.",
-      );
-    },
-  });
+$(document).on("click", ".delete-wishlist-product", function () {
+  const id = $(this).data("wishlist-product");
+  if (id) {
+    if (
+      confirm("Tem certeza que deseja deletar este item da lista de desejos?")
+    ) {
+      $.ajax({
+        url: "/delete-wishlist-item/",
+        type: "POST",
+        data: { id: id },
+        dataType: "json",
+        beforeSend: (xhr) => {
+          const csrftoken = getCookie("csrftoken");
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: (response) => {
+          if (response.success) {
+            $(`.wishlist-item[data-wishlist-product="${id}"]`).fadeOut(
+              300,
+              function () {
+                $(this).remove();
+              },
+            );
+            alert("Item deletado da lista de desejos com sucesso!");
+          } else {
+            alert(
+              response.message ||
+                "Erro ao deletar item da lista de desejos. Tente novamente.",
+            );
+          }
+        },
+        error: (error) => {
+          console.error("Error deleting wishlist item:", error);
+          alert(
+            "Erro ao deletar item da lista de desejos. Verifique sua conexão com a internet.",
+          );
+        },
+      });
+    }
+  } else {
+    console.error("Data attribute 'data-wishlist-product' is missing!");
+  }
 });

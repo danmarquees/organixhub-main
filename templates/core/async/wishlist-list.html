@@ -14,17 +14,18 @@
             <div class="col-xl-10 col-lg-12 m-auto">
                 <form method="post">
                     <!-- Adiciona o formulário aqui -->
-                    {% csrf_token %}
                     <div class="mb-50">
                         <h1 class="heading-2 mb-10">Sua Wishlist</h1>
                         <h6 class="text-body">
                             Existem
-                            <span class="text-brand">{{wishlist_count}}</span>
+                            <span class="text-brand wishlist-count"
+                                >{{wishlist_count}}</span
+                            >
                             produtos nesta lista
                         </h6>
                     </div>
                     <div class="table-responsive shopping-summery">
-                        <table class="table table-wishlist">
+                        <table class="table table-wishlist" id="wishlist-table">
                             <thead>
                                 <tr class="main-heading">
                                     <th class="custome-checkbox start pl-30">
@@ -50,7 +51,7 @@
                             <tbody>
                                 {% for w in wishlist_items %}
                                 <tr
-                                    class="wishlist-item-row pt-30"
+                                    class="wishlist-item-row pt-30 wishlist-item"
                                     data-wishlist-item-id="{{w.id}}"
                                 >
                                     <td class="custome-checkbox pl-30">
@@ -155,9 +156,17 @@
                                     </td>
                                     <td
                                         class="action text-center"
-                                        data-title="Remove"></td>
-                                        <button style="border: none;
-                                            background: none;<td class="action text-center" data-title="Remove"><button style="border: none; background: none;" class="text-body delete-product" data-product="{{w.produto.pid}}"><i class="fi-rs-trash"></i>
+                                        data-title="Remove"
+                                    >
+                                        <button
+                                            style="
+                                                border: none;
+                                                background: none;
+                                            "
+                                            data-wishlist-product="{{w.id}}"
+                                            class="text-body delete-wishlist-product"
+                                        >
+                                            <i class="fi-rs-trash"></i>
                                         </button>
                                     </td>
                                 </tr>

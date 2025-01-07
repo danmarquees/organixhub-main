@@ -21,12 +21,14 @@
                         <h1 class="heading-2 mb-10">Sua Wishlist</h1>
                         <h6 class="text-body">
                             Existem
-                            <span class="text-brand">{{wishlist_count}}</span>
+                            <span class="text-brand wishlist-count"
+                                >{{wishlist_count}}</span
+                            >
                             produtos nesta lista
                         </h6>
                     </div>
                     <div class="table-responsive shopping-summery">
-                        <table class="table table-wishlist">
+                        <table class="table table-wishlist" id="wishlist-table">
                             <thead>
                                 <tr class="main-heading">
                                     <th class="custome-checkbox start pl-30">
@@ -52,7 +54,7 @@
                             <tbody>
                                 {% for w in wishlist_items %}
                                 <tr
-                                    class="wishlist-item-row pt-30"
+                                    class="wishlist-item-row pt-30 wishlist-item"
                                     data-wishlist-item-id="{{w.id}}"
                                 >
                                     <td class="custome-checkbox pl-30">

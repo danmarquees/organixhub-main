@@ -872,26 +872,35 @@ def add_to_wishlist(request):
         return JsonResponse({"bool": False, "message": "Método de requisição inválido."}, status=405)
 
 
-
+@csrf_exempt
 @login_required
 def delete_wishlist_item(request):
-    if request.method == 'GET':
+    if request.method != 'POST':
+        return JsonResponse({"bool": False, "message": "Método de requisição inválido."}, status=405)
+
+    try:
+        pid = request.POST['id']
         try:
-            pid = request.GET['id']
             product = get_object_or_404(Wishlist, pk=pid, user=request.user)
             product.delete()
+            logger.info(f"Item da Wishlist deletado com sucesso (ID: {pid}, Usuário: {request.user.id})")
             wishlist_items = Wishlist.objects.filter(user=request.user)
             wishlist_count = Wishlist.objects.filter(user=request.user).count()
             context = {
-                "bool": True,
                 "wishlist_items": wishlist_items,
                 "wishlist_count": wishlist_count
             }
-            data = render_to_string("core/async/wishlist-list.html", context)
-            return JsonResponse({"data": data, "wishlist_count": wishlist_count})
-        except KeyError:
-            return JsonResponse({"bool": False, "message": "Parâmetro 'id' ausente."}, status=400)
+            html = render_to_string('core/async/wishlist-list.html', context)
+            return JsonResponse({"bool": True, "message": "Item deletado da lista de desejos com sucesso!", "html": html})
+        except Wishlist.DoesNotExist:
+            return JsonResponse({"bool": False, "message": "Item da Wishlist não encontrado."}, status=404)
+        except IntegrityError as e:
+            logger.exception(f"Erro de integridade ao deletar item da Wishlist (ID: {pid}, Usuário: {request.user.id}): {e}")
+            return JsonResponse({"bool": False, "message": "Erro de integridade do banco de dados. Por favor, tente novamente mais tarde."}, status=500)
         except Exception as e:
+            logger.exception(f"Erro inesperado ao deletar item da Wishlist (Usuário: {request.user.id}): {e}")
             return JsonResponse({"bool": False, "message": f"Erro ao remover da lista de desejos: {e}"}, status=500)
-    else:
-        return JsonResponse({"bool": False, "message": "Método de requisição inválido."}, status=405)
+
+    except KeyError:
+        logger.warning(f"Parâmetro 'id' ausente na requisição de exclusão de item da Wishlist do usuário: {request.user.id}")
+        return JsonResponse({"bool": False, "message": "Parâmetro 'id' ausente."}, status=400)
