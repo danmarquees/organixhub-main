@@ -5,7 +5,7 @@ from django.db.models import Count, Avg, Min, Max # Importa funções para conta
 from taggit.models import Tag # Importa o modelo Tag para lidar com tags
 from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco # Importa modelos do aplicativo core
 from core.forms import AvaliacaoProdutoForm # Importa o formulário para avaliações de produtos
-from userauths.models import User # Importa o modelo de usuário
+from userauths.models import User, Profile # Importa o modelo de usuário
 from django.utils import timezone # Importa funções relacionadas a data e hora
 from django.template.loader import render_to_string
 from django.contrib import messages
@@ -683,6 +683,9 @@ def customer_dashboard(request):
     orders = PedidoCarrinho.objects.filter(user=request.user).order_by("-id")
     addresses = Endereco.objects.filter(user=request.user).order_by("-id")
 
+    profile = Profile.objects.get(user=request.user)
+
+
     if request.method == "POST":
         try:
             num_addresses = int(request.POST.get('num_addresses', 1))
@@ -729,6 +732,7 @@ def customer_dashboard(request):
     context = {
         "orders": orders,
         "addresses": addresses,
+        "profile": profile,
     }
     return render(request, 'core/dashboard.html', context)
 

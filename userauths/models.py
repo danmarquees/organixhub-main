@@ -16,3 +16,15 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    imagem = models.ImageField(upload_to="image")
+    nome = models.CharField(max_length=255, null=True,blank=True)
+    bio = models.CharField(max_length=100, null=True, blank=True)
+    telefone = models.CharField(max_length=200)
+    verificado = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.nome
