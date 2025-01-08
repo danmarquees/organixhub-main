@@ -253,43 +253,43 @@
                                     </a>
                                     <a href="{% url 'core:wishlist' %}"><span class="lable">Wishlist</span></a>
                                 </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="{% url 'core:cart' %}">
-                                        <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                        <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
-                                    </a>
-                                    <a href="{% url 'core:cart' %}"><span class="lable">Carrinho</span></a>
-                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                        <ul>
-                                            {% for product_id, item in request.session.cart_data_obj.items %}
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="{% url 'core:product-detail' item.pid %}"><img
-                                                            alt="{{ item.title }}" src="{{ item.image }}"
-                                                            style="aspect-ratio: 1/1;" /></a>
+                                    <div class="header-action-icon-2">
+                                        <a class="mini-cart-icon" href="{% url 'core:cart' %}">
+                                            <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
+                                            <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
+                                        </a>
+                                        <a href="{% url 'core:cart' %}"><span class="lable">Carrinho</span></a>
+                                        <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                            <ul>
+                                                {% for product_id, item in request.session.cart_data_obj.items %}
+                                                <li>
+                                                    <div class="shopping-cart-img">
+                                                        <a href="{% url 'core:product-detail' item.pid %}"><img
+                                                                alt="{{ item.title }}" src="{{ item.image }}"
+                                                                style="aspect-ratio: 1/1;" /></a>
+                                                    </div>
+                                                    <div class="shopping-cart-title">
+                                                        <h4><a href="{% url 'core:product-detail' item.pid %}">{{ item.title }}</a></h4>
+                                                        <h3><span>{{ item.qty }} × </span>R${{ item.price|floatformat:2 }}</h3>
+                                                    </div>
+                                                    <div class="shopping-cart-delete">
+                                                        <a href="#" data-product="{{ product_id }}"
+                                                            class="delete-product"><i class="fi-rs-cross-small"></i></a>
+                                                    </div>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                            <div class="shopping-cart-footer">
+                                                <div class="shopping-cart-total">
+                                                    <h4>Total <span>R${{ request.session.cart_data_obj.total_amount }}</span></h4>
                                                 </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="{% url 'core:product-detail' item.pid %}">{{ item.title }}</a></h4>
-                                                    <h3><span>{{ item.qty }} × </span>R${{ item.price }}</h3>
+                                                <div class="shopping-cart-button">
+                                                    <a href="{% url 'core:cart' %}" class="outline">Carrinho</a>
+                                                    <a href="{% url 'core:checkout' %}">Finalizar</a>
                                                 </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#" data-product="{{ product_id }}"
-                                                        class="delete-product"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span>R${{ request.session.cart_data_obj.total_amount }}</span></h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a href="{% url 'core:cart' %}" class="outline">Carrinho</a>
-                                                <a href="{% url 'core:checkout' %}">Finalizar</a>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 <div class="header-action-icon-2">
                                     <a href="page-account.html">
                                         <img class="svgInject" alt="Nest"
@@ -541,9 +541,9 @@
                             </nav>
                         </div>
                     </div>
-                    <div class="hotline d-none d-lg-flex">
+                    <div class="hotline d-none d-lg-inline-flex">
                         <img src="{% static 'assets/imgs/theme/icons/icon-headphone.svg' %}" alt="suporte" />
-                        <p>0800-777<span>Central de Suporte 24/7</span></p>
+                        <p>(11)99999-9999<span>Central de Suporte 24/7</span></p>
                     </div>
                     <div class="header-action-icon-2 d-block d-lg-none">
                         <div class="burger-icon burger-icon-white">

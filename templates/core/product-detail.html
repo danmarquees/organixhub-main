@@ -115,9 +115,7 @@
                                                 <li class="mb-5">Tags: {% for tag in p.tags.all%} <a
                                                         href="{% url 'core:tags' tag.slug %}" rel="tag"> {{tag.name}}
                                                     </a>,{% endfor %}</li>
-                                                <li>Qtde. disponível:<span
-                                                        class="in-stock text-brand ml-5">{{p.qtd_estoque}} Itens em
-                                                        estoque</span></li>
+                                                <li>Qtde. disponível:<span class="in-stock text-brand ml-5">{{p.qtd_estoque}} Itens em estoque</span></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -148,30 +146,10 @@
                                         <div class="tab-pane fade show active" id="Description">
                                             <div class="">
                                                 <p>{{p.descricao|safe}}</p>
-                                                <!-- -- <ul class="product-more-infor mt-30">
-                                                                                                                                                                        <li><span>Tipo de Embalagem</span> {{p.tipo_embalagem}}</li>
-                                                                                                                                                                        <li><span>Cor</span> {{p.cor}}</li>
-                                                                                                                                                                        <li><span>Quantidade por caixa</span> {{p.quantidade_por_caixa}}</li>
-                                                                                                                                                                        <li><span>Álcool Etílico</span> {{p.alcool_etilico}}</li>
-                                                                                                                                                                        <li><span>Peças em uma</span> {{p.pecas_em_uma}}</li>
-                                                                                                                                                                    </ul>-->
+
                                                 <hr class="wp-block-separator is-style-dots" />
                                                 <p>{{p.especificacoes|safe}}</p>
-                                                <!-- --  <h4 class="mt-30">Embalagem e Entrega</h4>
-                                                                                                                                                                    <hr class="wp-block-separator is-style-wide" />
-                                                                                                                                                                    <p>{{p.embalagem_entrega}}</p>
-                                                                                                                                                                    <h4 class="mt-30">Uso Sugerido</h4>
-                                                                                                                                                                    <ul class="product-more-infor mt-30">
-                                                                                                                                                                        <li>{{p.uso_sugerido}}</li>
-                                                                                                                                                                    </ul>
-                                                                                                                                                                    <h4 class="mt-30">Outros Ingredientes</h4>
-                                                                                                                                                                    <ul class="product-more-infor mt-30">
-                                                                                                                                                                        <li>{{p.outros_ingredientes}}</li>
-                                                                                                                                                                    </ul>
-                                                                                                                                                                    <h4 class="mt-30">Avisos</h4>
-                                                                                                                                                                    <ul class="product-more-infor mt-30">
-                                                                                                                                                                        <li>{{p.avisos}}</li> -->
-                                                </ul>
+
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="Additional-info">
@@ -312,8 +290,7 @@
                                                                 data-review-id="{{ r.id }}">
                                                                 <div class="user justify-content-between d-flex">
                                                                     <div class="thumb text-center">
-                                                                        <img src="https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"
-                                                                            alt="" />
+                                                                        <img src="{{r.user.profile.imagem.url}}" style="width: 75px; object-fit:cover; height:75px; border-radius: 50%;" alt="" />
                                                                         <br>
                                                                         <a href="#"
                                                                             class="font-heading text-brand">{{r.user.username|title}}</a>
@@ -579,7 +556,7 @@
                                 {% for c in categorias %}
                                 <li>
                                     <a href="{% url 'core:category-product-list' c.cid %}"> <img
-                                            src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{ c.produtos.count }}</span>
+                                            src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{ c.produto_count }}</span>
                                 </li>
                                 {% endfor %}
                             </ul>

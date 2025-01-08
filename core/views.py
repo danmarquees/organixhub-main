@@ -560,7 +560,7 @@ def checkout(request):
         order = PedidoCarrinho.objects.create(
             user=request.user,
             preco=total_amount,
-            status_pagamento=True # Adiciona o status de pagamento como pendente
+            status_pagamento=False # Inicializa o status de pagamento como False
         )
 
         for p_id, item in request.session['cart_data_obj'].items():
@@ -660,12 +660,24 @@ def pagamento_efetuado(request):
         except (ValueError, TypeError, KeyError) as e:
             errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
 
+    # Atualiza o status do pedido para pagamento efetuado
+    try:
+        order = PedidoCarrinho.objects.get(user=request.user, preco=cart_total_amount)
+        order.status_pagamento = True
+        order.save()
+    except PedidoCarrinho.DoesNotExist:
+        errors.append("Pedido não encontrado.")
+    except Exception as e:
+        errors.append(f"Erro ao atualizar o status do pedido: {e}")
+
+
     return render(request, 'core/payment-completed.html', {
         "cart_data": cart_data_formatted,
         'totalcartitems': len(cart_data),
         'cart_total_amount': "{:.2f}".format(cart_total_amount),
         'errors': errors,
     })
+
 
 
 @login_required

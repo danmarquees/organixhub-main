@@ -29,16 +29,20 @@
                                 <div class="row align-items-center">
                                     <div class="col-md-6">
                                         <div class="text">
-                                            Rua Augusta, 1500, Jardim Paulista, São Paulo, SP, 01304-001, Brasil<br />
+                                            Rua Augusta, 1500, Jardim Paulista,
+                                            São Paulo, SP, 01304-001, Brasil<br />
                                             <abbr title="Phone">Telefone:</abbr>
                                             (+123) 456-7890<br />
                                         </div>
                                     </div>
                                     <div class="col-md-6 text-end">
-                                        <strong class="text-brand">Barueri - SP</strong>
+                                        <strong class="text-brand">{{endereco.logradouro}} -
+                                            {{endereco.cep }}</strong>
                                         <br />
-                                        Rua Delfim, 115, Jardim Paraíso, Barueri<br />
-                                        <abbr title="Email">Email: </abbr>d.silvamarques@proton.me
+                                        {{endereco.bairro}},
+                                        {{endereco.localidade}},
+                                        {{endereco.uf}}<br />
+                                        <abbr title="Email">Email: </abbr>{{user.email}}
                                     </div>
                                 </div>
                                 <div class="row mt-20">
@@ -83,7 +87,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for product_id, item in cart_data.items %}
+                                            {%for product_id, item in cart_data.items%}
                                             <tr>
                                                 <td>
                                                     <div class="item-desc-1">
@@ -99,7 +103,7 @@
                                                     {{item.qty}}
                                                 </td>
                                                 <td class="text-right">
-                                                    R${% widthratio item.price 1 item.qty %}.00
+                                                    R${%widthratio item.price 1 item.qty%}.00
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -116,7 +120,7 @@
                                                     Tax
                                                 </td>
                                                 <td class="text-right">
-                                                    $85.99
+                                                    $85. 99
                                                 </td> -->
                                             </tr>
                                             <tr>
@@ -136,8 +140,8 @@
                                     <div class="col-md-6">
                                         <h6 class="mb-15">NFe Info.</h6>
                                         <p class="font-sm">
-                                            <strong>Data:</strong> 31
-                                            de Dezembro de 2024<br />
+                                            <strong>Data:</strong> 31 de
+                                            Dezembro de 2024<br />
                                             <strong>NFe para:</strong>
                                             {{request.user|title}}<br />
                                             <strong>Swift Code:</strong>
@@ -158,7 +162,9 @@
                                     <div class="col-12">
                                         <div class="hr mt-30 mb-30"></div>
                                         <p class="mb-0 text-muted">
-                                           Obrigado<strong>{{request.user|title}}</strong> pela preferência. Organyxhub: Grow Like a Plant
+                                            Obrigado<strong>{{request.user|title}}</strong>
+                                            pela preferência. Organyxhub: Grow
+                                            Like a Plant
                                         </p>
                                     </div>
                                 </div>
@@ -167,8 +173,7 @@
                         <div class="invoice-btn-section clearfix d-print-none">
                             <a href="javascript:window.print()" class="btn btn-lg btn-custom btn-print hover-up">
                                 <img src="{% static 'assets/imgs/theme/icons/icon-print.svg' %}" alt="" />
-                                Print
-                            </a>Imprimir
+                                Print </a>Imprimir
                             <a id="invoice_download_btn" class="btn btn-lg btn-custom btn-download hover-up">
                                 <img src="{% static 'assets/imgs/theme/icons/icon-download.svg' %}" alt="" />
                                 Download
