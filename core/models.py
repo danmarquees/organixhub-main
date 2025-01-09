@@ -196,7 +196,7 @@ class AvaliacaoProduto(models.Model):
             return mark_safe('<img src= "%s" width="50" height="50" />' % (self.imagem.url))
 
     def __str__(self):
-        return str(self.produto.titulo)
+            return str(self.produto.titulo) if self.produto else "Produto não especificado"
 
 
     def obter_classificacao(self):

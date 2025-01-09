@@ -5,7 +5,7 @@ from django.db.models import Count, Avg, Min, Max # Importa funções para conta
 from taggit.models import Tag # Importa o modelo Tag para lidar com tags
 from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco # Importa modelos do aplicativo core
 from core.forms import AvaliacaoProdutoForm # Importa o formulário para avaliações de produtos
-from userauths.models import User, Profile # Importa o modelo de usuário
+from userauths.models import User, Profile, Contato # Importa o modelo de usuário
 from django.utils import timezone # Importa funções relacionadas a data e hora
 from django.template.loader import render_to_string
 from django.contrib import messages
@@ -205,6 +205,7 @@ def tag_list(request, tag_slug=None):
     return render(request, "core/tag.html", context)
 
 
+@login_required
 def ajax_add_review(request, pid):
     # Busca o produto pelo ID, retorna 404 se não encontrar
     produto = get_object_or_404(Produto, pk=pid)
@@ -227,6 +228,11 @@ def ajax_add_review(request, pid):
                 review.data = timezone.now()
                 # Salva a avaliação no banco de dados
                 review.save()
+
+                # Calculate average rating after saving the review
+                average_rating = AvaliacaoProduto.objects.filter(produto=produto).aggregate(Avg('classificacao'))['classificacao__avg']
+                formatted_average = "{:.2f}".format(average_rating) if average_rating is not None else "0.00" # or "N/A
+
                 # Retorna uma resposta JSON com sucesso
                 return JsonResponse({
                     'bool': True,
@@ -236,16 +242,13 @@ def ajax_add_review(request, pid):
                         'rating': review.classificacao,
                         'data': review.data.strftime("%d %b, %Y"),
                         'user_image': user.profile.image.url if hasattr(user, 'profile') and user.profile.image else None,
+                        'average_rating': formatted_average, # Include the formatted average
                     },
-                    'media_aval': AvaliacaoProduto.objects.filter(produto=produto).aggregate(average_rating=Avg('classificacao'))
                 })
             # Trata exceções
-            except ObjectDoesNotExist:
-                return JsonResponse({'bool': False, 'errors': 'Usuário ou produto não encontrado'}, status=404)
             except IntegrityError:
                 return JsonResponse({'bool': False, 'errors': 'Erro de integridade do banco de dados'}, status=500)
-            except ValueError as e:
-                return JsonResponse({'bool': False, 'errors': f'Erro de valor: {e}'}, status=500)
+
             except Exception as e:
                 return JsonResponse({'bool': False, 'errors': f'Erro inesperado: {e}'}, status=500)
         # Se o formulário for inválido
@@ -920,3 +923,32 @@ def delete_wishlist_item(request):
     except KeyError:
         logger.warning(f"Parâmetro 'id' ausente na requisição de exclusão de item da Wishlist do usuário: {request.user.id}")
         return JsonResponse({"bool": False, "message": "Parâmetro 'id' ausente."}, status=400)
+
+
+
+def contact(request):
+    return render(request, 'core/contact.html')
+
+
+def ajax_contato(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        telefone = request.POST.get('telefone')
+        assunto = request.POST.get('assunto')
+        mensagem = request.POST.get('mensagem')
+
+        try:
+            Contato.objects.create(
+                nome=nome,
+                email=email,
+                telefone=telefone,
+                assunto=assunto,
+                mensagem=mensagem
+            )
+            return JsonResponse({"success": True, "message": "Mensagem enviada com sucesso!"})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": f"Erro ao enviar mensagem: {str(e)}"}, status=500)
+
+    else:
+        return JsonResponse({"success": False, "message": "Método de requisição inválido."}, status=405)

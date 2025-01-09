@@ -28,3 +28,15 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.nome
+
+
+
+class Contato(models.Model):
+    nome = models.CharField(max_length=200)
+    email = models.CharField(max_length=200)
+    telefone = models.CharField(max_length=200)
+    assunto = models.CharField(max_length=200)
+    mensagem = models.TextField()
+
+    def __str__(self):
+        return self.nome

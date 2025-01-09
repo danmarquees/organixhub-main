@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
           newReview.innerHTML = `
                       <div class="user justify-content-between d-flex">
                         <div class="thumb text-center">
-                          <img src="${data.context.user_image || "https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"}" alt="" />
+                          <img src="${data.context.user_image}" alt="" />
                           <br>
                           <a href="#" class="font-heading text-brand">${data.context.user}</a>
                         </div>
@@ -77,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
                           <p class="mb-10">${data.context.review}</p>
                         </div>
                       </div>
-                      <div>
                     `;
           // Adiciona a nova avaliação ao início do contêiner de avaliações.
           reviewsContainer.prepend(newReview);
@@ -85,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // Seleciona o elemento para exibir a média das avaliações e atualiza seu conteúdo.
           const averageRating = document.querySelector(".d-flex > h6");
           if (averageRating) {
-            averageRating.textContent = `${data.media_aval.average_rating.toFixed(1)} de 5,0`;
+            averageRating.textContent = `${Number.parseFloat(data.context.average_rating).toFixed(1)} de 5,0`;
           } else {
             console.error(
               "Error: Element with class 'd-flex > h6' not found. Check your HTML.",
@@ -620,4 +619,51 @@ $(document).on("click", ".delete-wishlist-product", function () {
   } else {
     console.error("Data attribute 'data-wishlist-product' is missing!");
   }
+});
+
+$(document).on("submit", "#contact-form-ajax", (e) => {
+  e.preventDefault();
+  console.log("Enviado...");
+
+  const nome = $("#nome").val();
+  const email = $("#email").val();
+  const telefone = $("#telefone").val();
+  const assunto = $("#assunto").val();
+  const mensagem = $("#mensagem").val();
+
+  console.log("Nome:", nome);
+  console.log("Email:", email);
+  console.log("Telefone:", telefone);
+  console.log("Assunto:", assunto);
+  console.log("Mensagem:", mensagem);
+
+  $.ajax({
+    url: "/ajax-contato",
+    method: "POST",
+    data: {
+      nome: nome,
+      email: email,
+      telefone: telefone,
+      assunto: assunto,
+      mensagem: mensagem,
+    },
+    dataType: "json",
+    beforeSend: (xhr) => {
+      const csrftoken = getCookie("csrftoken");
+      xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    },
+    success: (response) => {
+      if (response.success) {
+        alert("Mensagem enviada com sucesso!");
+        $("#contact-form-ajax")[0].reset(); // Reset the form
+        $("#contact-form-ajax").hide(); // Hide the form
+      } else {
+        alert(response.message || "Erro ao enviar mensagem. Tente novamente.");
+      }
+    },
+    error: (error) => {
+      console.error("Error sending contact form:", error);
+      alert("Erro ao enviar mensagem. Verifique sua conexão com a internet.");
+    },
+  });
 });

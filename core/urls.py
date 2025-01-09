@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django import views
-from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail, make_address_default, delete_address,  buscar_endereco, product_quickview,  add_to_wishlist, wishlist, delete_wishlist_item
+from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail, make_address_default, delete_address,  buscar_endereco, product_quickview,  add_to_wishlist, wishlist, delete_wishlist_item, contact, ajax_contato
 
 app_name = "core"
 
@@ -36,4 +36,6 @@ urlpatterns = [
     path("add-to-wishlist/", add_to_wishlist, name="add-to-wishlist"),
     path("wishlist/", wishlist, name="wishlist"),
     path("delete-wishlist-item/", delete_wishlist_item, name="delete-wishlist-item"),
+    path("contato/", contact, name="contact"),
+    path("ajax-contato", ajax_contato, name="ajax-contato"),
 ]
