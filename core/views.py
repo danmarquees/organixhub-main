@@ -205,35 +205,28 @@ def tag_list(request, tag_slug=None):
     return render(request, "core/tag.html", context)
 
 
+
+import logging
+
+logger = logging.getLogger(__name__)
 @login_required
 def ajax_add_review(request, pid):
-    # Busca o produto pelo ID, retorna 404 se não encontrar
     produto = get_object_or_404(Produto, pk=pid)
-    # Pega o usuário logado
     user = request.user
 
-    # Se o método da requisição for POST
     if request.method == 'POST':
-        # Cria um formulário de avaliação com os dados da requisição
         review_form = AvaliacaoProdutoForm(request.POST)
-        # Se o formulário for válido
         if review_form.is_valid():
             try:
-                # Salva a avaliação, sem commit inicial
                 review = review_form.save(commit=False)
-                # Define o usuário e o produto da avaliação
                 review.user = user
                 review.produto = produto
-                # Define a data da avaliação
                 review.data = timezone.now()
-                # Salva a avaliação no banco de dados
                 review.save()
 
-                # Calculate average rating after saving the review
                 average_rating = AvaliacaoProduto.objects.filter(produto=produto).aggregate(Avg('classificacao'))['classificacao__avg']
-                formatted_average = "{:.2f}".format(average_rating) if average_rating is not None else "0.00" # or "N/A
+                formatted_average = "{:.1f}".format(average_rating) if average_rating is not None else "0.0"
 
-                # Retorna uma resposta JSON com sucesso
                 return JsonResponse({
                     'bool': True,
                     'context': {
@@ -241,24 +234,21 @@ def ajax_add_review(request, pid):
                         'review': review.avaliacao,
                         'rating': review.classificacao,
                         'data': review.data.strftime("%d %b, %Y"),
-                        'user_image': user.profile.image.url if hasattr(user, 'profile') and user.profile.image else None,
-                        'average_rating': formatted_average, # Include the formatted average
+                        'user_image': user.profile.imagem.url if hasattr(user, 'profile') and user.profile.imagem else None,
+                        'average_rating': formatted_average,
                     },
                 })
-            # Trata exceções
             except IntegrityError:
                 return JsonResponse({'bool': False, 'errors': 'Erro de integridade do banco de dados'}, status=500)
-
             except Exception as e:
-                return JsonResponse({'bool': False, 'errors': f'Erro inesperado: {e}'}, status=500)
-        # Se o formulário for inválido
+                logger.exception(e)  # Loga a exceção com traceback completo
+                return JsonResponse({'bool': False, 'errors': 'Ocorreu um erro ao processar sua avaliação.'}, status=500)
+
         else:
-            # Retorna uma resposta JSON com os erros do formulário
             return JsonResponse({'bool': False, 'errors': review_form.errors}, status=400)
-    # Se o método da requisição não for POST
     else:
-        # Retorna uma resposta JSON indicando método inválido
         return JsonResponse({'bool': False, 'errors': 'Método de requisição inválido'}, status=405)
+
 
 
 def search(request):
