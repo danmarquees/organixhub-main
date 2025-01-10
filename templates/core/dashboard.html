@@ -52,7 +52,7 @@
                                                 class="fi-rs-sign-out mr-10"></i>Sair</a>
                                     </li>
                                 </ul>
-                            </div>
+                            </div>Nome de Usuário
                         </div>
                         <div class="col-md-9">
                             <div class="tab-content account dashboard-content pl-50">
@@ -85,7 +85,7 @@
                                                 </div>
                                                 {% endif %}
                                                 <div class="p-4">
-                                                    <button class="btn btn-success">Editar Perfil</button>
+                                                    <a class="btn btn-success" href="{% url 'userauths:profile-update' %}" >Editar Perfil</a>
                                                 </div>
                                             </div>
                                         </div>

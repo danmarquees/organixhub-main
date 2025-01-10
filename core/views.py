@@ -1,7 +1,7 @@
-from django.db.models.aggregates import Avg # Importa a função Avg para calcular a média
+from django.db.models.aggregates import Avg  # Importa a função Avg para calcular a média
 from django.http import JsonResponse # Importa JsonResponse para retornar respostas JSON
 from django.shortcuts import HttpResponse, render, get_object_or_404, redirect # Importa funções para renderizar templates e lidar com requisições
-from django.db.models import Count, Avg, Min, Max # Importa funções para contagem e agregação de dados
+from django.db.models import Count, Avg, Min, Max, F, Func # Importa funções para contagem e agregação de dados
 from taggit.models import Tag # Importa o modelo Tag para lidar com tags
 from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco # Importa modelos do aplicativo core
 from core.forms import AvaliacaoProdutoForm # Importa o formulário para avaliações de produtos
@@ -23,18 +23,15 @@ from .models import PedidoCarrinho, Endereco
 from brazilcep import get_address_from_cep, WebService, exceptions
 import calendar
 from django.db.models.functions import ExtractMonth
+from django.db.models.functions import Cast
+from django.db.models import CharField
+
 
 def index(request):
-
-    # Busca produtos publicados e em destaque
     produtos = Produto.objects.filter(status_produto="published", destaque=True)
-    # Busca todos os vendedores
     vendedores = Vendedor.objects.all()
     categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
-    # Cria o contexto para o template
 
-
-    # Calcula a média das avaliações para cada produto
     for p in produtos:
         media_aval = AvaliacaoProduto.objects.filter(produto=p).aggregate(average_classification=Avg('classificacao'))
         if media_aval['average_classification'] is not None:
@@ -42,16 +39,14 @@ def index(request):
         else:
             p.media_avaliacoes = 0
 
+        #Corrected String Splitting for SQLite
+        p.badges = list(p.badges) if p.badges is not None else []
 
-
-    # Cria o contexto para o template
     context = {
         "produtos": produtos,
         "vendedores": vendedores,
         "categorias": categorias,
-        #Busca todas as categorias
     }
-    # Renderiza o template index.html com o contexto
     return render(request, 'core/index.html', context)
 
 

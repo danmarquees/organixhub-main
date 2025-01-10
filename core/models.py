@@ -30,33 +30,34 @@ RATING = (
 )
 
 BADGE_CHOICES = (
-    ('hot', 'Destaque'),
-    ('new', 'Novo'),
-    ('sale', 'Promoção'),
-    ('bestseller', 'Mais Vendido'),
-    ('trending', 'Em Alta'),
-    ('recommended', 'Recomendado'),
-    ('exclusive_deal', 'Oferta Exclusiva'),
-    ('free_shipping', 'Frete Grátis'),
-    ('best_price', 'Melhor Preço'),
-    ('just_arrived', 'Recém-Chegado'),
-    ('limited_edition', 'Edição Limitada'),
-    ('organic', 'Orgânico'),
-    ('handmade', 'Feito à Mão'),
-    ('locally_made', 'Produzido Localmente'),
-    ('warranty', 'Garantia'),
-    ('certified', 'Certificado'),
-    ('five_star_rated', 'Classificação 5 Estrelas'),
-    ('last_units', 'Últimas Unidades'),
-    ('flash_sale', 'Oferta Relâmpago'),
-    ('today_only', 'Somente Hoje'),
-    ('gift_idea', 'Sugestão de Presente'),
-    ('most_searched', 'Mais Procurado'),
-    ('combo_deal', 'Oferta Combo'),
-    ('online_only', 'Exclusivo Online'),
-    ('ready_to_ship', 'Pronto para Envio'),
-    ('pre_order', 'Pré-Venda'),
+    ("hot", "Em Destaque"),
+    ("new", "Novo"),
+    ("sale", "Em Promoção"),
+    ("bestseller", "Mais vendido"),
+    ("trending", "Tendência"),
+    ("recommended", "Recomendado"),
+    ("exclusive_deal", "Oferta Exclusiva"),
+    ("free_shipping", "Frete Grátis"),
+    ("best_price", "Melhor Preço"),
+    ("just_arrived", "Recém-Chegado"),
+    ("limited_edition", "Edição Limitada"),
+    ("organic", "Orgânico"),
+    ("handmade", "Feito à Mão"),
+    ("locally-made", "Produzido Localmente"),
+    ("warranty", "Com Garantia"),
+    ("certified", "Certificado"),
+    ("five_star-rated", "5 Estrelas"),
+    ("last_units", "Últimas Unidades"),
+    ("flash_sale", "Oferta Relâmpago"),
+    ("today_only", "Por tempo limitado"),
+    ("gift_idea", "Sugestão de Presente"),
+    ("most_searched", "Mais Procurado"),
+    ("combo_deal", "Combo"),
+    ("online_only", "Online"),
+    ("ready_to_ship", "Envio Imediato"),
+    ("pre_order", "Pré-venda"),
 )
+
 
 
 def user_directory_path(instance, filename):
@@ -133,7 +134,7 @@ class Produto(models.Model):
     #especificacoes = models.TextField(null=True, blank=True)
     especificacoes = CKEditor5Field(null=True, blank=True)
     tipo = models.CharField(max_length=100, default="Orgânico", null=True, blank=True)
-    qtd_estoque = models.CharField(max_length=100, default="10", null=True, blank=True)
+    qtd_estoque = models.IntegerField(default=10, null=True, blank=True) # Changed to IntegerField
     validade = models.CharField(max_length=100, default="100 dias", null=True, blank=True)
     data_fab = models.DateTimeField(auto_now_add=False, null=True, blank=True)
 
@@ -169,8 +170,9 @@ class Produto(models.Model):
                 return novo_preco
             return "0%"
 
-    def obter_badges(self):
+    def get_badges(self): #Renamed to avoid conflict
         return self.badges if self.badges else []
+
 
 class ImagemProduto(models.Model):
     imagens = models.ImageField(upload_to="imagens-produto", default="produto.jpg")

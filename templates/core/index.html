@@ -261,7 +261,8 @@
                             <div class="row product-grid-4">
                                 {% for p in produtos %}
                                 <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                    <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                                    <div class="product-cart-wrap mb-30 wow animate__anima        p.badges = p.badge_list.split(',') if p.badge_list else []
+ted animate__fadeIn"
                                         data-wow-delay=".1s">
                                         <div class="product-img-action-wrap">
                                             <div class="product-img product-img-zoom">
@@ -284,58 +285,58 @@
                                             </div>
                                             <div class="product-badges product-badges-position product-badges-mrg">
                                                 {% for badge in p.badges %}
-                                                    {% if badge == 'hot' %}
-                                                        <span class="hot">Destaque</span>
-                                                    {% elif badge == 'new' %}
-                                                        <span class="new">Novo</span>
-                                                    {% elif badge == 'sale' %}
-                                                        <span class="sale">Promoção</span>
-                                                    {% elif badge == 'bestseller' %}
-                                                        <span class="bestseller">Mais Vendido</span>
-                                                    {% elif badge == 'trending' %}
-                                                        <span class="trending">Em Alta</span>
-                                                    {% elif badge == 'recommended' %}
-                                                        <span class="recommended">Recomendado</span>
-                                                    {% elif badge == 'exclusive_deal' %}
-                                                        <span class="exclusive_deal">Oferta Exclusiva</span>
-                                                    {% elif badge == 'free_shipping' %}
-                                                        <span class="free_shipping">Frete Grátis</span>
-                                                    {% elif badge == 'best_price' %}
-                                                        <span class="best_price">Melhor Preço</span>
-                                                    {% elif badge == 'just_arrived' %}
-                                                        <span class="just_arrived">Recém-Chegado</span>
-                                                    {% elif badge == 'limited_edition' %}
-                                                        <span class="limited_edition">Edição Limitada</span>
-                                                    {% elif badge == 'organic' %}
-                                                        <span class="organic">Orgânico</span>
-                                                    {% elif badge == 'handmade' %}
-                                                        <span class="handmade">Feito à Mão</span>
-                                                    {% elif badge == 'locally_made' %}
-                                                        <span class="locally_made">Produzido Localmente</span>
-                                                    {% elif badge == 'warranty' %}
-                                                        <span class="warranty">Garantia</span>
-                                                    {% elif badge == 'certified' %}
-                                                        <span class="certified">Certificado</span>
-                                                    {% elif badge == 'five_star_rated' %}
-                                                        <span class="five_star_rated">Classificação 5 Estrelas</span>
-                                                    {% elif badge == 'last_units' %}
-                                                        <span class="last_units">Últimas Unidades</span>
-                                                    {% elif badge == 'flash_sale' %}
-                                                        <span class="flash_sale">Oferta Relâmpago</span>
-                                                    {% elif badge == 'today_only' %}
-                                                        <span class="today_only">Somente Hoje</span>
-                                                    {% elif badge == 'gift_idea' %}
-                                                        <span class="gift_idea">Sugestão de Presente</span>
-                                                    {% elif badge == 'most_searched' %}
-                                                        <span class="most_searched">Mais Procurado</span>
-                                                    {% elif badge == 'combo_deal' %}
-                                                        <span class="combo_deal">Oferta Combo</span>
-                                                    {% elif badge == 'online_only' %}
-                                                        <span class="online_only">Exclusivo Online</span>
-                                                    {% elif badge == 'ready_to_ship' %}
-                                                        <span class="ready_to_ship">Pronto para Envio</span>
-                                                    {% elif badge == 'pre_order' %}
-                                                        <span class="pre_order">Pré-Venda</span>
+                                                    {% if badge == "hot" %}
+                                                        <span class="{{ badge }}">Em Destaque</span>
+                                                    {% elif badge == "new" %}
+                                                        <span class="{{ badge }}">Novo</span>
+                                                    {% elif badge == "sale" %}
+                                                        <span class="{{ badge }}">Em Promoção</span>
+                                                    {% elif badge == "bestseller" %}
+                                                        <span class="{{ badge }}">Mais vendido</span>
+                                                    {% elif badge == "trending" %}
+                                                        <span class="{{ badge }}">Tendência</span>
+                                                    {% elif badge == "recommended" %}
+                                                        <span class="{{ badge }}">Recomendado</span>
+                                                    {% elif badge == "exclusive_deal" %}
+                                                        <span class="{{ badge }}">Oferta Exclusiva</span>
+                                                    {% elif badge == "free_shipping" %}
+                                                        <span class="{{ badge }}">Frete Grátis</span>
+                                                    {% elif badge == "best_price" %}
+                                                        <span class="{{ badge }}">Melhor Preço</span>
+                                                    {% elif badge == "just_arrived" %}
+                                                        <span class="{{ badge }}">Recém-Chegado</span>
+                                                    {% elif badge == "limited_edition" %}
+                                                        <span class="{{ badge }}">Edição Limitada</span>
+                                                    {% elif badge == "organic" %}
+                                                        <span class="{{ badge }}">Orgânico</span>
+                                                    {% elif badge == "handmade" %}
+                                                        <span class="{{ badge }}">Feito à Mão</span>
+                                                    {% elif badge == "locally_made" %}
+                                                        <span class="{{ badge }}">Produzido Localmente</span>
+                                                    {% elif badge == "warranty" %}
+                                                        <span class="{{ badge }}">Com Garantia</span>
+                                                    {% elif badge == "certified" %}
+                                                        <span class="{{ badge }}">Certificado</span>
+                                                    {% elif badge == "five-star-rated" %}
+                                                        <span class="{{ badge }}">5 Estrelas</span>
+                                                    {% elif badge == "last_units" %}
+                                                        <span class="{{ badge }}">Últimas Unidades</span>
+                                                    {% elif badge == "flash_sale" %}
+                                                        <span class="{{ badge }}">Oferta Relâmpago</span>
+                                                    {% elif badge == "today_only" %}
+                                                        <span class="{{ badge }}">Por tempo limitado</span>
+                                                    {% elif badge == "gift_idea" %}
+                                                        <span class="{{ badge }}">Sugestão de Presente</span>
+                                                    {% elif badge == "most_searched" %}
+                                                        <span class="{{ badge }}">Mais Procurado</span>
+                                                    {% elif badge == "combo_deal" %}
+                                                        <span class="{{ badge }}">Combo</span>
+                                                    {% elif badge == "online_only" %}
+                                                        <span class="{{ badge }}">Online</span>
+                                                    {% elif badge == "ready_to_ship" %}
+                                                        <span class="{{ badge }}">Envio Imediato</span>
+                                                    {% elif badge == "pre_order" %}
+                                                        <span class="{{ badge }}">Pré-venda</span>
                                                     {% endif %}
                                                 {% endfor %}
                                             </div>

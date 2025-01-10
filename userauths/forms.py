@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from userauths.models import User
+from userauths.models import User, Profile
 
 class UserRegisterForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"Nome de Usuário"}))
@@ -11,3 +11,12 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email']
+
+
+class ProfileForm(forms.ModelForm):
+    nome = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"Nome de Usuário"}))
+    bio = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"Bio"}))
+    telefone = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"Telefone"}))
+    class Meta:
+        model = Profile
+        fields = ['nome', 'imagem', 'bio', 'telefone']
