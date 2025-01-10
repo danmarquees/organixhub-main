@@ -556,8 +556,11 @@ $(document).on("click", ".add-to-wishlist", function () {
   });
 });
 
-$(document).on("click", ".delete-wishlist-product", function () {
+$(document).on("click", ".delete-wishlist-product", function (event) {
+  event.preventDefault(); // Prevent default form submission behavior
   const id = $(this).data("wishlist-product");
+  const $thisRow = $(this).closest(".wishlist-item"); // Select the closest wishlist item
+
   if (id) {
     if (
       confirm("Tem certeza que deseja deletar este item da lista de desejos?")
@@ -573,13 +576,10 @@ $(document).on("click", ".delete-wishlist-product", function () {
         },
         success: (response) => {
           if (response.success) {
-            $(`.wishlist-item[data-wishlist-product="${id}"]`).fadeOut(
-              300,
-              function () {
-                $(this).remove();
-              },
-            );
-            alert("Item deletado da lista de desejos com sucesso!");
+            $thisRow.fadeOut(300, function () {
+              $(this).remove(); // Remove the row after fade out completes
+            });
+            //alert("Item deletado da lista de desejos com sucesso!"); // Removed alert for real-time effect
           } else {
             alert(
               response.message ||

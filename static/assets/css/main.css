@@ -4144,6 +4144,107 @@ table .product-thumbnail img {
   background-color: #f59758;
 }
 
+/* Badges de Popularidade */
+.product-cart-wrap .product-badges span.bestseller {
+  background-color: #f74b81; /* Rosa vibrante */
+}
+
+.product-cart-wrap .product-badges span.trending {
+  background-color: #ffcc00; /* Amarelo ouro */
+}
+
+.product-cart-wrap .product-badges span.recommended {
+  background-color: #6a1b9a; /* Roxo */
+}
+
+/* Badges de Preço e Promoção */
+.product-cart-wrap .product-badges span.exclusive-deal {
+  background-color: #3BB77E; /* Verde escuro */
+}
+
+.product-cart-wrap .product-badges span.free-shipping {
+  background-color: #5a9bf6; /* Azul claro */
+}
+
+.product-cart-wrap .product-badges span.best-price {
+  background-color: #ff5722; /* Laranja vibrante */
+}
+
+/* Badges de Novidade e Exclusividade */
+.product-cart-wrap .product-badges span.just-arrived {
+  background-color: #607d8b; /* Cinza azulado */
+}
+
+.product-cart-wrap .product-badges span.limited-edition {
+  background-color: #ff4081; /* Rosa claro */
+}
+
+/* Badges de Sustentabilidade e Valores */
+.product-cart-wrap .product-badges span.organic {
+  background-color: #8bc34a; /* Verde limão */
+}
+
+.product-cart-wrap .product-badges span.handmade {
+  background-color: #795548; /* Marrom */
+}
+
+.product-cart-wrap .product-badges span.locally-made {
+  background-color: #009688; /* Verde água */
+}
+
+/* Badges de Qualidade e Garantia */
+.product-cart-wrap .product-badges span.warranty {
+  background-color: #607d8b; /* Cinza azulado */
+}
+
+.product-cart-wrap .product-badges span.certified {
+  background-color: #2196f3; /* Azul padrão */
+}
+
+.product-cart-wrap .product-badges span.five-star-rated {
+  background-color: #ffeb3b; /* Amarelo brilhante */
+  color: #000; /* Texto preto para contraste */
+}
+
+/* Badges de Exclusividade por Tempo */
+.product-cart-wrap .product-badges span.last-units {
+  background-color: #e91e63; /* Rosa forte */
+}
+
+.product-cart-wrap .product-badges span.flash-sale {
+  background-color: #ff1744; /* Vermelho intenso */
+}
+
+.product-cart-wrap .product-badges span.today-only {
+  background-color: #ff9800; /* Laranja queimado */
+}
+
+/* Badges de Utilização e Categorias Específicas */
+.product-cart-wrap .product-badges span.gift-idea {
+  background-color: #03a9f4; /* Azul claro */
+}
+
+.product-cart-wrap .product-badges span.most-searched {
+  background-color: #9c27b0; /* Roxo intenso */
+}
+
+.product-cart-wrap .product-badges span.combo-deal {
+  background-color: #673ab7; /* Roxo escuro */
+}
+
+/* Outros Badges */
+.product-cart-wrap .product-badges span.online-only {
+  background-color: #2196f3; /* Azul padrão */
+}
+
+.product-cart-wrap .product-badges span.ready-to-ship {
+  background-color: #4caf50; /* Verde vibrante */
+}
+
+.product-cart-wrap .product-badges span.pre-order {
+  background-color: #9e9e9e; /* Cinza médio */
+}
+
 .product-cart-wrap .product-content-wrap {
   padding: 0 20px 20px 20px;
 }

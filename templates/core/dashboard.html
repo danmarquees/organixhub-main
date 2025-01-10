@@ -64,8 +64,13 @@
                                         </div>
                                         <div class="card-body mb-2" style="display: flex; align-items: center; gap: 10px;">
                                             <div>
-                                                <span><img src="{{profile.imagem.url}}" style="width: 150px; object-fit:cover; height:150px; border-radius: 50%;"></span>
+                                                {% if profile.imagem %}
+                                                <img src="{{ profile.imagem.url }}" style="width: 150px; object-fit:cover; height:150px; border-radius: 50%;">
+                                                {% else %}
+                                                <img src="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg" style="width: 150px; object-fit:cover; height:150px; border-radius: 50%;">
+                                                {% endif %}
                                             </div>
+
                                             <div>
                                                 <span><input class="mb-2" type="text" value="Nome: {{profile.nome}}"></span>
                                                 <span><input class="mb-2" type="text" value="Bio: {{profile.bio}}"></span>
@@ -100,6 +105,13 @@
                                                     href="#">editar sua senha e detalhes da conta.</a>
                                             </p>
                                         </div>
+                                <!-- --  <div class="mt-4">
+                                    <p>{{month}}</p>
+                                    <p>{{total_orders}}</p>
+                                    </div> -->
+                                    <div>
+                                      <canvas style="height: 100px;" id="myChart"></canvas>
+                                    </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
@@ -113,7 +125,6 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Pedido</th>
-
                                                             <th>Data</th>
                                                             <th>Status</th>
                                                             <th>Status de Pgto.</th>
@@ -122,7 +133,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {% for o in orders %}
+                                                        {% for o in orders_list %}
                                                         <tr>
                                                             <td>PEDIDO_Nº{{o.id}}</td>
                                                             <td>{{o.data_pedido}}</td>
@@ -281,7 +292,10 @@
                                                         <i data-address-id="{{address.id}}" style="display: none;" class="fa fa-check-circle text-success check{{address.id}}" style="display:none;"></i>
                                                         <button data-address-id="{{address.id}}" class="btn make-default-address button{{address.id}} action_btn">Tornar Padrão</button>
                                                         <button data-address-id="{{address.id}}" class="btn btn-danger delete-address action_btn">Deletar</button>
-                                                        {% endif %}
+
+
+
+                                                                                {% endif %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -298,7 +312,10 @@
                                                         <button class="btn btn-link" type="button"
                                                             id="addAddressButton">
                                                             Adicionar endereço
-                                                        </button>
+
+
+
+                                                                                                             </button>
                                                     </h5>
                                                 </div>
                                                 <div class="card-body">
@@ -351,7 +368,7 @@
                                                                             name="celular_0" placeholder="Celular">
                                                                     </div>
                                                                 </div>
-</div>
+                                                            </div>
                                                         </div>
                                                         <input type="hidden" name="num_addresses" value="1"
                                                             id="numAddresses">
@@ -369,6 +386,33 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </main>
+
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{month|safe}},
+      datasets: [{
+        label: 'Histórico de Pedidos',
+        data: {{total_orders|safe}},
+        backgroundColor: 'rgb(59, 183, 126)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
 
 {% endblock content %}

@@ -21,7 +21,8 @@ from django.db import IntegrityError
 from django.forms import modelformset_factory
 from .models import PedidoCarrinho, Endereco
 from brazilcep import get_address_from_cep, WebService, exceptions
-
+import calendar
+from django.db.models.functions import ExtractMonth
 
 def index(request):
 
@@ -153,7 +154,13 @@ def detalhes_produto(request, pid):
     # Busca as avaliações do produto, ordenadas pela data
     reviews = AvaliacaoProduto.objects.filter(produto=produto).order_by("-data")
     avaliacoes = AvaliacaoProduto.objects.filter(produto=produto)
-    endereco = Endereco.objects.get(user=request.user, status=True)
+    if request.user.is_authenticated:
+        try:
+            endereco = Endereco.objects.get(user=request.user, status=False)
+        except Endereco.DoesNotExist:
+            endereco = None  # Ou algum valor padrão
+    else:
+        endereco = None
     categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
     # Calcula a média das avaliações
     media_aval = AvaliacaoProduto.objects.filter(produto=produto).aggregate(average_classification=Avg('classificacao'))
@@ -685,10 +692,32 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def customer_dashboard(request):
-    orders = PedidoCarrinho.objects.filter(user=request.user).order_by("-id")
+    orders_list = PedidoCarrinho.objects.filter(user=request.user).order_by("-id")
     addresses = Endereco.objects.filter(user=request.user).order_by("-id")
-
     profile = Profile.objects.get(user=request.user)
+
+    orders = PedidoCarrinho.objects.annotate(month=ExtractMonth("data_pedido")).values("month").annotate(count=Count("id")).values("month", "count")
+    meses_pt = {
+        1: "Janeiro",
+        2: "Fevereiro",
+        3: "Março",
+        4: "Abril",
+        5: "Maio",
+        6: "Junho",
+        7: "Julho",
+        8: "Agosto",
+        9: "Setembro",
+        10: "Outubro",
+        11: "Novembro",
+        12: "Dezembro",
+    }
+
+    month = []
+    total_orders = []
+
+    for o in orders:
+        month.append(meses_pt[o['month']])
+        total_orders.append(o["count"])
 
 
     if request.method == "POST":
@@ -735,9 +764,12 @@ def customer_dashboard(request):
         return redirect('core:dashboard') # Redirect back to the dashboard after POST
 
     context = {
-        "orders": orders,
+        "orders_list": orders_list,
         "addresses": addresses,
         "profile": profile,
+        "orders": orders,
+        "month": month,
+        "total_orders": total_orders,
     }
     return render(request, 'core/dashboard.html', context)
 
@@ -942,3 +974,7 @@ def ajax_contato(request):
 
     else:
         return JsonResponse({"success": False, "message": "Método de requisição inválido."}, status=405)
+
+
+def purchase_guide(request):
+    return render(request, "core/purchase-guide.html")

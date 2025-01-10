@@ -444,19 +444,27 @@
                         <div class="sidebar-widget widget-delivery mb-30 bg-grey-9 box-shadow-none">
                             <h5 class="section-title style-3 mb-20">Endereço de Entrega</h5>
                             <ul>
-                                {% if endereco and endereco.status %}
-                                <li>
-                                    <i class="fi fi-rs-marker mr-10 text-brand"></i>
-                                    <span>{{ endereco.logradouro }}, {{ endereco.numero|default:"" }} - {{ endereco.bairro }} - {{ endereco.localidade }} - {{ endereco.uf }} - {{ endereco.cep }}</span><br><br>
-                                    <span class="text-success">Endereço Verificado</span>
-                                    <a href="{% url 'core:dashboard' %}" class="change float-end">Trocar</a>
-                                </li>
+                                {% if user.is_authenticated %}
+                                    {% if endereco and endereco.status %}
+                                    <li>
+                                        <i class="fi fi-rs-marker mr-10 text-brand"></i>
+                                        <span>{{ endereco.logradouro }}, {{ endereco.numero|default:"" }} - {{ endereco.bairro }} - {{ endereco.localidade }} - {{ endereco.uf }} - {{ endereco.cep }}</span><br><br>
+                                        <span class="text-success">Endereço Verificado</span>
+                                        <a href="{% url 'core:dashboard' %}" class="change float-end">Trocar</a>
+                                    </li>
+                                    {% else %}
+                                    <li>
+                                        <i class="fi fi-rs-marker mr-10 text-brand"></i>
+                                        <span>Nenhum endereço verificado cadastrado.</span>
+                                        <a href="{% url 'core:dashboard' %}" class="change float-end">Adicionar</a>
+                                    </li>
+                                    {% endif %}
                                 {% else %}
-                                <li>
-                                    <i class="fi fi-rs-marker mr-10 text-brand"></i>
-                                    <span>Nenhum endereço verificado cadastrado.</span>
-                                    <a href="#" class="change float-end">Adicionar</a>
-                                </li>
+                                    <li>
+                                        <i class="fi fi-rs-marker mr-10 text-brand"></i>
+                                        <span>Faça login para ver informações de endereço.</span>
+                                        <a href="{% url 'userauths:sign-in' %}" class="change float-end">Login</a>
+                                    </li>
                                 {% endif %}
                                 <li class="hr"><span></span></li>
                             </ul>

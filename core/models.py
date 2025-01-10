@@ -4,8 +4,8 @@ from django.utils.html import mark_safe
 from userauths.models import User
 from taggit.managers import TaggableManager
 from django_ckeditor_5.fields import CKEditor5Field
-
-
+from multiselectfield import MultiSelectField
+from django.utils.safestring import mark_safe
 
 STATUS_CHOICES = (
     ("processing", "Em Processamento"),
@@ -28,6 +28,36 @@ RATING = (
     (4, "★★★★☆"),
     (5, "★★★★★"),
 )
+
+BADGE_CHOICES = (
+    ('hot', 'Destaque'),
+    ('new', 'Novo'),
+    ('sale', 'Promoção'),
+    ('bestseller', 'Mais Vendido'),
+    ('trending', 'Em Alta'),
+    ('recommended', 'Recomendado'),
+    ('exclusive_deal', 'Oferta Exclusiva'),
+    ('free_shipping', 'Frete Grátis'),
+    ('best_price', 'Melhor Preço'),
+    ('just_arrived', 'Recém-Chegado'),
+    ('limited_edition', 'Edição Limitada'),
+    ('organic', 'Orgânico'),
+    ('handmade', 'Feito à Mão'),
+    ('locally_made', 'Produzido Localmente'),
+    ('warranty', 'Garantia'),
+    ('certified', 'Certificado'),
+    ('five_star_rated', 'Classificação 5 Estrelas'),
+    ('last_units', 'Últimas Unidades'),
+    ('flash_sale', 'Oferta Relâmpago'),
+    ('today_only', 'Somente Hoje'),
+    ('gift_idea', 'Sugestão de Presente'),
+    ('most_searched', 'Mais Procurado'),
+    ('combo_deal', 'Oferta Combo'),
+    ('online_only', 'Exclusivo Online'),
+    ('ready_to_ship', 'Pronto para Envio'),
+    ('pre_order', 'Pré-Venda'),
+)
+
 
 def user_directory_path(instance, filename):
     return 'usuario_{0}/{1}'.format(instance.user.id, filename)
@@ -82,6 +112,7 @@ class Vendedor(models.Model):
     def __str__(self):
         return self.titulo
 
+
 class Produto(models.Model):
     pid = ShortUUIDField(unique=True, length=10, max_length=10, alphabet="abcdefgh12345")
 
@@ -110,6 +141,7 @@ class Produto(models.Model):
 
     status_produto = models.CharField(choices=STATUS, max_length=10, default="in_review")
 
+    badges = MultiSelectField(choices=BADGE_CHOICES, blank=True, null=True)
 
 
     status = models.BooleanField(default=True)
@@ -132,8 +164,13 @@ class Produto(models.Model):
         return self.titulo
 
     def obter_porcentagem(self):
-        novo_preco = "-" + str(round(((self.preco_antigo - self.preco) / self.preco_antigo) * 100)) + "%"
-        return novo_preco
+            if self.preco_antigo and self.preco_antigo > 0:
+                novo_preco = "-" + str(round(((self.preco_antigo - self.preco) / self.preco_antigo) * 100)) + "%"
+                return novo_preco
+            return "0%"
+
+    def obter_badges(self):
+        return self.badges if self.badges else []
 
 class ImagemProduto(models.Model):
     imagens = models.ImageField(upload_to="imagens-produto", default="produto.jpg")
@@ -152,7 +189,7 @@ class PedidoCarrinho(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     preco = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
     status_pagamento = models.BooleanField(default=False)
-    data_pedido = models.DateTimeField(auto_now_add=True)
+    data_pedido = models.DateTimeField(auto_now_add=False)
     status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing")
 
     class Meta:

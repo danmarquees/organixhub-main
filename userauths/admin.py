@@ -6,7 +6,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['nome','imagem', 'bio', 'telefone', 'verificado',]
+    list_display = ['user', 'nome','imagem', 'bio', 'telefone', 'verificado',]
 
 
 class ContatoAdmin(admin.ModelAdmin):

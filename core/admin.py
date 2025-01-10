@@ -6,7 +6,10 @@ class ImagemProdutoAdmin(admin.TabularInline):
 
 class ProdutoAdmin(admin.ModelAdmin):
     inlines = [ImagemProdutoAdmin]
-    list_display = ['user', 'titulo', 'imagem_produto', 'preco', 'categoria', 'vendedor', 'destaque', 'status_produto', 'pid']
+    list_display = ['user', 'titulo', 'imagem_produto', 'preco', 'categoria', 'vendedor', 'destaque', 'status_produto', 'pid', 'get_badges']
+    def get_badges(self, obj):
+        return ", ".join(obj.badges) if obj.badges else "Sem Badges"
+    get_badges.short_description = "Badges"
 
 
 class CategoriaAdmin(admin.ModelAdmin):
@@ -20,8 +23,6 @@ class VendedorAdmin(admin.ModelAdmin):
 class PedidoCarrinhoAdmin(admin.ModelAdmin):
     list_editable = ['status_pagamento', 'status_produto']
     list_display = ['user', 'preco', 'status_pagamento','data_pedido', 'status_produto']
-
-
 
 
 class ItensPedidoCarrinhoAdmin(admin.ModelAdmin):
@@ -39,7 +40,6 @@ class WishlistAdmin(admin.ModelAdmin):
 class EnderecoAdmin(admin.ModelAdmin):
     list_editable = ['cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf', 'numero', 'status', 'celular']
     list_display = ['user', 'cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf', 'numero', 'status', 'celular' ]
-
 
 
 
