@@ -26,9 +26,10 @@
                 <div class="row mb-50">
 
                     <div class="col-lg-6">
-                        <form method="post" class="apply-coupon">
-                            <input type="text" placeholder="Entre com o código promocional...">
-                            <button class="btn  btn-md" name="login">Resgatar</button>
+                        <form method="POST" class="apply-coupon">
+                            {% csrf_token %}
+                            <input type="text" name="codigo" placeholder="Entre com o código promocional...">
+                            <button class="btn btn-md" type="submit" name="login">Resgatar</button>
                         </form>
                     </div>
                 </div>
@@ -230,13 +231,51 @@
                                     <td>
                                         <h5 class="text-muted">R${{item.price}}</h5>
                                     </td>
-
                                     <td>
                                         <h5 class="text-brand">R${% widthratio item.price 1 item.qty %}</h5>
                                     </td>
                                 </tr>
                             </tbody>
                             {% endfor %}
+                        </table>
+                        <table class="table no-border">
+                            <tbody>
+                                <tr>
+                                    <td class="cart_total_label">Subtotal</td>
+                                    <td class="cart_total_amount text-brand">R${{cart_total_amount|floatformat:2}}</td>
+                                </tr>
+                                {% if order and order.coupons.all %}
+                                    {% for coupon in order.coupons.all %}
+                                    <tr>
+                                        <td class="cart_total_label">Cupom ({{ coupon.codigo }})</td>
+                                        <td class="cart_total_amount text-danger">-{{coupon.desconto}}%</td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td class="cart_total_label">Desconto Total</td>
+                                        <td class="cart_total_amount text-danger">
+                                            -R${{order.get_discount_amount|floatformat:2}}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="cart_total_label"><strong>Total Final</strong></td>
+                                    <td class="cart_total_amount">
+                                        {% if order and order.coupons.all %}
+                                            <strong class="text-decoration-line-through text-muted me-2">
+                                                R${{cart_total_amount|floatformat:2}}
+                                            </strong>
+                                            <strong class="text-success">
+                                                R${{order.get_final_price|floatformat:2}}
+                                            </strong>
+                                        {% else %}
+                                            <strong class="text-brand">
+                                                R${{cart_total_amount|floatformat:2}}
+                                            </strong>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>

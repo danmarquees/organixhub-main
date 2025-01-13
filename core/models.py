@@ -5,6 +5,7 @@ from userauths.models import User
 from taggit.managers import TaggableManager
 from django_ckeditor_5.fields import CKEditor5Field
 from multiselectfield import MultiSelectField
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 
 STATUS_CHOICES = (
@@ -191,11 +192,60 @@ class PedidoCarrinho(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     preco = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
     status_pagamento = models.BooleanField(default=False)
-    data_pedido = models.DateTimeField(auto_now_add=False)
+    data_pedido = models.DateTimeField(default=timezone.now)
     status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing")
+    coupons = models.ManyToManyField("core.Coupon", blank=True)
 
     class Meta:
-         verbose_name_plural = "Pedidos do Carrinho"
+        verbose_name_plural = "Pedidos do Carrinho"
+
+    def get_original_price(self):
+        """Retorna o preço original antes dos descontos"""
+        try:
+            return float(self.preco)
+        except (TypeError, ValueError):
+            return 0.0
+
+    def get_discount_amount(self):
+        """Calcula o valor total do desconto de todos os cupons aplicados"""
+        if not self.coupons.exists():
+            return 0.0
+
+        preco_original = self.get_original_price()
+        desconto_total = 0.0
+
+        for coupon in self.coupons.all():
+            desconto = (float(coupon.desconto) / 100) * preco_original
+            desconto_total += desconto
+
+        return desconto_total
+
+    def get_final_price(self):
+        """Retorna o preço final com todos os descontos aplicados"""
+        try:
+            preco_original = self.get_original_price()
+            desconto_total = self.get_discount_amount()
+            return preco_original - desconto_total
+        except (TypeError, ValueError):
+            return 0.0
+
+    def apply_coupon(self, coupon):
+        """Aplica o cupom e calcula o novo preço"""
+        if not coupon.is_valid():
+            raise ValueError("Cupom inválido ou expirado")
+
+        preco_atual = self.get_original_price()
+        desconto = (float(coupon.desconto) / 100) * preco_atual
+        novo_preco = preco_atual - desconto
+
+        self.preco = Decimal(str(novo_preco))
+        self.coupons.add(coupon)
+        self.save()
+
+        return desconto
+
+    def __str__(self):
+        return f"Pedido #{self.id} - {self.user.username}"
 
 class ItensPedidoCarrinho(models.Model):
     pedido = models.ForeignKey(PedidoCarrinho, on_delete=models.CASCADE)
@@ -269,3 +319,45 @@ class Endereco(models.Model):
 
     class Meta:
             verbose_name_plural = "Endereço"
+
+
+class Coupon(models.Model):
+    codigo = models.CharField(max_length=50, unique=True)
+    desconto = models.DecimalField(max_digits=5, decimal_places=2)  # percentage
+    ativo = models.BooleanField(default=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_validade = models.DateTimeField(null=True, blank=True)
+    valor_minimo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    usos_maximos = models.IntegerField(null=True, blank=True)
+    usos_atuais = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Cupom'
+        verbose_name_plural = 'Cupons'
+
+    def __str__(self):
+        return f"{self.codigo} ({self.desconto}% off)"
+
+    def is_valid(self):
+        if not self.ativo:
+            return False
+
+        if self.data_validade and timezone.now() > self.data_validade:
+            return False
+
+        if self.usos_maximos and self.usos_atuais >= self.usos_maximos:
+            return False
+
+        return True
+
+    def apply_to_order(self, order):
+        if not self.is_valid():
+            raise ValueError("Cupom inválido ou expirado")
+
+        if self.valor_minimo and order.preco < self.valor_minimo:
+            raise ValueError(f"Valor mínimo do pedido não atingido (R${self.valor_minimo})")
+
+        desconto = (float(self.desconto) / 100) * float(order.preco)
+        novo_preco = order.preco - desconto
+
+        return novo_preco

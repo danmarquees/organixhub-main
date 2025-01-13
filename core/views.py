@@ -3,7 +3,7 @@ from django.http import JsonResponse # Importa JsonResponse para retornar respos
 from django.shortcuts import HttpResponse, render, get_object_or_404, redirect # Importa funções para renderizar templates e lidar com requisições
 from django.db.models import Count, Avg, Min, Max, F, Func # Importa funções para contagem e agregação de dados
 from taggit.models import Tag # Importa o modelo Tag para lidar com tags
-from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco # Importa modelos do aplicativo core
+from core.models import Produto, Categoria, Vendedor, PedidoCarrinho, ItensPedidoCarrinho, Wishlist, ImagemProduto, AvaliacaoProduto, Endereco, Coupon # Importa modelos do aplicativo core
 from core.forms import AvaliacaoProdutoForm # Importa o formulário para avaliações de produtos
 from userauths.models import User, Profile, Contato # Importa o modelo de usuário
 from django.utils import timezone # Importa funções relacionadas a data e hora
@@ -540,92 +540,102 @@ def checkout(request):
     total_amount = 0.0
     errors = []
 
+    # Get the existing unpaid order or None
+    try:
+        order = PedidoCarrinho.objects.filter(
+            user=request.user,
+            status_pagamento=False
+        ).order_by('-data_pedido').first()
+    except Exception as e:
+        errors.append(f"Error retrieving order: {str(e)}")
+        order = None
+
+    # Calculate cart total first
     if 'cart_data_obj' in request.session:
-        for p_id, item in request.session['cart_data_obj'].items():
+        cart_data = request.session.get('cart_data_obj', {})
+        for p_id, item in cart_data.items():
             try:
                 qty = int(item['qty'])
                 price = float(item['price'])
                 if qty <= 0 or price <= 0:
-                    errors.append(f"Invalid quantity or price for item {item['title']}.")
                     continue
                 total_amount += qty * price
             except (ValueError, TypeError, KeyError) as e:
                 errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
 
-        order = PedidoCarrinho.objects.create(
-            user=request.user,
-            preco=total_amount,
-            status_pagamento=False # Inicializa o status de pagamento como False
-        )
+        # Create or update order with initial total
+        if total_amount > 0:
+            try:
+                if not order:
+                    order = PedidoCarrinho.objects.create(
+                        user=request.user,
+                        preco=total_amount,
+                        status_pagamento=False,
+                        data_pedido=timezone.now()
+                    )
+                else:
+                    order.preco = total_amount
+                    order.save()
+            except Exception as e:
+                errors.append(f"Error creating/updating order: {str(e)}")
 
-        for p_id, item in request.session['cart_data_obj'].items():
+        # Format cart data
+        cart_data_formatted = {}
+        cart_total_amount = total_amount
+
+        for p_id, item in cart_data.items():
             try:
                 qty = int(item['qty'])
                 price = float(item['price'])
                 if qty <= 0 or price <= 0:
-                    errors.append(f"Invalid quantity or price for item {item['title']}.")
                     continue
-                ItensPedidoCarrinho.objects.create(
-                    pedido=order,
-                    num_fatura="INVOICE_NO" + str(order.id),
-                    status_produto="published",
-                    item=item['title'],
-                    imagem=item['image'],
-                    qtd=qty,
-                    preco=Decimal(str(price)),
-                    total=Decimal(str(qty * price))
-                )
+                subtotal = qty * price
+                cart_data_formatted[p_id] = {
+                    'title': item['title'],
+                    'qty': qty,
+                    'price': "{:.2f}".format(price),
+                    'image': item['image'],
+                    'pid': item['pid'],
+                    'subtotal': "{:.2f}".format(subtotal)
+                }
             except (ValueError, TypeError, KeyError) as e:
-                errors.append(f"Error creating cart item: {e}")
+                errors.append(f"Error formatting cart item: {e}")
 
+        # Calculate final price
+        if order and order.coupons.exists():
+            final_price = order.get_final_price()
+        else:
+            final_price = cart_total_amount
 
-    host = request.get_host()
-    cart_total_amount = 0.0  # Initialize as float
-    cart_data = request.session.get('cart_data_obj', {})
-    cart_data_formatted = {}
-    for p_id, item in cart_data.items():
-        try:
-            qty = int(item['qty'])
-            price = float(item['price'])
-            if qty <= 0 or price <= 0:
-                errors.append(f"Invalid quantity or price for item {item['title']}.")
-                continue
+        # Configure PayPal
+        host = request.get_host()
+        paypal_dict = {
+            'business': settings.PAYPAL_RECEIVER_EMAIL,
+            'amount': "{:.2f}".format(final_price if final_price is not None else cart_total_amount),
+            'item_name': f"Order-Item-No-{order.id if order else ''}",
+            'invoice': f"INVOICE-{order.id if order else ''}",
+            'currency_code': "BRL",
+            'notify_url': f'http://{host}{reverse("core:paypal-ipn")}',
+            'return_url': f'http://{host}{reverse("core:payment-completed")}',
+            'cancel_url': f'http://{host}{reverse("core:payment-failed")}',
+        }
 
-            subtotal = qty * price
-            cart_total_amount += subtotal
-            cart_data_formatted[p_id] = {
-                'title': item['title'],
-                'qty': qty,
-                'price': "{:.2f}".format(price),
-                'image': item['image'],
-                'pid': item['pid'],
-                'subtotal': "{:.2f}".format(subtotal)
-            }
-        except (ValueError, TypeError) as e:
-            errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
-        except KeyError as e:
-            errors.append(f"Missing key '{e}' in cart item {item.get('title', 'unknown')}.")
+        paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
 
-    paypal_dict = {
-        'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': cart_total_amount,
-        'item_name': "Order-Item-No-" + str(order.id),
-        'invoice': "INVOICE-{}" + str(order.id),
-        'currency_code': "BRL",
-        'notify_url': 'http://{}{}'.format(host, reverse("core:paypal-ipn")),
-        'return_url': 'http://{}{}'.format(host, reverse("core:payment-completed")),
-        'cancel_url': 'http://{}{}'.format(host, reverse("core:payment-failed")),
-    }
+        context = {
+            "cart_data": cart_data_formatted,
+            'totalcartitems': len(cart_data),
+            'cart_total_amount': "{:.2f}".format(cart_total_amount),
+            'final_price': "{:.2f}".format(final_price if final_price is not None else cart_total_amount),
+            'errors': errors,
+            'paypal_payment_button': paypal_payment_button,
+            'order': order,
+        }
 
-    paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
-
-    return render(request, "core/checkout.html", {
-        "cart_data": cart_data_formatted,
-        'totalcartitems': len(cart_data),
-        'cart_total_amount': "{:.2f}".format(cart_total_amount),
-        'errors': errors,
-        'paypal_payment_button': paypal_payment_button,
-    })
+        return render(request, "core/checkout.html", context)
+    else:
+        messages.warning(request, "Seu carrinho está vazio!")
+        return redirect("core:index")
 
 
 
@@ -860,9 +870,11 @@ def product_quickview(request, pid):
     if request.method == 'GET':
         try:
             produto = get_object_or_404(Produto, pid=pid)
+            p_imagem = produto.p_imagem.all()
 
             # Prepare os dados do produto
             context = {
+                'p_imagem': p_imagem,
                 'pid': produto.pid,
                 'titulo': produto.titulo,
                 'preco': str(produto.preco),
