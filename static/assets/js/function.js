@@ -646,3 +646,83 @@ $(document).on("submit", "#contact-form-ajax", (e) => {
     },
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const quickviewButtons = document.querySelectorAll(".quickview-button");
+
+  quickviewButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const pid = button.dataset.pid;
+
+      fetch(`/quickview/${pid}/`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Construa o HTML do modal com os dados do produto
+          const productHTML = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="product-image">
+                                    <img src="${data.imagem}" alt="${data.titulo}" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="product-info">
+                                    <h2 class="product-title">${data.titulo}</h2>
+                                    <div class="product-price">
+                                        ${data.preco_antigo ? `<del>R$ ${data.preco_antigo}</del>` : ""}
+                                        <span class="current-price">R$ ${data.preco}</span>
+                                        ${
+                                          data.porcentagem_desconto !== "0%"
+                                            ? `<span class="discount-badge">${data.porcentagem_desconto}</span>`
+                                            : ""
+                                        }
+                                    </div>
+                                    <div class="product-meta">
+                                        <span class="category">Categoria: ${data.categoria}</span>
+                                        <span class="vendor">Vendedor: ${data.vendedor}</span>
+                                    </div>
+                                    <div class="product-description">
+                                        ${data.descricao}
+                                    </div>
+                                    <div class="stock-status">
+                                        ${
+                                          data.em_estoque
+                                            ? `<span class="in-stock">Em estoque (${data.qtd_estoque})</span>`
+                                            : '<span class="out-of-stock">Fora de estoque</span>'
+                                        }
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="add-to-cart-btn btn btn-primary">
+                                            Adicionar ao Carrinho
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+          // Insira o HTML no modal e mostre-o
+          const modalBody = document.querySelector(
+            "#quickViewModal .modal-body",
+          );
+          modalBody.innerHTML = productHTML;
+
+          // Inicialize o modal (assumindo que você está usando Bootstrap)
+          const modal = new bootstrap.Modal(
+            document.getElementById("quickViewModal"),
+          );
+          modal.show();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Erro ao carregar dados do produto");
+        });
+    });
+  });
+});

@@ -858,22 +858,27 @@ def buscar_endereco(request):
 
 def product_quickview(request, pid):
     if request.method == 'GET':
-        produto = get_object_or_404(Produto, pid=pid)  # Fetch the product
-        # Prepare data for JSON response.  Include only necessary fields for efficiency.
-        context = {
-            'pid': produto.pid,
-            'titulo': produto.titulo,
-            'preco': str(produto.preco),
-            'preco_antigo': str(produto.preco_antigo),
-            'descricao': produto.descricao,
-            'imagem': produto.imagem.url,
-            'vendedor': produto.vendedor.titulo if produto.vendedor else None,
-            'categoria': produto.categoria.titulo if produto.categoria else None,
+        try:
+            produto = get_object_or_404(Produto, pid=pid)
 
-        }
-        return JsonResponse(context)  # Return JSON data
-    else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
+            # Prepare os dados do produto
+            context = {
+                'pid': produto.pid,
+                'titulo': produto.titulo,
+                'preco': str(produto.preco),
+                'preco_antigo': str(produto.preco_antigo),
+                'descricao': produto.descricao,
+                'imagem': produto.imagem.url if produto.imagem else None,
+                'vendedor': produto.vendedor.titulo if produto.vendedor else None,
+                'categoria': produto.categoria.titulo if produto.categoria else None,
+                'em_estoque': produto.em_estoque,
+                'qtd_estoque': produto.qtd_estoque,
+                'porcentagem_desconto': produto.obter_porcentagem(),
+            }
+            return JsonResponse(context)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 @login_required
 def wishlist(request):
