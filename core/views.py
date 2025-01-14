@@ -533,14 +533,11 @@ def update_from_cart(request):
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
 
-
 @login_required
 def checkout(request):
-    cart_total_amount = 0.0
-    total_amount = 0.0
+    cart_total_amount = Decimal('0.00')
     errors = []
 
-    # Get the existing unpaid order or None
     try:
         order = PedidoCarrinho.objects.filter(
             user=request.user,
@@ -550,68 +547,86 @@ def checkout(request):
         errors.append(f"Error retrieving order: {str(e)}")
         order = None
 
-    # Calculate cart total first
-    if 'cart_data_obj' in request.session:
-        cart_data = request.session.get('cart_data_obj', {})
-        for p_id, item in cart_data.items():
+    # Processa o carrinho
+    cart_data = request.session.get('cart_data_obj', {})
+    cart_data_formatted = {}
+
+    # Calcula o total do carrinho
+    for p_id, item in cart_data.items():
+        try:
+            qty = int(item['qty'])
+            price = Decimal(str(item['price']))
+            if qty <= 0 or price <= 0:
+                continue
+            subtotal = qty * price
+            cart_total_amount += subtotal
+
+            cart_data_formatted[p_id] = {
+                'title': item['title'],
+                'qty': qty,
+                'price': "{:.2f}".format(price),
+                'image': item['image'],
+                'pid': item['pid'],
+                'subtotal': "{:.2f}".format(subtotal)
+            }
+        except (ValueError, TypeError, KeyError) as e:
+            errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
+
+    # Processa o cupom
+    if request.method == "POST":
+        codigo = request.POST.get("codigo")
+
+        if not codigo:
+            messages.warning(request, "Por favor, insira um código de cupom.")
+            return redirect("core:checkout")
+
+        try:
+            # Busca o cupom
+            coupon = Coupon.objects.get(codigo=codigo, ativo=True)
+
+            # Verifica se o pedido existe ou cria um novo
+            if not order:
+                order = PedidoCarrinho.objects.create(
+                    user=request.user,
+                    preco=cart_total_amount,
+                    status_pagamento=False,
+                    data_pedido=timezone.now()
+                )
+            else:
+                # Atualiza o preço do pedido com o valor atual do carrinho
+                order.preco = cart_total_amount
+                order.save()
+
+            # Tenta aplicar o cupom
             try:
-                qty = int(item['qty'])
-                price = float(item['price'])
-                if qty <= 0 or price <= 0:
-                    continue
-                total_amount += qty * price
-            except (ValueError, TypeError, KeyError) as e:
-                errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
+                desconto = order.apply_coupon(coupon)
+                messages.success(request,
+                    f"Cupom '{codigo}' aplicado com sucesso! "
+                    f"Desconto de {coupon.desconto}% aplicado. "
+                    f"Economia de R${desconto:.2f}")
 
-        # Create or update order with initial total
-        if total_amount > 0:
-            try:
-                if not order:
-                    order = PedidoCarrinho.objects.create(
-                        user=request.user,
-                        preco=total_amount,
-                        status_pagamento=False,
-                        data_pedido=timezone.now()
-                    )
-                else:
-                    order.preco = total_amount
-                    order.save()
-            except Exception as e:
-                errors.append(f"Error creating/updating order: {str(e)}")
+            except ValueError as e:
+                messages.warning(request, str(e))
+                return redirect("core:checkout")
 
-        # Format cart data
-        cart_data_formatted = {}
-        cart_total_amount = total_amount
+        except Coupon.DoesNotExist:
+            messages.warning(request, "Cupom não encontrado ou inativo.")
+        except Exception as e:
+            messages.error(request, f"Erro ao aplicar cupom: {str(e)}")
 
-        for p_id, item in cart_data.items():
-            try:
-                qty = int(item['qty'])
-                price = float(item['price'])
-                if qty <= 0 or price <= 0:
-                    continue
-                subtotal = qty * price
-                cart_data_formatted[p_id] = {
-                    'title': item['title'],
-                    'qty': qty,
-                    'price': "{:.2f}".format(price),
-                    'image': item['image'],
-                    'pid': item['pid'],
-                    'subtotal': "{:.2f}".format(subtotal)
-                }
-            except (ValueError, TypeError, KeyError) as e:
-                errors.append(f"Error formatting cart item: {e}")
+        return redirect("core:checkout")
 
-        # Calculate final price
-        if order and order.coupons.exists():
-            final_price = order.get_final_price()
-        else:
-            final_price = cart_total_amount
+    # Configura PayPal
+    if order:
+        final_amount = order.preco
+    else:
+        final_amount = cart_total_amount
 
-        # Configure PayPal
+    if final_amount > 0:
         host = request.get_host()
         paypal_dict = {
             'business': settings.PAYPAL_RECEIVER_EMAIL,
-            'amount': "{:.2f}".format(final_price if final_price is not None else cart_total_amount),
+            'amount': "{:.2f}".format(float(final_amount)),
             'item_name': f"Order-Item-No-{order.id if order else ''}",
             'invoice': f"INVOICE-{order.id if order else ''}",
             'currency_code': "BRL",
@@ -619,23 +634,26 @@ def checkout(request):
             'return_url': f'http://{host}{reverse("core:payment-completed")}',
             'cancel_url': f'http://{host}{reverse("core:payment-failed")}',
         }
-
         paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
-
-        context = {
-            "cart_data": cart_data_formatted,
-            'totalcartitems': len(cart_data),
-            'cart_total_amount': "{:.2f}".format(cart_total_amount),
-            'final_price': "{:.2f}".format(final_price if final_price is not None else cart_total_amount),
-            'errors': errors,
-            'paypal_payment_button': paypal_payment_button,
-            'order': order,
-        }
-
-        return render(request, "core/checkout.html", context)
     else:
+        paypal_payment_button = None
+
+    # Prepara o contexto para o template
+    context = {
+        "cart_data": cart_data_formatted,
+        'totalcartitems': len(cart_data),
+        'cart_total_amount': "{:.2f}".format(cart_total_amount),
+        'order': order,
+        'final_amount': "{:.2f}".format(final_amount),
+        'errors': errors,
+        'paypal_payment_button': paypal_payment_button,
+    }
+
+    if not cart_data:
         messages.warning(request, "Seu carrinho está vazio!")
         return redirect("core:index")
+
+    return render(request, "core/checkout.html", context)
 
 
 

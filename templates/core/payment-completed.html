@@ -115,20 +115,38 @@
                                                     R${{cart_total_amount}}
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <!--<td colspan="3" class="text-end f-w-600">
-                                                    Tax
-                                                </td>
-                                                <td class="text-right">
-                                                    $85. 99
-                                                </td> -->
-                                            </tr>
+                                            {% if order and order.coupons.all %}
+                                                {% for coupon in order.coupons.all %}
+                                                <tr>
+                                                    <td colspan="3" class="text-end f-w-600 text-danger"></td>
+                                                        Cupom ({{ coupon.codigo }})
+                                                </tr>td>
+                                                    <td class="text-right text-danger"></td>
+                                                        -{{coupon.desconto}}%
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                <tr>
+                                                    <td colspan="3" class="text-end f-w-600 text-danger"></td>
+                                                        Desconto Total
+                                                </tr>td>
+                                                    <td class="text-right text-danger"></td>
+                                                        -R${{order.get_discount_amount|floatformat:2}}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
                                             <tr>
                                                 <td colspan="3" class="text-end f-w-600">
-                                                    Grand Total
+                                                    Total Final
                                                 </td>
                                                 <td class="text-right f-w-600">
-                                                    R${{cart_total_amount}}
+                                                    {% if order and order.coupons.all %}
+                                                        <span class="text-decoration-line-through text-muted">R${{cart_total_amount}}</span>
+                                                        <br>
+                                                        <span class="text-success">R${{order.get_final_price|floatformat:2}}</span>
+                                                    {% else %}
+                                                        R${{cart_total_amount}}
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         </tbody>

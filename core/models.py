@@ -8,6 +8,7 @@ from multiselectfield import MultiSelectField
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 
+
 STATUS_CHOICES = (
     ("processing", "Em Processamento"),
     ("shipped", "Enviado"),
@@ -191,61 +192,59 @@ class ImagemProduto(models.Model):
 class PedidoCarrinho(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     preco = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
-    status_pagamento = models.BooleanField(default=False)
+    status_pagamento = models.BooleanField(default=False, null=True)
     data_pedido = models.DateTimeField(default=timezone.now)
     status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing")
-    coupons = models.ManyToManyField("core.Coupon", blank=True)
+    coupons = models.ManyToManyField('Coupon', blank=True)
 
     class Meta:
         verbose_name_plural = "Pedidos do Carrinho"
 
-    def get_original_price(self):
-        """Retorna o preço original antes dos descontos"""
-        try:
-            return float(self.preco)
-        except (TypeError, ValueError):
-            return 0.0
-
     def get_discount_amount(self):
-        """Calcula o valor total do desconto de todos os cupons aplicados"""
-        if not self.coupons.exists():
-            return 0.0
-
+        from decimal import Decimal
+        if not self.coupons.filter(ativo=True).exists():
+            return Decimal('0.00')
         preco_original = self.get_original_price()
-        desconto_total = 0.0
+        return Decimal(str(preco_original)) - Decimal(str(self.preco))
 
-        for coupon in self.coupons.all():
-            desconto = (float(coupon.desconto) / 100) * preco_original
-            desconto_total += desconto
-
-        return desconto_total
-
-    def get_final_price(self):
-        """Retorna o preço final com todos os descontos aplicados"""
-        try:
-            preco_original = self.get_original_price()
-            desconto_total = self.get_discount_amount()
-            return preco_original - desconto_total
-        except (TypeError, ValueError):
-            return 0.0
+    def get_original_price(self):
+        from decimal import Decimal
+        if not self.coupons.filter(ativo=True).exists():
+            return self.preco
+        # Recalcula o preço original baseado nos cupons aplicados
+        preco_atual = Decimal(str(self.preco))
+        for coupon in self.coupons.filter(ativo=True):
+            desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0'))
+            preco_atual = preco_atual / (Decimal('1.0') - desconto)
+        return preco_atual
 
     def apply_coupon(self, coupon):
-        """Aplica o cupom e calcula o novo preço"""
+        """Aplica um cupom ao pedido"""
+        from decimal import Decimal
+
+        # Verifica se o cupom já foi aplicado
+        if coupon in self.coupons.all():
+            raise ValueError("Este cupom já está aplicado ao pedido")
+
+        # Verifica se o cupom é válido
         if not coupon.is_valid():
             raise ValueError("Cupom inválido ou expirado")
 
-        preco_atual = self.get_original_price()
-        desconto = (float(coupon.desconto) / 100) * preco_atual
-        novo_preco = preco_atual - desconto
+        # Calcula o desconto
+        desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0')) * self.preco
+        novo_preco = self.preco - desconto
 
-        self.preco = Decimal(str(novo_preco))
+        # Aplica o cupom
         self.coupons.add(coupon)
+        self.preco = novo_preco
         self.save()
+
+        # Atualiza o contador de usos do cupom
+        coupon.usos_atuais += 1
+        coupon.save()
 
         return desconto
 
-    def __str__(self):
-        return f"Pedido #{self.id} - {self.user.username}"
 
 class ItensPedidoCarrinho(models.Model):
     pedido = models.ForeignKey(PedidoCarrinho, on_delete=models.CASCADE)
@@ -323,9 +322,9 @@ class Endereco(models.Model):
 
 class Coupon(models.Model):
     codigo = models.CharField(max_length=50, unique=True)
-    desconto = models.DecimalField(max_digits=5, decimal_places=2)  # percentage
+    desconto = models.DecimalField(max_digits=5, decimal_places=2)
     ativo = models.BooleanField(default=True)
-    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_criacao = models.DateTimeField(default=timezone.now)
     data_validade = models.DateTimeField(null=True, blank=True)
     valor_minimo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     usos_maximos = models.IntegerField(null=True, blank=True)
@@ -339,25 +338,30 @@ class Coupon(models.Model):
         return f"{self.codigo} ({self.desconto}% off)"
 
     def is_valid(self):
+        """Verifica se o cupom é válido"""
+        # Verifica se o cupom está ativo
         if not self.ativo:
             return False
 
+        # Verifica a data de validade
         if self.data_validade and timezone.now() > self.data_validade:
             return False
 
+        # Verifica o número máximo de usos
         if self.usos_maximos and self.usos_atuais >= self.usos_maximos:
             return False
 
         return True
 
-    def apply_to_order(self, order):
-        if not self.is_valid():
-            raise ValueError("Cupom inválido ou expirado")
+    def check_validity(self):
+        """Verifica a validade e retorna mensagem de erro se houver"""
+        if not self.ativo:
+            raise ValueError("Este cupom não está mais ativo")
 
-        if self.valor_minimo and order.preco < self.valor_minimo:
-            raise ValueError(f"Valor mínimo do pedido não atingido (R${self.valor_minimo})")
+        if self.data_validade and timezone.now() > self.data_validade:
+            raise ValueError("Este cupom está expirado")
 
-        desconto = (float(self.desconto) / 100) * float(order.preco)
-        novo_preco = order.preco - desconto
+        if self.usos_maximos and self.usos_atuais >= self.usos_maximos:
+            raise ValueError("Este cupom atingiu o limite máximo de usos")
 
-        return novo_preco
+        return True
