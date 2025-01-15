@@ -41,7 +41,11 @@ class EnderecoAdmin(admin.ModelAdmin):
     list_editable = ['cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf', 'numero', 'status', 'celular']
     list_display = ['user', 'cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf', 'numero', 'status', 'celular' ]
 
-
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ['codigo', 'desconto', 'ativo', 'data_criacao', 'data_validade', 'valor_minimo', 'usos_maximos', 'usos_atuais']
+    list_editable = ['ativo', 'data_validade', 'valor_minimo', 'usos_maximos']
+    search_fields = ['codigo']
+    list_filter = ['ativo', 'data_criacao', 'data_validade']
 
 admin.site.register(Produto, ProdutoAdmin)
 admin.site.register(Categoria, CategoriaAdmin)
@@ -51,4 +55,4 @@ admin.site.register(ItensPedidoCarrinho, ItensPedidoCarrinhoAdmin)
 admin.site.register(AvaliacaoProduto, AvaliacaoProdutoAdmin)
 admin.site.register(Wishlist, WishlistAdmin)
 admin.site.register(Endereco, EnderecoAdmin)
-admin.site.register(Coupon)
+admin.site.register(Coupon, CouponAdmin)

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django import views
-from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail, make_address_default, delete_address,  buscar_endereco, product_quickview,  add_to_wishlist, wishlist, delete_wishlist_item, contact, ajax_contato, purchase_guide
+from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail, make_address_default, delete_address,  buscar_endereco, product_quickview,  add_to_wishlist, wishlist, delete_wishlist_item, contact, ajax_contato, purchase_guide, paypal_ipn
 
 app_name = "core"
 
@@ -24,7 +24,7 @@ urlpatterns = [
     path('delete-item-from-cart/', delete_item_from_cart, name='delete-item-from-cart'), # Rota para remover um item do carrinho
     path("update-cart/", update_from_cart, name='update-from-cart'), # Rota para atualizar a quantidade de um item no carrinho
     path("checkout/", checkout, name="checkout"), # Rota para a página de checkout
-    path('paypal/', include('paypal.standard.ipn.urls')),
+    path('payment/paypal-ipn/', paypal_ipn, name='paypal-ipn'),
     path("pagamento-efetuado/", pagamento_efetuado, name="payment-completed"),
     path("pagamento-falha/", pagamento_falha, name="payment-failed"),
     path("dashboard/", customer_dashboard, name="dashboard"),

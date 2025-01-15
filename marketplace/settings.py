@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-ubra-h&yoo@_a7$2opov&inr%o^geug_*db500c7k0@!k(h#zy
 DEBUG = True
 
 ALLOWED_HOSTS = []
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 LOGGING = {
     'version': 1,
@@ -187,6 +188,11 @@ JAZZMIN_SETTINGS = {
     },
 }
 
+JAZZMIN_UI_TWEAKS = {
+
+    "theme": "darkly",
+}
+
 LOGIN_URL = "userauths:sign-in"
 
 AUTH_USER_MODEL = 'userauths.User'
@@ -261,5 +267,5 @@ CKEDITOR_5_CONFIGS = {
 }
 
 
-PAYPAL_RECEIVER_EMAIL = 'organyxhub@business.example.com'
-PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = os.environ.get('organyxhub@business.example.com', 'danmarquees@personal.example.com')
+PAYPAL_TEST = os.environ.get('PAYPAL_TEST', 'True').lower() in ('true', '1', 't') # Boolean from env var

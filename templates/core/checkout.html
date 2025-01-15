@@ -26,11 +26,7 @@
                 <div class="row mb-50">
 
                     <div class="col-lg-6">
-                        <form method="POST" class="apply-coupon">
-                            {% csrf_token %}
-                            <input type="text" name="codigo" placeholder="Entre com o código promocional...">
-                            <button class="btn btn-md" type="submit">Resgatar</button>
-                        </form>
+
                     </div>
                 </div>
                 <div class="row">
@@ -259,21 +255,21 @@
                                     </tr>
                                 {% endif %}
                                 <tr>
-                                    <td class="cart_total_label"><strong>Total Final</strong></td>
-                                    <td class="cart_total_amount">
-                                        <strong class="text-brand">
-                                            {% if order and order.coupons.all %}
-                                                <span class="text-decoration-line-through text-muted me-2">
-                                                    R${{order.get_original_price|floatformat:2}}
-                                                </span>
-                                                <span class="text-success">
-                                                    R${{order.preco|floatformat:2}}
-                                                </span>
-                                            {% else %}
-                                                R${{cart_total_amount}}
-                                            {% endif %}
-                                        </strong>
-                                    </td>
+                                <td class="text-brand"><strong>Total Final</strong></td>
+                                <td class="cart_total_amount">
+                                    <strong class="text-brand">
+                                        {% if order and order.coupons.all %}
+                                            <span class="text-decoration-line-through text-muted me-2">
+                                                R${{cart_total_amount|floatformat:2}}
+                                            </span>
+                                            <span class="text-success">
+                                                R${{order.preco|floatformat:2}}
+                                            </span>
+                                        {% else %}
+                                            R${{cart_total_amount|floatformat:2}}
+                                        {% endif %}
+                                    </strong>
+                                </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -282,43 +278,94 @@
                 <div class="payment ml-30">
                     <h4 class="mb-30">Pagamento</h4>
                     <div class="payment_option">
-                        <div class="custome-radio">
-                            <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" checked="">
-                            <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#creditCardPayment" aria-controls="creditCardPayment">Cartão de Crédito</label>
-                        </div>
-                        <div class="custome-radio">
-                            <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" checked="">
-                            <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#creditCardPayment" aria-controls="creditCardPayment">Cartão de Débito</label>
-                        </div>
-                        <div id="creditCardPayment" class="collapse">
-                            <div class="form-group">
-                                <input type="text" name="card_number" placeholder="Número do Cartão">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="card_expiry" placeholder="Data de Expiração (MM/AA)">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="card_cvv" placeholder="CVV">
-                            </div>
-                        </div>
-                        <div class="custome-radio">
-                            <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" checked="">
-                            <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">PayPal</label>
+                        <button type="button" class="btn w-100" id="checkout-button" style="background-color: blueviolet;">Pagar com o Stripe (Cartão de Crédito)</button>
+                        <button type="button" class="btn w-100" style="background-color: rgb(50, 188, 173); color: white;">Pagar com Pix</button>
+                        <div id="paypal-button-container">
                         </div>
                     </div>
+                     <br>
+                    <div>
+                        <form method="POST" class="apply-coupon">
+                            {% csrf_token %}
+                            <input type="text" name="codigo" placeholder="Entre com o código promocional...">
+                            <button class="btn btn-md" type="submit">Resgatar</button>
+                        </form>
+                    </div>
+                    <br>
                     <div class="payment-logo d-flex">
                         <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-paypal.svg' %}" alt="">
                         <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-visa.svg' %}" alt="">
                         <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-master.svg' %}" alt="">
                         <img src="{% static 'assets/imgs/theme/icons/payment-zapper.svg' %}" alt="">
                     </div>
-                    <div class="w-50">
-                        {{paypal_payment_button.render}}
-                    </div>
-                   <!--<a href="#" class="btn btn-fill-out btn-block mt-30">Finalizar Pedido<i class="fi-rs-sign-out ml-15"></i></a> -->
                 </div>
             </div>
         </div>
     </div>
 </main>
+
+<script src="https://www.paypal.com/sdk/js?client-id=ActiYRgid4P6FwWy3KerAY3kDkxgu7oSkL_Vtxya4KYFZHlLdazU2MpcOsJDoFxEBix30Pv9FOaZjo-I&currency=BRL"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            const cartItems = JSON.parse('{{ cart_data|escapejs }}');
+            const items = [];
+
+            if (Object.keys(cartItems).length === 0) {
+                console.error("Cart is empty");
+                alert("Seu carrinho está vazio. Por favor, adicione itens ao carrinho.");
+                return;
+            }
+
+            for (const [productId, item] of Object.entries(cartItems)) {
+                const price = parseFloat(item.price.replace(",", "."));
+                if (isNaN(price) || item.qty <= 0 || !item.title) {
+                    console.error("Invalid cart item:", item);
+                    alert("Seu carrinho contém itens inválidos.");
+                    return;
+                }
+                items.push({
+                    name: item.title,
+                    quantity: item.qty,
+                    unit_amount: {
+                        value: price,
+                        currency_code: 'BRL'
+                    }
+                });
+            }
+
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: "{{ order.preco|floatformat:2 }}".replace(",", "."),
+                        currency_code: 'BRL'
+                    },
+                    items: items
+                }]
+            }).catch(function(error) {
+                console.error('Error creating order:', error);
+                alert('Erro ao criar o pedido. Por favor, tente novamente mais tarde.');
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                console.log(details);
+                if (details.status === "COMPLETED") {
+                    const redirectUrl = '/payment-completed/' + details.purchase_units[0].payments.captures[0].id;
+                    window.location.href = redirectUrl;
+                } else {
+                    console.error("Payment not completed:", details);
+                }
+            }).catch(function(error) {
+                console.error('Error capturing order:', error);
+            });
+        },
+        onError: function(error) {
+            console.error('PayPal error:', error);
+        }
+    }).render('#paypal-button-container');
+</script>
+
 {% endblock content %}

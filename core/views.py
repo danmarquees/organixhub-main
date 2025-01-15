@@ -25,7 +25,7 @@ import calendar
 from django.db.models.functions import ExtractMonth
 from django.db.models.functions import Cast
 from django.db.models import CharField
-
+from paypal.standard.ipn.forms import PayPalIPNForm
 
 def index(request):
     produtos = Produto.objects.filter(status_produto="published", destaque=True)
@@ -533,25 +533,28 @@ def update_from_cart(request):
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
 
+
 @login_required
 def checkout(request):
-    cart_total_amount = Decimal('0.00')
+    from decimal import Decimal
+    import json
+    cart_total_amount = Decimal('0.00')  # Total sem desconto
     errors = []
 
     try:
+        # Busca ou cria o pedido
         order = PedidoCarrinho.objects.filter(
             user=request.user,
             status_pagamento=False
         ).order_by('-data_pedido').first()
     except Exception as e:
-        errors.append(f"Error retrieving order: {str(e)}")
+        errors.append(f"Erro ao buscar pedido: {str(e)}")
         order = None
 
     # Processa o carrinho
     cart_data = request.session.get('cart_data_obj', {})
     cart_data_formatted = {}
 
-    # Calcula o total do carrinho
     for p_id, item in cart_data.items():
         try:
             qty = int(item['qty'])
@@ -570,12 +573,11 @@ def checkout(request):
                 'subtotal': "{:.2f}".format(subtotal)
             }
         except (ValueError, TypeError, KeyError) as e:
-            errors.append(f"Error processing item {item.get('title', 'unknown')}: {e}")
+            errors.append(f"Erro ao processar item {item.get('title', 'desconhecido')}: {e}")
 
-    # Processa o cupom
+    # Processa cupons no POST
     if request.method == "POST":
         codigo = request.POST.get("codigo")
-
         if not codigo:
             messages.warning(request, "Por favor, insira um código de cupom.")
             return redirect("core:checkout")
@@ -584,7 +586,7 @@ def checkout(request):
             # Busca o cupom
             coupon = Coupon.objects.get(codigo=codigo, ativo=True)
 
-            # Verifica se o pedido existe ou cria um novo
+            # Cria ou atualiza o pedido
             if not order:
                 order = PedidoCarrinho.objects.create(
                     user=request.user,
@@ -593,18 +595,16 @@ def checkout(request):
                     data_pedido=timezone.now()
                 )
             else:
-                # Atualiza o preço do pedido com o valor atual do carrinho
                 order.preco = cart_total_amount
                 order.save()
 
-            # Tenta aplicar o cupom
+            # Aplica o cupom
             try:
                 desconto = order.apply_coupon(coupon)
                 messages.success(request,
-                    f"Cupom '{codigo}' aplicado com sucesso! "
-                    f"Desconto de {coupon.desconto}% aplicado. "
-                    f"Economia de R${desconto:.2f}")
-
+                                 f"Cupom '{codigo}' aplicado com sucesso! "
+                                 f"Desconto de {coupon.desconto}% aplicado. "
+                                 f"Economia de R${desconto:.2f}")
             except ValueError as e:
                 messages.warning(request, str(e))
                 return redirect("core:checkout")
@@ -616,37 +616,64 @@ def checkout(request):
 
         return redirect("core:checkout")
 
-    # Configura PayPal
-    if order:
-        final_amount = order.preco
+    # Calcula o valor final
+    if order and order.coupons.exists():
+        final_amount = order.preco  # Já descontado no método apply_coupon
     else:
         final_amount = cart_total_amount
 
+    # Configura o PayPal
+    host = request.get_host()
+    paypal_payment_button = None
     if final_amount > 0:
-        host = request.get_host()
-        paypal_dict = {
-            'business': settings.PAYPAL_RECEIVER_EMAIL,
-            'amount': "{:.2f}".format(float(final_amount)),
-            'item_name': f"Order-Item-No-{order.id if order else ''}",
-            'invoice': f"INVOICE-{order.id if order else ''}",
-            'currency_code': "BRL",
-            'notify_url': f'http://{host}{reverse("core:paypal-ipn")}',
-            'return_url': f'http://{host}{reverse("core:payment-completed")}',
-            'cancel_url': f'http://{host}{reverse("core:payment-failed")}',
-        }
-        paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
-    else:
-        paypal_payment_button = None
+        try:
+            paypal_dict = {
+                'business': settings.PAYPAL_RECEIVER_EMAIL,
+                'amount': str(final_amount.quantize(Decimal("0.00"))),  # Formatted Decimal
+                'item_name': f"Pedido OrganixHub - {order.id if order else 'N/A'}",  # Descriptive item name
+                'invoice': f"INVOICE-{order.id if order else 'N/A'}",
+                'currency_code': "BRL",
+                'notify_url': f"http://{host}{reverse('paypal-ipn')}",  # Use named URL
+                'return_url': f"http://{host}{reverse('payment-completed')}",  # Use named URL
+                'cancel_url': f"http://{host}{reverse('payment-failed')}",  # Use named URL
+                # Add more details for better transaction tracking
+                'custom': str(order.id),  # Pass order ID as custom parameter
+            }
+            paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
+        except Exception as e:
+            errors.append(f"Error creating PayPal button: {e}")
+            logger.exception(e)
 
-    # Prepara o contexto para o template
+        try:
+            if order:
+                for p_id, item in cart_data.items():
+                    try:
+                        qty = int(item['qty'])
+                        price = Decimal(str(item['price']))
+                        ItensPedidoCarrinho.objects.create(
+                            pedido=order,
+                            produto_id=item['pid'],
+                            quantidade=qty,
+                            preco_unitario=price,  # Store as Decimal
+                            preco_total=qty * price,  # Store as Decimal
+                        )
+                    except Exception as e:
+                        errors.append(f"Error adding item to order: {str(e)}")
+                        logger.exception(e)
+        except Exception as e:
+            errors.append(f"Error adding items to order: {str(e)}")
+            logger.exception(e)
+
+
+    # Contexto do template
     context = {
         "cart_data": cart_data_formatted,
-        'totalcartitems': len(cart_data),
-        'cart_total_amount': "{:.2f}".format(cart_total_amount),
-        'order': order,
-        'final_amount': "{:.2f}".format(final_amount),
-        'errors': errors,
-        'paypal_payment_button': paypal_payment_button,
+        "totalcartitems": len(cart_data),
+        "cart_total_amount": "{:.2f}".format(cart_total_amount),
+        "order": order,
+        "final_amount": "{:.2f}".format(final_amount),
+        "errors": errors,
+        "paypal_payment_button": paypal_payment_button,
     }
 
     if not cart_data:
@@ -654,6 +681,8 @@ def checkout(request):
         return redirect("core:index")
 
     return render(request, "core/checkout.html", context)
+
+
 
 
 
@@ -797,13 +826,10 @@ def customer_dashboard(request):
     return render(request, 'core/dashboard.html', context)
 
 
-
-
-
 def order_detail(request, id):
     try:
         order = get_object_or_404(PedidoCarrinho, user=request.user, id=id)
-        order_items = ItensPedidoCarrinho.objects.filter(pedido=order)  # Corrected line
+        order_items = ItensPedidoCarrinho.objects.filter(pedido=order)
 
         context = {
             "order": order,
@@ -816,6 +842,7 @@ def order_detail(request, id):
     except Exception as e:
         logger.exception(f"An error occurred while retrieving order details: {e}")
         return HttpResponseNotFound("Ocorreu um erro.")
+
 
 
 def make_address_default(request):
@@ -1008,3 +1035,33 @@ def ajax_contato(request):
 
 def purchase_guide(request):
     return render(request, "core/purchase-guide.html")
+
+
+def paypal_ipn(request):
+    form = PayPalIPNForm(request.POST)
+    if form.is_valid():
+        ipn_obj = form.save()
+        if ipn_obj.verify(): #Verify IPN
+            if ipn_obj.payment_status == "Completed":
+                try:
+                    order_id = int(ipn_obj.custom)
+                    order = PedidoCarrinho.objects.get(pk=order_id)
+                    order.status_pagamento = True
+                    order.save()
+                    logger.info(f"PayPal payment completed successfully for order {order_id}")
+                except (PedidoCarrinho.DoesNotExist, ValueError) as e:
+                    logger.error(f"Error processing PayPal IPN: Order not found or invalid order ID: {e}")
+            elif ipn_obj.payment_status == "Pending":
+                logger.warning(f"PayPal payment pending for order {ipn_obj.custom}")
+                # Handle pending payment (e.g., send email notification)
+            else:
+                logger.warning(f"PayPal payment failed or other status: {ipn_obj.payment_status} for order {ipn_obj.custom}")
+                # Handle failed payment (e.g., update order status, notify user)
+
+            return HttpResponse("OK")
+        else:
+            logger.error(f"Invalid PayPal IPN: IPN verification failed.")
+            return HttpResponse("Error")
+    else:
+        logger.error(f"Invalid PayPal IPN: {form.errors}")
+        return HttpResponse("Error")

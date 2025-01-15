@@ -167,10 +167,10 @@ class Produto(models.Model):
         return self.titulo
 
     def obter_porcentagem(self):
-            if self.preco_antigo and self.preco_antigo > 0:
-                novo_preco = "-" + str(round(((self.preco_antigo - self.preco) / self.preco_antigo) * 100)) + "%"
-                return novo_preco
-            return "0%"
+                if self.preco_antigo and self.preco_antigo > 0:
+                    novo_preco = "-" + str(round(((self.preco_antigo - self.preco) / self.preco_antigo) * 100)) + "%"
+                    return novo_preco
+                return "0%"
 
     def get_badges(self): #Renamed to avoid conflict
         return self.badges if self.badges else []
@@ -207,43 +207,54 @@ class PedidoCarrinho(models.Model):
         preco_original = self.get_original_price()
         return Decimal(str(preco_original)) - Decimal(str(self.preco))
 
+    from decimal import Decimal
+
     def get_original_price(self):
-        from decimal import Decimal
-        if not self.coupons.filter(ativo=True).exists():
+        """Calculates the original price considering all active coupons cumulatively."""
+        active_coupons = self.coupons.filter(ativo=True)
+        if not active_coupons.exists():
             return self.preco
-        # Recalcula o preço original baseado nos cupons aplicados
+
         preco_atual = Decimal(str(self.preco))
-        for coupon in self.coupons.filter(ativo=True):
-            desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0'))
-            preco_atual = preco_atual / (Decimal('1.0') - desconto)
-        return preco_atual
+        cumulative_discount_factor = Decimal('1.0')
+
+        for coupon in active_coupons:
+            discount = Decimal(str(coupon.desconto)) / Decimal('100.0')
+            cumulative_discount_factor *= (Decimal('1.0') - discount)
+
+        if cumulative_discount_factor <= 0: #Handle edge case of 100% or more discount
+            return Decimal('0.0') # or raise an exception
+
+        original_price = preco_atual / cumulative_discount_factor
+        return original_price
 
     def apply_coupon(self, coupon):
-        """Aplica um cupom ao pedido"""
-        from decimal import Decimal
+            """Aplica um cupom ao pedido"""
+            from decimal import Decimal
 
-        # Verifica se o cupom já foi aplicado
-        if coupon in self.coupons.all():
-            raise ValueError("Este cupom já está aplicado ao pedido")
+            # Verifica se o cupom já foi aplicado
+            if coupon in self.coupons.all():
+                raise ValueError("Este cupom já está aplicado ao pedido")
 
-        # Verifica se o cupom é válido
-        if not coupon.is_valid():
-            raise ValueError("Cupom inválido ou expirado")
+            # Verifica se o cupom é válido
+            if not coupon.is_valid():
+                raise ValueError("Cupom inválido ou expirado")
 
-        # Calcula o desconto
-        desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0')) * self.preco
-        novo_preco = self.preco - desconto
+            # Calcula o desconto
+            desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0')) * Decimal(str(self.preco))
+            novo_preco = self.preco - desconto  # Subtrai o desconto do total
 
-        # Aplica o cupom
-        self.coupons.add(coupon)
-        self.preco = novo_preco
-        self.save()
+            # Aplica o cupom
+            self.coupons.add(coupon)
+            self.preco = max(Decimal('0.00'), novo_preco)  # Garante que o preço não seja negativo
+            self.save()
 
-        # Atualiza o contador de usos do cupom
-        coupon.usos_atuais += 1
-        coupon.save()
+            # Atualiza o contador de usos do cupom
+            coupon.usos_atuais += 1
+            coupon.save()
 
-        return desconto
+            return desconto
+
 
 
 class ItensPedidoCarrinho(models.Model):
