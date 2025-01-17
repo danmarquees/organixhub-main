@@ -537,7 +537,6 @@ def update_from_cart(request):
 @login_required
 def checkout(request):
     from decimal import Decimal
-    import json
     cart_total_amount = Decimal('0.00')  # Total sem desconto
     errors = []
 
@@ -630,8 +629,8 @@ def checkout(request):
             paypal_dict = {
                 'business': settings.PAYPAL_RECEIVER_EMAIL,
                 'amount': str(final_amount.quantize(Decimal("0.00"))),  # Formatted Decimal
-                'item_name': f"Pedido OrganixHub - {order.id if order else 'N/A'}",  # Descriptive item name
-                'invoice': f"INVOICE-{order.id if order else 'N/A'}",
+                'item_name': f"Pedido OrganixHub - {order.num_fatura if order else 'N/A'}",  # Descriptive item name
+                'invoice': f"INVOICE-{order.num_fatura if order else 'N/A'}",
                 'currency_code': "BRL",
                 'notify_url': f"http://{host}{reverse('paypal-ipn')}",  # Use named URL
                 'return_url': f"http://{host}{reverse('payment-completed')}",  # Use named URL
@@ -681,6 +680,7 @@ def checkout(request):
         return redirect("core:index")
 
     return render(request, "core/checkout.html", context)
+
 
 
 
@@ -829,7 +829,7 @@ def customer_dashboard(request):
 def order_detail(request, id):
     try:
         order = get_object_or_404(PedidoCarrinho, user=request.user, id=id)
-        order_items = ItensPedidoCarrinho.objects.filter(pedido=order)
+        order_items = order.itenspedidocarrinho_set.all() # Accessing related objects using the reverse relation
 
         context = {
             "order": order,
@@ -842,7 +842,6 @@ def order_detail(request, id):
     except Exception as e:
         logger.exception(f"An error occurred while retrieving order details: {e}")
         return HttpResponseNotFound("Ocorreu um erro.")
-
 
 
 def make_address_default(request):
@@ -1058,10 +1057,10 @@ def paypal_ipn(request):
                 logger.warning(f"PayPal payment failed or other status: {ipn_obj.payment_status} for order {ipn_obj.custom}")
                 # Handle failed payment (e.g., update order status, notify user)
 
-            return HttpResponse("OK")
+            return HttpResponse(b"OK")
         else:
             logger.error(f"Invalid PayPal IPN: IPN verification failed.")
-            return HttpResponse("Error")
+            return HttpResponse(b"Error")
     else:
         logger.error(f"Invalid PayPal IPN: {form.errors}")
-        return HttpResponse("Error")
+        return HttpResponse(b"Error")

@@ -196,9 +196,15 @@ class PedidoCarrinho(models.Model):
     data_pedido = models.DateTimeField(default=timezone.now)
     status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing")
     coupons = models.ManyToManyField('Coupon', blank=True)
+    num_fatura = models.CharField(max_length=200, null=True, blank=True)  # Novo campo
 
     class Meta:
         verbose_name_plural = "Pedidos do Carrinho"
+
+    def save(self, *args, **kwargs):
+        if not self.num_fatura:
+            self.num_fatura = f"INV-{timezone.now().strftime('%Y%m%d%H%M%S')}"
+        super().save(*args, **kwargs)
 
     def get_discount_amount(self):
         from decimal import Decimal
@@ -210,23 +216,24 @@ class PedidoCarrinho(models.Model):
     from decimal import Decimal
 
     def get_original_price(self):
-        """Calculates the original price considering all active coupons cumulatively."""
-        active_coupons = self.coupons.filter(ativo=True)
-        if not active_coupons.exists():
-            return self.preco
+            """Calculates the original price considering all active coupons cumulatively."""
+            from decimal import Decimal
+            active_coupons = self.coupons.all().filter(ativo=True)
+            if not active_coupons.exists():
+                return self.preco
 
-        preco_atual = Decimal(str(self.preco))
-        cumulative_discount_factor = Decimal('1.0')
+            preco_atual = Decimal(str(self.preco))
+            cumulative_discount_factor = Decimal('1.0')
 
-        for coupon in active_coupons:
-            discount = Decimal(str(coupon.desconto)) / Decimal('100.0')
-            cumulative_discount_factor *= (Decimal('1.0') - discount)
+            for coupon in active_coupons:
+                discount = Decimal(str(coupon.desconto)) / Decimal('100.0')
+                cumulative_discount_factor *= (Decimal('1.0') - discount)
 
-        if cumulative_discount_factor <= 0: #Handle edge case of 100% or more discount
-            return Decimal('0.0') # or raise an exception
+            if cumulative_discount_factor <= 0: #Handle edge case of 100% or more discount
+                return Decimal('0.0') # or raise an exception
 
-        original_price = preco_atual / cumulative_discount_factor
-        return original_price
+            original_price = preco_atual / cumulative_discount_factor
+            return original_price
 
     def apply_coupon(self, coupon):
             """Aplica um cupom ao pedido"""

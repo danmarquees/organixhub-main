@@ -23,222 +23,69 @@
         </div>
         <div class="row">
             <div class="col-lg-7">
-                <div class="row mb-50">
-
-                    <div class="col-lg-6">
-
-                    </div>
-                </div>
-                <div class="row">
-                    <h4 class="mb-30">Detalhes de cobrança</h4>
-                    <form method="post">
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <input type="text" required="" name="fname" placeholder="Nome *">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input type="text" required="" name="lname" placeholder="Sobrenome *">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <input type="text" name="billing_address" required="" placeholder="Endereço *">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input type="text" name="billing_address2" required="" placeholder="Endereço 2">
-                            </div>
-                        </div>
-                        <div class="row shipping_calculator">
-                            <div class="form-group col-lg-6">
-                                <div class="custom_select">
-                                    <select class="form-control select-active">
-                                        <option value="">Selecione uma Opção...</option>
-                                        <option value="AC">Acre</option>
-                                        <option value="AL">Alagoas</option>
-                                        <option value="AP">Amapá</option>
-                                        <option value="AM">Amazonas</option>
-                                        <option value="BA">Bahia</option>
-                                        <option value="CE">Ceará</option>
-                                        <option value="DF">Distrito Federal</option>
-                                        <option value="ES">Espírito Santo</option>
-                                        <option value="GO">Goiás</option>
-                                        <option value="MA">Maranhão</option>
-                                        <option value="MT">Mato Grosso</option>
-                                        <option value="MS">Mato Grosso do Sul</option>
-                                        <option value="MG">Minas Gerais</option>
-                                        <option value="PA">Pará</option>
-                                        <option value="PB">Paraíba</option>
-                                        <option value="PR">Paraná</option>
-                                        <option value="PE">Pernambuco</option>
-                                        <option value="PI">Piauí</option>
-                                        <option value="RJ">Rio de Janeiro</option>
-                                        <option value="RN">Rio Grande do Norte</option>
-                                        <option value="RS">Rio Grande do Sul</option>
-                                        <option value="RO">Rondônia</option>
-                                        <option value="RR">Roraima</option>
-                                        <option value="SC">Santa Catarina</option>
-                                        <option value="SP">São Paulo</option>
-                                        <option value="SE">Sergipe</option>
-                                        <option value="TO">Tocantins</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input required="" type="text" name="city" placeholder="Cidade *">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <input required="" type="text" name="zipcode" placeholder="CEP *">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input required="" type="text" name="phone" placeholder="Telefone *">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <input required="" type="text" name="cname" placeholder="Empresa">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input required="" type="text" name="email" placeholder="Endereço de Email *">
-                            </div>
-                        </div>
-                        <div class="form-group mb-30">
-                            <textarea rows="5" placeholder="Informações Adicionais"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <div class="custome-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="checkbox" id="createaccount">
-                                    <label class="form-check-label label_info" data-bs-toggle="collapse" href="#collapsePassword" data-target="#collapsePassword" aria-controls="collapsePassword" for="createaccount"><span>Criar uma conta?</span></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="collapsePassword" class="form-group create-account collapse in">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <input required="" type="password" placeholder="Password" name="password">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ship_detail">
-                            <div class="form-group">
-                                <div class="chek-form">
-                                    <div class="custome-checkbox">
-                                        <input class="form-check-input" type="checkbox" name="checkbox" id="differentaddress">
-                                        <label class="form-check-label label_info" data-bs-toggle="collapse" data-target="#collapseAddress" href="#collapseAddress" aria-controls="collapseAddress" for="differentaddress"><span>Entregar em um endereço diferente?</span></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="collapseAddress" class="different_address collapse in">
-                                <div class="row">
-                                    <div class="form-group col-lg-6">
-                                        <input type="text" required="" name="fname" placeholder="Nome *">
-                                    </div>
-                                    <div class="form-group col-lg-6">
-                                        <input type="text" required="" name="lname" placeholder="Sobrenome *">
-                                    </div>
-                                </div>
-                                <div class="row shipping_calculator">
-                                    <div class="form-group col-lg-6">
-                                        <input required="" type="text" name="cname" placeholder="Nome da Empresa">
-                                    </div>
-                                    <div class="form-group col-lg-6">
-                                        <div class="custom_select w-100">
-                                            <select class="form-control select-active">
-                                                <option value="">Selecione uma Opção...</option>
-                                                <option value="AC">Acre</option>
-                                                <option value="AL">Alagoas</option>
-                                                <option value="AP">Amapá</option>
-                                                <option value="AM">Amazonas</option>
-                                                <option value="BA">Bahia</option>
-                                                <option value="CE">Ceará</option>
-                                                <option value="DF">Distrito Federal</option>
-                                                <option value="ES">Espírito Santo</option>
-                                                <option value="GO">Goiás</option>
-                                                <option value="MA">Maranhão</option>
-                                                <option value="MT">Mato Grosso</option>
-                                                <option value="MS">Mato Grosso do Sul</option>
-                                                <option value="MG">Minas Gerais</option>
-                                                <option value="PA">Pará</option>
-                                                <option value="PB">Paraíba</option>
-                                                <option value="PR">Paraná</option>
-                                                <option value="PE">Pernambuco</option>
-                                                <option value="PI">Piauí</option>
-                                                <option value="RJ">Rio de Janeiro</option>
-                                                <option value="RN">Rio Grande do Norte</option>
-                                                <option value="RS">Rio Grande do Sul</option>
-                                                <option value="RO">Rondônia</option>
-                                                <option value="RR">Roraima</option>
-                                                <option value="SC">Santa Catarina</option>
-                                                <option value="SP">São Paulo</option>
-                                                <option value="SE">Sergipe</option>
-                                                <option value="TO">Tocantins</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-6">
-                                        <input type="text" name="billing_address" required="" placeholder="Endereço *">
-                                    </div>
-                                    <div class="form-group col-lg-6">
-                                        <input type="text" name="billing_address2" required="" placeholder="Endereço 2 (opcional)">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-6">
-                                        <input required="" type="text" name="state" placeholder="Cidade *">
-                                    </div>
-                                    <div class="form-group col-lg-6">
-                                        <input required="" type="text" name="city" placeholder="Estado *">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-6">
-                                        <input required="" type="text" name="zipcode" placeholder="CEP *">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                <div class="border p-40 cart-totals ml-30 mb-50">
+                    <h4 class="mb-30">Seu Pedido</h4>
+                    <table class="table no-border table-wishlist">
+                        <thead>
+                            <tr class="main-heading">
+                                <th class="text-brand">Item</th>
+                                <th  class="text-brand">Nome</th>
+                                <th  class="text-brand">Quantidade</th>
+                                <th  class="text-brand">Valor Unitário</th>
+                                <th  class="text-brand">Valor Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product_id, item in cart_data.items %}
+                            <tr>
+                                <td class="image product-thumbnail"><img style="aspect-ratio: 1/1; object-fit: cover;" src="{{ item.image }}" alt="#"></td>
+                                <td>
+                                    <h6 class="w-160 mb-5"><a href="{% url 'core:product-detail' item.pid %}" class="text-heading">{{ item.title }}</a></h6></span>
+                                </td>
+                                <td>
+                                    <h6 class="text-muted pl-20 pr-20">X{{item.qty}}</h6>
+                                </td>
+                                <td>
+                                    <h5 class="text-muted">R${{item.price}}</h5>
+                                </td>
+                                <td>
+                                    <h5 class="text-brand">R${{item.subtotal|floatformat:2}}</h5>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="col-lg-5">
                 <div class="border p-40 cart-totals ml-30 mb-50">
                     <div class="d-flex align-items-end justify-content-between mb-30">
-                        <h4>Seu Pedido</h4>
+                        <h4>Sumário do Pedido</h4>
                         <h6 class="text-muted">Subtotal: <span class="text-brand">R${{cart_total_amount|floatformat:2}}</span></h6>
+                    </div>
+                    <div>
+                        <form method="POST" class="apply-coupon">
+                            {% csrf_token %}
+                            <input type="text" name="codigo" placeholder="Entre com o código promocional...">
+                            <button class="btn btn-md" type="submit">Resgatar</button>
+                        </form>
                     </div>
                     <div class="divider-2 mb-30"></div>
                     <a href="{% url 'core:cart' %}" class="btn btn-fill-out btn-block mt-30 mb-40">Voltar ao Carrinho</a>
                     <div class="table-responsive order_table checkout">
                         <table class="table no-border">
                             <tbody>
-                                {% for product_id, item in cart_data.items %}
-                                <tr>
-                                    <td class="image product-thumbnail"><img style="aspect-ratio: 1/1; object-fit: cover;" src="{{ item.image }}" alt="#"></td>
-                                    <td>
-                                        <h6 class="w-160 mb-5"><a href="{% url 'core:product-detail' item.pid %}" class="text-heading">{{ item.title }}</a></h6></span>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-muted pl-20 pr-20">X{{item.qty}}</h6>
-                                    </td>
-                                    <td>
-                                        <h5 class="text-muted">R${{item.price}}</h5>
-                                    </td>
-                                    <td>
-                                        <h5 class="text-brand">R${{item.subtotal|floatformat:2}}</h5>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <table class="table no-border">
-                            <tbody>
                                 <tr>
                                     <td class="cart_total_label">Subtotal</td>
                                     <td class="cart_total_amount text-brand">R${{cart_total_amount}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="cart_total_label">Taxa de Entrega</td>
+                                    <td class="cart_total_amount text-brand">R${{shipping_cost|floatformat:2}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="cart_total_label">Impostos</td>
+                                    <td class="cart_total_amount text-brand">R${{tax_amount|floatformat:2}}</td>
                                 </tr>
                                 {% if order and order.coupons.all %}
                                     {% for coupon in order.coupons.all %}
@@ -266,7 +113,7 @@
                                                 R${{order.preco|floatformat:2}}
                                             </span>
                                         {% else %}
-                                            R${{cart_total_amount|floatformat:2}}
+                                            R${{final_amount|floatformat:2}}
                                         {% endif %}
                                     </strong>
                                 </td>
@@ -275,28 +122,53 @@
                         </table>
                     </div>
                 </div>
-                <div class="payment ml-30">
-                    <h4 class="mb-30">Pagamento</h4>
-                    <div class="payment_option">
-                        <button type="button" class="btn w-100" id="checkout-button" style="background-color: blueviolet;">Pagar com o Stripe (Cartão de Crédito)</button>
-                        <button type="button" class="btn w-100" style="background-color: rgb(50, 188, 173); color: white;">Pagar com Pix</button>
-                        <div id="paypal-button-container">
+                <div class="border p-40 cart-totals ml-30 mb-50">
+                    <div class="widget-delivery mb-30 box-shadow-none">
+                        <h4 class="section-title style-3 mb-20">Endereço de Entrega</h4>
+                        <ul>
+                            {% if user.is_authenticated %}
+                                {% if endereco and endereco.status %}
+                                <li>
+                                    <i class="fi fi-rs-marker mr-10 text-brand"></i>
+                                    <span>{{ endereco.logradouro }}, {{ endereco.numero|default:"" }} - {{ endereco.bairro }} - {{ endereco.localidade }} - {{ endereco.uf }} - {{ endereco.cep }}</span><br><br>
+                                    <span class="text-success">Endereço Verificado</span>
+                                    <a href="{% url 'core:dashboard' %}" class="change float-end">Trocar</a>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <i class="fi fi-rs-marker mr-10 text-brand"></i>
+                                    <span>Nenhum endereço verificado cadastrado.</span>
+                                    <a href="{% url 'core:dashboard' %}" class="change float-end">Adicionar</a>
+                                </li>
+                                {% endif %}
+                            {% else %}
+                                <li>
+                                    <i class="fi fi-rs-marker mr-10 text-brand"></i>
+                                    <span>Faça login para ver informações de endereço.</span>
+                                    <a href="{% url 'userauths:sign-in' %}" class="change float-end">Login</a>
+                                </li>
+                            {% endif %}
+                            <li class="hr"><span></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border p-40 cart-totals ml-30 mb-50">
+                    <div class="payment ml-30">
+                        <h4 class="mb-30">Formas de Pagamento</h4>
+                        <div class="payment_option">
+                            <button type="button" class="btn w-100" id="checkout-button" style="background-color: blueviolet;">Pagar com o Stripe (Cartão de Crédito)</button>
+                            <button type="button" class="btn w-100" style="background-color: rgb(50, 188, 173); color: white;">Pagar com Pix</button>
+                            <div id="paypal-button-container">
+                            </div>
                         </div>
-                    </div>
-                     <br>
-                    <div>
-                        <form method="POST" class="apply-coupon">
-                            {% csrf_token %}
-                            <input type="text" name="codigo" placeholder="Entre com o código promocional...">
-                            <button class="btn btn-md" type="submit">Resgatar</button>
-                        </form>
-                    </div>
-                    <br>
-                    <div class="payment-logo d-flex">
-                        <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-paypal.svg' %}" alt="">
-                        <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-visa.svg' %}" alt="">
-                        <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-master.svg' %}" alt="">
-                        <img src="{% static 'assets/imgs/theme/icons/payment-zapper.svg' %}" alt="">
+                        <br>
+                        <div class="payment-logo d-flex">
+                            <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-paypal.svg' %}" alt="">
+                            <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-visa.svg' %}" alt="">
+                            <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-master.svg' %}" alt="">
+                                <!--<img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-pix.svg' %}" alt=""> -->
+                            <img src="{% static 'assets/imgs/theme/icons/payment-zapper.svg' %}" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,7 +176,7 @@
     </div>
 </main>
 
-<script src="https://www.paypal.com/sdk/js?client-id=ActiYRgid4P6FwWy3KerAY3kDkxgu7oSkL_Vtxya4KYFZHlLdazU2MpcOsJDoFxEBix30Pv9FOaZjo-I&currency=BRL"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=test&currency=BRL"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 <script>
@@ -339,7 +211,7 @@
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: "{{ order.preco|floatformat:2 }}".replace(",", "."),
+                        value: "{{ final_amount|floatformat:2 }}".replace(",", "."),
                         currency_code: 'BRL'
                     },
                     items: items

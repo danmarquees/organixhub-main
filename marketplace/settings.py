@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from django.contrib.messages import constants as messages
+
+from environs import Env
+env = Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -267,5 +272,9 @@ CKEDITOR_5_CONFIGS = {
 }
 
 
-PAYPAL_RECEIVER_EMAIL = os.environ.get('organyxhub@business.example.com', 'danmarquees@personal.example.com')
-PAYPAL_TEST = os.environ.get('PAYPAL_TEST', 'True').lower() in ('true', '1', 't') # Boolean from env var
+PAYPAL_CLIENT_SECRET = env("PAYPAL_CLIENT_SECRET")
+PAYPAL_RECEIVER_EMAIL = env("PAYPAL_RECEIVER_EMAIL")
+PAYPAL_TEST = True  # Altere para False em produção
+
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
