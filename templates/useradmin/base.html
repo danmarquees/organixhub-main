@@ -1,0 +1,216 @@
+{% load static %}
+
+<!doctype html>
+<html lang="pt">
+    <head>
+        <meta charset="utf-8" />
+        <title>Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link
+            rel="shortcut icon"
+            type="image/x-icon"
+            href="{% static 'assets2/imgs/theme/favicon.svg' %}
+        />
+        <!-- Template CSS -->
+        <script src="{% static 'assets2/js/vendors/color-modes.js' %}"></script>
+
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'assets2/css/main.css' %}"
+        />
+        />
+    </head>
+
+    <body>
+        <div class="screen-overlay"></div>
+        <aside class="navbar-aside" id="offcanvas_aside">
+            <div class="aside-top">
+                <a href="index.html" class="brand-wrap">
+                    <img
+                        src="{% static 'assets2/imgs/theme/logo.png' %}"
+                        class="logo"
+                        alt="Nest Dashboard"
+                    />
+                </a>
+                <div>
+                    <button class="btn btn-icon btn-aside-minimize">
+                        <i class="text-muted material-icons md-menu_open"></i>
+                    </button>
+                </div>
+            </div>
+            <nav>
+                <ul class="menu-aside">
+                    <li class="menu-item active">
+                        <a class="menu-link" href="index.html">
+                            <i class="icon material-icons md-home"></i>
+                            <span class="text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-products-list.html">
+                            <i class="icon material-icons md-shopping_bag"></i>
+                            <span class="text">Produtos</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="page-products-list.html"
+                                >Lista de Produtos</a
+                            >
+                            <a href="page-products-grid.html"
+                                >Grade de Produtos</a
+                            >
+                            <a href="page-products-grid-2.html"
+                                >Grade de Produtos 2</a
+                            >
+                            <a href="page-categories.html">Categorias</a>
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-orders-1.html">
+                            <i class="icon material-icons md-shopping_cart"></i>
+                            <span class="text">Pedidos</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="page-orders-1.html">Lista de Pedidos 1</a>
+                            <a href="page-orders-2.html">Lista de Pedidos 2</a>
+                            <a href="page-orders-detail.html"
+                                >Detalhes do Pedido</a
+                            >
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-sellers-cards.html">
+                            <i class="icon material-icons md-store"></i>
+                            <span class="text">Vendedores</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="page-sellers-cards.html"
+                                >Cartões de Vendedores</a
+                            >
+                            <a href="page-sellers-list.html"
+                                >Lista de Vendedores</a
+                            >
+                            <a href="page-seller-detail.html"
+                                >Perfil do Vendedor</a
+                            >
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-form-product-1.html">
+                            <i class="icon material-icons md-add_box"></i>
+                            <span class="text">Adicionar produto</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="page-form-product-1.html"
+                                >Adicionar produto 1</a
+                            >
+                            <a href="page-form-product-2.html"
+                                >Adicionar produto 2</a
+                            >
+                            <a href="page-form-product-3.html"
+                                >Adicionar produto 3</a
+                            >
+                            <a href="page-form-product-4.html"
+                                >Adicionar produto 4</a
+                            >
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-transactions-1.html">
+                            <i
+                                class="icon material-icons md-monetization_on"
+                            ></i>
+                            <span class="text">Transações</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="page-transactions-1.html">Transação 1</a>
+                            <a href="page-transactions-2.html">Transação 2</a>
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="#">
+                            <i class="icon material-icons md-person"></i>
+                            <span class="text">Conta</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="page-account-login.html"
+                                >Login do Usuário</a
+                            >
+                            <a href="page-account-register.html"
+                                >Cadastro do Usuário</a
+                            >
+                            <a href="page-error-404.html">Erro 404</a>
+                        </div>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="page-reviews.html">
+                            <i class="icon material-icons md-comment"></i>
+                            <span class="text">Avaliações</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="page-brands.html">
+                            <i class="icon material-icons md-stars"></i>
+                            <span class="text">Marcas</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" disabled href="#">
+                            <i class="icon material-icons md-pie_chart"></i>
+                            <span class="text">Estatísticas</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr />
+                <ul class="menu-aside">
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="#">
+                            <i class="icon material-icons md-settings"></i>
+                            <span class="text">Configurações</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="page-settings-1.html"
+                                >Exemplo de configuração 1</a
+                            >
+                            <a href="page-settings-2.html"
+                                >Exemplo de configuração 2</a
+                            >
+                        </div>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="page-blank.html">
+                            <i class="icon material-icons md-local_offer"></i>
+                            <span class="text"> Página inicial </span>
+                        </a>
+                    </li>
+                </ul>
+                <br />
+                <br />
+            </nav>
+        </aside>
+        {% block content %} {% endblock content %}
+
+        <script src="{% static 'assets2/js/vendors/jquery-3.6.0.min.js' %}"></script>
+        <script src="{% static 'assets2/js/vendors/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'assets2/js/vendors/select2.min.js' %}"></script>
+        <script src="{% static 'assets2/js/vendors/perfect-scrollbar.js' %}"></script>
+        <script src="{% static 'assets2/js/vendors/jquery.fullscreen.min.js' %}"></script>
+        <script src="{% static 'assets2/js/vendors/chart.js' %}"></script>
+        <!-- Main Script -->
+        <script
+            src="{% static 'assets2/js/main.js?v=6.0' %}"
+            type="text/javascript"
+        ></script>
+        <script
+            src="{% static 'assets2/js/custom-chart.js' %}"
+            type="text/javascript"
+        ></script>
+    </body>
+</html>

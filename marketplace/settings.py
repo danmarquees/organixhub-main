@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'core',
     'userauths',
 
+
 ]
 
 MIDDLEWARE = [
@@ -207,6 +208,7 @@ CKEDITOR_5_UPLOAD_PATH  = 'uploads/'
 CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': [
+
             'heading', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough', 'code',
             'subscript', 'superscript', 'highlight', '|', 'bulletedList', 'numberedList',
             'todoList', 'blockQuote', 'imageUpload', 'mediaEmbed', 'insertTable', '|',
@@ -272,8 +274,9 @@ CKEDITOR_5_CONFIGS = {
 }
 
 
-PAYPAL_CLIENT_SECRET = env("PAYPAL_CLIENT_SECRET")
-PAYPAL_RECEIVER_EMAIL = env("PAYPAL_RECEIVER_EMAIL")
+PAYPAL_CLIENT_ID = 'AUeZJX-aqir88NyR8g3c3u17mbsnji-NaUaR4iUTnoc5w9PBypCTm4lx7ngDoeYKNJM0xc3QvUkBShbK'
+PAYPAL_SECRET_ID = 'EJi4OyCDW13geVnJEmjHQlzVmfaAXlnTo-SDx62jFWGkh9EM-nVMhc2YgVVvN5RJYkChpKmAOk-G7DGr'
+PAYPAL_RECEIVER_EMAIL = 'organyxpay@business.example.com'
 PAYPAL_TEST = True  # Altere para False em produção
 
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")

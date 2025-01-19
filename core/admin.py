@@ -21,8 +21,10 @@ class VendedorAdmin(admin.ModelAdmin):
 
 
 class PedidoCarrinhoAdmin(admin.ModelAdmin):
-    list_editable = ['status_pagamento', 'status_produto']
-    list_display = ['user', 'preco', 'status_pagamento','data_pedido', 'status_produto']
+    list_display = ('user', 'num_fatura', 'data_pedido', 'preco', 'status_pagamento', 'paypal_txn_id', 'payment_date', 'get_final_price')
+    list_filter = ('status_pagamento', 'data_pedido', 'payment_date')
+    search_fields = ('user__username', 'num_fatura', 'paypal_txn_id')
+
 
 
 class ItensPedidoCarrinhoAdmin(admin.ModelAdmin):
@@ -46,6 +48,7 @@ class CouponAdmin(admin.ModelAdmin):
     list_editable = ['ativo', 'data_validade', 'valor_minimo', 'usos_maximos']
     search_fields = ['codigo']
     list_filter = ['ativo', 'data_criacao', 'data_validade']
+
 
 admin.site.register(Produto, ProdutoAdmin)
 admin.site.register(Categoria, CategoriaAdmin)

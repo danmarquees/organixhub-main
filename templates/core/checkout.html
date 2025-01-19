@@ -28,11 +28,11 @@
                     <table class="table no-border table-wishlist">
                         <thead>
                             <tr class="main-heading">
-                                <th class="text-brand">Item</th>
-                                <th  class="text-brand">Nome</th>
-                                <th  class="text-brand">Quantidade</th>
-                                <th  class="text-brand">Valor Unitário</th>
-                                <th  class="text-brand">Valor Total</th>
+                                <th class="text-brand"><h6>Item</h6></th>
+                                <th  class="text-brand"><h6>Nome</h6></th>
+                                <th  class="text-brand"><h6>Quantidade</h6></th>
+                                <th  class="text-brand"><h6>Valor Unitário</h6></th>
+                                <th  class="text-brand"><h6>Valor Total</h6></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,53 +70,53 @@
                             <button class="btn btn-md" type="submit">Resgatar</button>
                         </form>
                     </div>
-                    <div class="divider-2 mb-30"></div>
                     <a href="{% url 'core:cart' %}" class="btn btn-fill-out btn-block mt-30 mb-40">Voltar ao Carrinho</a>
-                    <div class="table-responsive order_table checkout">
-                        <table class="table no-border">
+                    <div class="order_table checkout">
+                        <table class="table no-border no-line" style="border-collapse: collapse;">
                             <tbody>
                                 <tr>
-                                    <td class="cart_total_label">Subtotal</td>
-                                    <td class="cart_total_amount text-brand">R${{cart_total_amount}}</td>
+                                    <td class="cart_total_label"><h6>Subtotal</h6></td>
+                                    <td class="cart_total_amount text-success"><h6>R${{cart_total_amount}}</h6></td>
                                 </tr>
-                                <tr>
-                                    <td class="cart_total_label">Taxa de Entrega</td>
-                                    <td class="cart_total_amount text-brand">R${{shipping_cost|floatformat:2}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="cart_total_label">Impostos</td>
-                                    <td class="cart_total_amount text-brand">R${{tax_amount|floatformat:2}}</td>
-                                </tr>
-                                {% if order and order.coupons.all %}
-                                    {% for coupon in order.coupons.all %}
                                     <tr>
-                                        <td class="cart_total_label">Cupom ({{ coupon.codigo }})</td>
-                                        <td class="cart_total_amount text-danger">-{{coupon.desconto}}%</td>
+                                        <td class="cart_total_label"><h6>Taxa de Entrega</h6></td>
+                                        <td class="cart_total_amount text-success"><h6>R${{shipping_cost|floatformat:2}}</h6></td>
                                     </tr>
-                                    {% endfor %}
                                     <tr>
-                                        <td class="cart_total_label">Desconto Total</td>
-                                        <td class="cart_total_amount text-danger">
-                                            -R${{order.get_discount_amount|floatformat:2}}
+                                        <td class="cart_total_label"><h6>Impostos</h6></td>
+                                        <td class="cart_total_amount text-success"><h6>R${{tax_amount|floatformat:2}}</h6></td>
+                                    </tr>
+                                    {% if order and order.coupons.all %}
+                                        {% for coupon in order.coupons.all %}
+                                        <tr>
+                                            <td class="cart_total_label"><h6>Cupom ({{ coupon.codigo }})</h6></td>
+                                            <td class="cart_total_amount text-danger"><h6>-{{coupon.desconto}}%</h6></td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="cart_total_label text-brand"><h6>Desconto Total</h6></td>
+                                            <td class="cart_total_amount text-danger">
+                                                <h6>-R${{order.get_discount_amount|floatformat:2}}</h6>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td class="text-brand"><strong><h6>Total Final</h6></strong></td>
+                                        <td class="cart_total_amount">
+                                            <strong class="text-brand">
+                                                {% if order and order.coupons.all %}
+                                                    <span class="text-decoration-line-through text-muted me-3">
+                                                        <h6>R${{cart_total_amount|floatformat:2}}</h6>
+                                                    </span>
+                                                    <span class="text-success">
+                                                        <h6>R${{order.preco|floatformat:2}}</h6>
+                                                    </span>
+                                                {% else %}
+                                                    <h6 class="text-success">R${{final_amount|floatformat:2}}</h6>
+                                                {% endif %}
+                                            </strong>
                                         </td>
                                     </tr>
-                                {% endif %}
-                                <tr>
-                                <td class="text-brand"><strong>Total Final</strong></td>
-                                <td class="cart_total_amount">
-                                    <strong class="text-brand">
-                                        {% if order and order.coupons.all %}
-                                            <span class="text-decoration-line-through text-muted me-2">
-                                                R${{cart_total_amount|floatformat:2}}
-                                            </span>
-                                            <span class="text-success">
-                                                R${{order.preco|floatformat:2}}
-                                            </span>
-                                        {% else %}
-                                            R${{final_amount|floatformat:2}}
-                                        {% endif %}
-                                    </strong>
-                                </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -176,68 +176,55 @@
     </div>
 </main>
 
-<script src="https://www.paypal.com/sdk/js?client-id=test&currency=BRL"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AUeZJX-aqir88NyR8g3c3u17mbsnji-NaUaR4iUTnoc5w9PBypCTm4lx7ngDoeYKNJM0xc3QvUkBShbK&currency=BRL"></script>
 
 <script>
-    paypal.Buttons({
-        createOrder: function(data, actions) {
-            const cartItems = JSON.parse('{{ cart_data|escapejs }}');
-            const items = [];
+paypal.Buttons({
+    style: {
+        shape: 'rect',
+        color: 'gold',
+        layout: 'vertical',
+        label: 'paypal',
+    },
 
-            if (Object.keys(cartItems).length === 0) {
-                console.error("Cart is empty");
-                alert("Seu carrinho está vazio. Por favor, adicione itens ao carrinho.");
-                return;
-            }
-
-            for (const [productId, item] of Object.entries(cartItems)) {
-                const price = parseFloat(item.price.replace(",", "."));
-                if (isNaN(price) || item.qty <= 0 || !item.title) {
-                    console.error("Invalid cart item:", item);
-                    alert("Seu carrinho contém itens inválidos.");
-                    return;
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    currency_code: "BRL",
+                    value: '{{ final_amount }}'
                 }
-                items.push({
-                    name: item.title,
-                    quantity: item.qty,
-                    unit_amount: {
-                        value: price,
-                        currency_code: 'BRL'
-                    }
-                });
-            }
+            }]
+        });
+    },
 
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: "{{ final_amount|floatformat:2 }}".replace(",", "."),
-                        currency_code: 'BRL'
-                    },
-                    items: items
-                }]
-            }).catch(function(error) {
-                console.error('Error creating order:', error);
-                alert('Erro ao criar o pedido. Por favor, tente novamente mais tarde.');
-            });
-        },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                console.log(details);
-                if (details.status === "COMPLETED") {
-                    const redirectUrl = '/payment-completed/' + details.purchase_units[0].payments.captures[0].id;
-                    window.location.href = redirectUrl;
-                } else {
-                    console.error("Payment not completed:", details);
-                }
-            }).catch(function(error) {
-                console.error('Error capturing order:', error);
-            });
-        },
-        onError: function(error) {
-            console.error('PayPal error:', error);
-        }
-    }).render('#paypal-button-container');
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(orderData) {
+            // Successful capture!
+            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+            // Redirect to the payment confirmation page
+            window.location.href = "{% url 'core:payment-completed' %}" + "?status=" + orderData.status + "&orderId=" + orderData.purchase_units[0].custom;
+        });
+    },
+
+    onError: function(err) {
+        console.error('PayPal Error:', err);
+        // Display an error message to the user.  You should have better error handling here in a production app.
+        alert('Ocorreu um erro ao processar o pagamento. Por favor, tente novamente ou entre em contato com o suporte.');
+    },
+
+    onCancel: function (data) {
+        console.log('PayPal Payment Cancelled', data);
+        // Optionally display a message to the user
+        alert('Pagamento cancelado.');
+    }
+}).render('#paypal-button-container');
+</script>
+
+<script>
+
 </script>
 
 {% endblock content %}

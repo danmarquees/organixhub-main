@@ -191,12 +191,21 @@ class ImagemProduto(models.Model):
 
 class PedidoCarrinho(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    preco = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
-    status_pagamento = models.BooleanField(default=False, null=True)
-    data_pedido = models.DateTimeField(default=timezone.now)
+    nome = models.CharField(max_length=200, null=True, blank=True)
+    email = models.EmailField(max_length=200, null=True, blank=True)
+    telefone = models.CharField(max_length=20, null=True, blank=True)
+    endereco = models.CharField(max_length=200, null=True, blank=True)
+    cidade = models.CharField(max_length=200, null=True, blank=True)
+    estado = models.CharField(max_length=200, null=True, blank=True)
+    status_pagamento = models.BooleanField(default=False)
+    sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="sku", alphabet="1234567890")
+    preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99)
+    data_pedido = models.DateTimeField(auto_now_add=True)
     status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing")
     coupons = models.ManyToManyField('Coupon', blank=True)
-    num_fatura = models.CharField(max_length=200, null=True, blank=True)  # Novo campo
+    paypal_txn_id = models.CharField(max_length=255, blank=True, null=True)  # Add this field
+    payment_date = models.DateTimeField(blank=True, null=True)
+    num_fatura = models.CharField(max_length=255, blank=True, null=True) # Novo campo
 
     class Meta:
         verbose_name_plural = "Pedidos do Carrinho"
@@ -208,59 +217,59 @@ class PedidoCarrinho(models.Model):
 
     def get_discount_amount(self):
         from decimal import Decimal
-        if not self.coupons.filter(ativo=True).exists():
+        if not self.coupons.exists(): #Fixed
             return Decimal('0.00')
         preco_original = self.get_original_price()
         return Decimal(str(preco_original)) - Decimal(str(self.preco))
 
-    from decimal import Decimal
 
     def get_original_price(self):
-            """Calculates the original price considering all active coupons cumulatively."""
-            from decimal import Decimal
-            active_coupons = self.coupons.all().filter(ativo=True)
-            if not active_coupons.exists():
-                return self.preco
+        from decimal import Decimal
+        active_coupons = self.coupons.all().filter(ativo=True)
+        if not active_coupons.exists():
+            return self.preco
 
-            preco_atual = Decimal(str(self.preco))
-            cumulative_discount_factor = Decimal('1.0')
+        preco_atual = Decimal(str(self.preco))
+        cumulative_discount_factor = Decimal('1.0')
 
-            for coupon in active_coupons:
-                discount = Decimal(str(coupon.desconto)) / Decimal('100.0')
-                cumulative_discount_factor *= (Decimal('1.0') - discount)
+        for coupon in active_coupons:
+            discount = Decimal(str(coupon.desconto)) / Decimal('100.0')
+            cumulative_discount_factor *= (Decimal('1.0') - discount)
 
-            if cumulative_discount_factor <= 0: #Handle edge case of 100% or more discount
-                return Decimal('0.0') # or raise an exception
+        if cumulative_discount_factor <= 0:
+            return Decimal('0.0')
 
-            original_price = preco_atual / cumulative_discount_factor
-            return original_price
+        original_price = preco_atual / cumulative_discount_factor
+        return original_price
+
+    def get_final_price(self):
+        final_price = self.preco
+        for coupon in self.coupons.all(): #Fixed
+            final_price -= coupon.get_discount_amount(self.preco)
+        return final_price
 
     def apply_coupon(self, coupon):
-            """Aplica um cupom ao pedido"""
-            from decimal import Decimal
+        from decimal import Decimal
 
-            # Verifica se o cupom já foi aplicado
-            if coupon in self.coupons.all():
-                raise ValueError("Este cupom já está aplicado ao pedido")
+        if coupon in self.coupons.all(): #Fixed
+            raise ValueError("Este cupom já está aplicado ao pedido")
 
-            # Verifica se o cupom é válido
-            if not coupon.is_valid():
-                raise ValueError("Cupom inválido ou expirado")
+        if not coupon.is_valid():
+            raise ValueError("Cupom inválido ou expirado")
 
-            # Calcula o desconto
-            desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0')) * Decimal(str(self.preco))
-            novo_preco = self.preco - desconto  # Subtrai o desconto do total
+        desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0')) * Decimal(str(self.preco))
+        novo_preco = self.preco - desconto
 
-            # Aplica o cupom
-            self.coupons.add(coupon)
-            self.preco = max(Decimal('0.00'), novo_preco)  # Garante que o preço não seja negativo
-            self.save()
+        self.coupons.add(coupon) #Fixed
+        self.preco = max(Decimal('0.00'), novo_preco)
+        self.save()
 
-            # Atualiza o contador de usos do cupom
-            coupon.usos_atuais += 1
-            coupon.save()
+        coupon.usos_atuais += 1
+        coupon.save()
 
-            return desconto
+        return desconto
+
+
 
 
 
