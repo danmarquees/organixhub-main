@@ -208,7 +208,7 @@ class PedidoCarrinho(models.Model):
     num_fatura = models.CharField(max_length=255, blank=True, null=True) # Novo campo
 
     class Meta:
-        verbose_name_plural = "Pedidos do Carrinho"
+        verbose_name_plural = "Pedidos"
 
     def save(self, *args, **kwargs):
         if not self.num_fatura:
@@ -217,7 +217,7 @@ class PedidoCarrinho(models.Model):
 
     def get_discount_amount(self):
         from decimal import Decimal
-        if not self.coupons.exists(): #Fixed
+        if not self.coupons.all().exists():
             return Decimal('0.00')
         preco_original = self.get_original_price()
         return Decimal(str(preco_original)) - Decimal(str(self.preco))
@@ -244,14 +244,14 @@ class PedidoCarrinho(models.Model):
 
     def get_final_price(self):
         final_price = self.preco
-        for coupon in self.coupons.all(): #Fixed
+        for coupon in self.coupons.all():
             final_price -= coupon.get_discount_amount(self.preco)
         return final_price
 
     def apply_coupon(self, coupon):
         from decimal import Decimal
 
-        if coupon in self.coupons.all(): #Fixed
+        if coupon in self.coupons.all():
             raise ValueError("Este cupom já está aplicado ao pedido")
 
         if not coupon.is_valid():
@@ -260,7 +260,7 @@ class PedidoCarrinho(models.Model):
         desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0')) * Decimal(str(self.preco))
         novo_preco = self.preco - desconto
 
-        self.coupons.add(coupon) #Fixed
+        self.coupons.add(coupon)
         self.preco = max(Decimal('0.00'), novo_preco)
         self.save()
 
@@ -284,7 +284,7 @@ class ItensPedidoCarrinho(models.Model):
     total = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
 
     class Meta:
-         verbose_name_plural = "Itens do Pedido do Carrinho"
+         verbose_name_plural = "Itens de Pedidos"
 
     def imagem_produto(self):
             return mark_safe('<img src= "%s" width="50" height="50" />' % (self.imagem.url))

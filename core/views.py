@@ -1101,6 +1101,8 @@ def update_from_cart(request):
 @login_required
 def checkout(request):
     from decimal import Decimal
+    from django.db.models import Sum
+    import uuid
     cart_total_amount = Decimal('0.00')  # Total sem desconto
     errors = []
 
@@ -1151,12 +1153,32 @@ def checkout(request):
 
             # Cria ou atualiza o pedido
             if not order:
+                sku = str(uuid.uuid4())[:8]  # Generate SKU here
                 order = PedidoCarrinho.objects.create(
                     user=request.user,
+                    sku=sku,
                     preco=cart_total_amount,
                     status_pagamento=False,
                     data_pedido=timezone.now()
                 )
+                for product_id, item in cart_data.items():
+                    try:
+                        product = Produto.objects.get(pk=product_id)
+                        ItensPedidoCarrinho.objects.create(
+                            pedido=order,
+                            num_fatura=order.num_fatura,
+                            status_produto=order.status_produto,
+                            item=item['title'],
+                            imagem=item['image'],
+                            qtd=item['qty'],
+                            preco=item['price'],
+                            total=item['price'] * item['qty']
+                        )
+                    except Produto.DoesNotExist:
+                        logger.error(f"Product with ID {product_id} not found during order creation.")
+                    except Exception as e:
+                        logger.exception(f"Error creating order item: {e}")
+
             else:
                 order.preco = cart_total_amount
                 order.save()
@@ -1181,52 +1203,9 @@ def checkout(request):
 
     # Calcula o valor final
     if order and order.coupons.exists():
-        final_amount = order.preco  # Já descontado no método apply_coupon
+        final_amount = order.get_final_price() # Use the method to calculate the final price
     else:
         final_amount = cart_total_amount
-
-    # Configura o PayPal
-    host = request.get_host()
-    paypal_payment_button = None
-    if final_amount > 0:
-        try:
-            paypal_dict = {
-                'business': settings.PAYPAL_RECEIVER_EMAIL,
-                'amount': str(final_amount.quantize(Decimal("0.00"))),  # Formatted Decimal
-                'item_name': f"Pedido OrganixHub - {order.num_fatura if order else 'N/A'}",  # Descriptive item name
-                'invoice': f"INVOICE-{order.num_fatura if order else 'N/A'}",
-                'currency_code': "BRL",
-                'notify_url': f"http://{host}{reverse('paypal-ipn')}",  # Use named URL
-                'return_url': f"http://{host}{reverse('payment-completed')}",  # Use named URL
-                'cancel_url': f"http://{host}{reverse('payment-failed')}",  # Use named URL
-                # Add more details for better transaction tracking
-                'custom': str(order.id),  # Pass order ID as custom parameter
-            }
-            paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
-        except Exception as e:
-            errors.append(f"Error creating PayPal button: {e}")
-            logger.exception(e)
-
-        try:
-            if order:
-                for p_id, item in cart_data.items():
-                    try:
-                        qty = int(item['qty'])
-                        price = Decimal(str(item['price']))
-                        ItensPedidoCarrinho.objects.create(
-                            pedido=order,
-                            produto_id=item['pid'],
-                            quantidade=qty,
-                            preco_unitario=price,  # Store as Decimal
-                            preco_total=qty * price,  # Store as Decimal
-                        )
-                    except Exception as e:
-                        errors.append(f"Error adding item to order: {str(e)}")
-                        logger.exception(e)
-        except Exception as e:
-            errors.append(f"Error adding items to order: {str(e)}")
-            logger.exception(e)
-
 
     # Contexto do template
     context = {
@@ -1236,7 +1215,6 @@ def checkout(request):
         "order": order,
         "final_amount": "{:.2f}".format(final_amount),
         "errors": errors,
-        "paypal_payment_button": paypal_payment_button,
     }
 
     if not cart_data:
@@ -1246,20 +1224,40 @@ def checkout(request):
     return render(request, "core/checkout.html", context)
 
 
+
 def pagamento_efetuado(request):
+    order_id = request.GET.get('orderId')
+    status = request.GET.get('status')
+    session_id = request.GET.get('session_id') # Added for Stripe session id
+
+
+    if not order_id or status != 'COMPLETED':
+        return render(request, 'core/payment-failed.html', {'error': 'Pagamento não confirmado.'})
+
     try:
-        order_id = request.GET.get('order_id')  # Get order ID from GET parameters
-        if order_id is None:
-            return render(request, 'core/payment-failed.html', {'error': 'ID do pedido não fornecido.'})
-        order = get_object_or_404(PedidoCarrinho, pk=order_id, user=request.user) #Retrieve the order using order_id
-        order.status_pagamento = True #Mark payment as complete
+        order = PedidoCarrinho.objects.get(pk=order_id, user=request.user)
+        order.status_pagamento = True
+        order.payment_date = timezone.now() # Registra data de pagamento
+        order.paypal_txn_id = session_id # Registra o ID do Stripe Payment Intent
         order.save()
+
+        # Calcula o total do pedido e atualiza o modelo PedidoCarrinho
+        total_price = order.itenspedidocarrinho_set.aggregate(total=Sum(F('total')))['total']
+        order.preco = total_price
+        order.save()
+
+        messages.success(request, "Pagamento efetuado com sucesso!")
         return render(request, 'core/payment-completed.html', {'order': order})
+
     except PedidoCarrinho.DoesNotExist:
-        return render(request, 'core/payment-failed.html', {'error': 'Pedido não encontrado ou pagamento não confirmado.'})
+        messages.error(request, "Pedido não encontrado.")
+        return render(request, 'core/payment-failed.html', {'error': 'Pedido não encontrado.'})
     except Exception as e:
         logger.exception(f"Erro em pagamento_efetuado: {e}")
+        messages.error(request, f"Ocorreu um erro inesperado: {e}. Entre em contato com o suporte.")
         return render(request, 'core/payment-failed.html', {'error': 'Ocorreu um erro inesperado.'})
+
+
 
 
 
@@ -1566,412 +1564,3 @@ def ajax_contato(request):
 
 def purchase_guide(request):
     return render(request, "core/purchase-guide.html")
-
-
-def create_checkout_session(request, oid):
-    order = PedidoCarrinho.objects.get(pk=oid)
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-
-    checkout_session = stripe.checkout.Session.create(
-        customer_email = order.user.email,
-        payment_method_types = ['card'],
-        line_items = [
-            {
-                'price_data': {
-                    'currency': "BRL",
-                    'product_data': {
-                        'name': "OrganixHub Order" #Using a generic name for now.  Consider using order details for a more descriptive name.
-                    },
-                    'unit_amount': int(order.preco * 100) # Changed from * 1000
-                },
-                'quantity': 1
-            }
-        ],
-        mode = 'payment',
-        success_url = request.build_absolute_uri(reverse("core:payment-completed", args=[order.id])) + "?session_id={CHECKOUT_SESSION_ID}",
-        cancel_url = request.build_absolute_uri(reverse("core:payment-failed"))
-    )
-    order.status_pagamento = False
-    order.stripe_payment_intent = checkout_session['id']
-    order.save()
-
-
-
-def pagamento_efetuado(request):
-    paypal_order_id = request.GET.get('paypal_order_id')
-    if not paypal_order_id:
-        return render(request, 'core/payment-failed.html', {'error': 'ID de pedido do PayPal não fornecido.'})
-
-    try:
-        order = PedidoCarrinho.objects.get(paypal_txn_id=paypal_order_id, user=request.user, status_pagamento=True)
-        return render(request, 'core/payment-completed.html', {'order': order})
-    except PedidoCarrinho.DoesNotExist:
-        return render(request, 'core/payment-failed.html', {'error': 'Pedido não encontrado ou pagamento não confirmado.'})
-    except Exception as e:
-        logger.exception(f"Erro em pagamento_efetuado: {e}")
-        return render(request, 'core/payment-failed.html', {'error': 'Ocorreu um erro inesperado.'})
-
-    return render(request, 'checkout.html', {'order': order})
-
-
-
-@login_required
-def pagamento_falha(request):
-    return render(request, 'core/payment-failed.html')
-
-
-
-import logging
-
-logger = logging.getLogger(__name__)
-
-@login_required
-def customer_dashboard(request):
-    orders_list = PedidoCarrinho.objects.filter(user=request.user).order_by("-id")
-    addresses = Endereco.objects.filter(user=request.user).order_by("-id")
-    profile = Profile.objects.get(user=request.user)
-
-    orders = PedidoCarrinho.objects.annotate(month=ExtractMonth("data_pedido")).values("month").annotate(count=Count("id")).values("month", "count")
-    meses_pt = {
-        1: "Janeiro",
-        2: "Fevereiro",
-        3: "Março",
-        4: "Abril",
-        5: "Maio",
-        6: "Junho",
-        7: "Julho",
-        8: "Agosto",
-        9: "Setembro",
-        10: "Outubro",
-        11: "Novembro",
-        12: "Dezembro",
-    }
-
-    month = []
-    total_orders = []
-
-    for o in orders:
-        month.append(meses_pt[o['month']])
-        total_orders.append(o["count"])
-
-
-    if request.method == "POST":
-        try:
-            num_addresses = int(request.POST.get('num_addresses', 1))
-            created_addresses = []
-            for i in range(num_addresses):
-                address_data = {
-                    'cep': request.POST.get(f'cep_{i}', '').strip(),
-                    'logradouro': request.POST.get(f'logradouro_{i}', '').strip(),
-                    'complemento': request.POST.get(f'complemento_{i}', '').strip(),
-                    'bairro': request.POST.get(f'bairro_{i}', '').strip(),
-                    'localidade': request.POST.get(f'localidade_{i}', '').strip(),
-                    'uf': request.POST.get(f'uf_{i}', '').strip(),
-                    'numero': request.POST.get(f'numero_{i}', '').strip(),
-                    'celular': request.POST.get(f'celular_{i}', '').strip(),
-                    'user': request.user,
-                    'status': False,
-                }
-                new_address = Endereco(**address_data)
-                new_address.full_clean()  # This will raise ValidationError if any errors
-                new_address.save()
-                created_addresses.append(new_address)
-                logger.info(f"Endereço criado com sucesso: {new_address.id}")
-
-            messages.success(request, f"{len(created_addresses)} endereços adicionados com sucesso!")
-        except ValueError as e:
-            messages.error(request, f"Erro de valor: {e}")
-            logger.exception(f"ValueError ao criar endereços: {e}")
-        except IntegrityError as e:
-            messages.error(request, "Erro de integridade no banco de dados. Verifique os dados e tente novamente.")
-            logger.exception(f"IntegrityError: {e}")
-        except ValidationError as e:
-            error_messages = []
-            for field, errors in e.message_dict.items():
-                for error in errors:
-                    error_messages.append(f"{field}: {error}")
-            messages.error(request, "Erro de validação: " + ", ".join(error_messages))
-            logger.exception(f"ValidationError: {e}")
-        except Exception as e:
-            messages.error(request, "Ocorreu um erro inesperado. Tente novamente.")
-            logger.exception(f"Erro inesperado: {e}")
-
-        return redirect('core:dashboard') # Redirect back to the dashboard after POST
-
-    context = {
-        "orders_list": orders_list,
-        "addresses": addresses,
-        "profile": profile,
-        "orders": orders,
-        "month": month,
-        "total_orders": total_orders,
-    }
-    return render(request, 'core/dashboard.html', context)
-
-
-def order_detail(request, id):
-    try:
-        order = get_object_or_404(PedidoCarrinho, user=request.user, id=id)
-        order_items = order.itenspedidocarrinho_set.all() # Accessing related objects using the reverse relation
-
-        context = {
-            "order": order,
-            "order_items": order_items,
-        }
-        return render(request, 'core/order-detail.html', context)
-    except PedidoCarrinho.DoesNotExist:
-        logger.warning(f"Order with id {id} not found for user {request.user.id}")
-        return HttpResponseNotFound("Pedido não encontrado.")
-    except Exception as e:
-        logger.exception(f"An error occurred while retrieving order details: {e}")
-        return HttpResponseNotFound("Ocorreu um erro.")
-
-
-def make_address_default(request):
-    if request.method == 'POST':
-        try:
-            id = request.POST.get('id')
-            if id is None:
-                return JsonResponse({"success": False, "error": "Missing 'id' parameter"}, status=400)
-            try:
-                id = int(id)
-            except ValueError:
-                return JsonResponse({"success": False, "error": "Invalid 'id' parameter"}, status=400)
-
-            user = request.user
-
-            try:
-                address = Endereco.objects.get(pk=id, user=user)
-                # Only one address can be default, so set all others to False first
-                Endereco.objects.filter(user=user, status=True).update(status=False)
-                address.status = True
-                address.save()
-                return JsonResponse({"success": True})
-            except Endereco.DoesNotExist:
-                return JsonResponse({"success": False, "error": "Address not found"}, status=404)
-            except Exception as e:
-                return JsonResponse({"success": False, "error": f"An unexpected error occurred: {e}"}, status=500)
-
-        except Exception as e:
-            return JsonResponse({"success": False, "error": f"An unexpected error occurred: {e}"}, status=500)
-    else:
-        return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
-
-
-
-@login_required
-def delete_address(request):
-    if request.method == 'POST':
-        try:
-            address_id = request.POST.get('id')
-            if address_id is None:
-                return JsonResponse({"success": False, "error": "Missing 'id' parameter"}, status=400)
-            try:
-                address_id = int(address_id)
-            except ValueError:
-                return JsonResponse({"success": False, "error": "Invalid 'id' parameter"}, status=400)
-
-            address = get_object_or_404(Endereco, pk=address_id, user=request.user)
-            address.delete()
-            return JsonResponse({"success": True})
-        except Exception as e:
-            return JsonResponse({"success": False, "error": f"An unexpected error occurred: {e}"}, status=500)
-    else:
-        return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
-
-
-def buscar_endereco(request):
-    cep = request.GET.get('cep', '').replace('-', '').strip()
-
-    if len(cep) != 8 or not cep.isdigit():
-        return JsonResponse({'erro': 'CEP inválido!'}, status=400)
-
-    try:
-        endereco = get_address_from_cep(cep, webservice=WebService.VIACEP)
-        return JsonResponse(endereco)
-    except Exception as e:
-        return JsonResponse({'erro': str(e)}, status=500)
-
-
-def product_quickview(request, pid):
-    if request.method == 'GET':
-        try:
-            produto = get_object_or_404(Produto, pid=pid)
-            p_imagem = produto.p_imagem.all()
-
-            # Prepare os dados do produto
-            context = {
-                'p_imagem': p_imagem,
-                'pid': produto.pid,
-                'titulo': produto.titulo,
-                'preco': str(produto.preco),
-                'preco_antigo': str(produto.preco_antigo),
-                'descricao': produto.descricao,
-                'imagem': produto.imagem.url if produto.imagem else None,
-                'vendedor': produto.vendedor.titulo if produto.vendedor else None,
-                'categoria': produto.categoria.titulo if produto.categoria else None,
-                'em_estoque': produto.em_estoque,
-                'qtd_estoque': produto.qtd_estoque,
-                'porcentagem_desconto': produto.obter_porcentagem(),
-            }
-            return JsonResponse(context)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Método não permitido'}, status=405)
-
-@login_required
-def wishlist(request):
-    wishlist_items = Wishlist.objects.filter(user=request.user) #Filtro pelo usuario logado
-    wishlist_count = Wishlist.objects.filter(user=request.user).count()
-    context = {
-        "wishlist_items": wishlist_items, # Corrigido para usar o nome correto da variável
-        "wishlist_count": wishlist_count
-    }
-    return render(request, 'core/wishlist.html', context)
-
-
-
-def add_to_wishlist(request):
-    if request.method == 'GET':
-        try:
-            product_id = request.GET['id']
-            product = get_object_or_404(Produto, pk=product_id)
-            user = request.user
-
-            wishlist_count = Wishlist.objects.filter(produto=product, user=user).count() #Corrected
-            if wishlist_count > 0:
-                return JsonResponse({"bool": False, "message": "Produto já adicionado à lista de desejos."})
-            else:
-                Wishlist.objects.create(produto=product, user=user) #Corrected
-                return JsonResponse({"bool": True, "message": "Produto adicionado à lista de desejos com sucesso!"})
-        except KeyError:
-            return JsonResponse({"bool": False, "message": "Parâmetro 'id' ausente."}, status=400)
-        except Exception as e:
-            return JsonResponse({"bool": False, "message": f"Erro ao adicionar à lista de desejos: {e}"}, status=500)
-    else:
-        return JsonResponse({"bool": False, "message": "Método de requisição inválido."}, status=405)
-
-
-@csrf_exempt
-@login_required
-def delete_wishlist_item(request):
-    if request.method != 'POST':
-        return JsonResponse({"bool": False, "message": "Método de requisição inválido."}, status=405)
-
-    try:
-        pid = request.POST['id']
-        try:
-            product = get_object_or_404(Wishlist, pk=pid, user=request.user)
-            product.delete()
-            logger.info(f"Item da Wishlist deletado com sucesso (ID: {pid}, Usuário: {request.user.id})")
-            wishlist_items = Wishlist.objects.filter(user=request.user)
-            wishlist_count = Wishlist.objects.filter(user=request.user).count()
-            context = {
-                "wishlist_items": wishlist_items,
-                "wishlist_count": wishlist_count
-            }
-            html = render_to_string('core/async/wishlist-list.html', context)
-            return JsonResponse({"bool": True, "message": "Item deletado da lista de desejos com sucesso!", "html": html})
-        except Wishlist.DoesNotExist:
-            return JsonResponse({"bool": False, "message": "Item da Wishlist não encontrado."}, status=404)
-        except IntegrityError as e:
-            logger.exception(f"Erro de integridade ao deletar item da Wishlist (ID: {pid}, Usuário: {request.user.id}): {e}")
-            return JsonResponse({"bool": False, "message": "Erro de integridade do banco de dados. Por favor, tente novamente mais tarde."}, status=500)
-        except Exception as e:
-            logger.exception(f"Erro inesperado ao deletar item da Wishlist (Usuário: {request.user.id}): {e}")
-            return JsonResponse({"bool": False, "message": f"Erro ao remover da lista de desejos: {e}"}, status=500)
-
-    except KeyError:
-        logger.warning(f"Parâmetro 'id' ausente na requisição de exclusão de item da Wishlist do usuário: {request.user.id}")
-        return JsonResponse({"bool": False, "message": "Parâmetro 'id' ausente."}, status=400)
-
-
-
-def contact(request):
-    return render(request, 'core/contact.html')
-
-
-def ajax_contato(request):
-    if request.method == 'POST':
-        nome = request.POST.get('nome')
-        email = request.POST.get('email')
-        telefone = request.POST.get('telefone')
-        assunto = request.POST.get('assunto')
-        mensagem = request.POST.get('mensagem')
-
-        try:
-            Contato.objects.create(
-                nome=nome,
-                email=email,
-                telefone=telefone,
-                assunto=assunto,
-                mensagem=mensagem
-            )
-            return JsonResponse({"success": True, "message": "Mensagem enviada com sucesso!"})
-        except Exception as e:
-            return JsonResponse({"success": False, "message": f"Erro ao enviar mensagem: {str(e)}"}, status=500)
-
-    else:
-        return JsonResponse({"success": False, "message": "Método de requisição inválido."}, status=405)
-
-
-def purchase_guide(request):
-    return render(request, "core/purchase-guide.html")
-
-
-@csrf_exempt
-def paypal_ipn(request):
-    from django.http import HttpResponseBadRequest, HttpResponseServerError, HttpResponse
-    from django.db import transaction
-
-    if request.method != 'POST':
-        return HttpResponseBadRequest(b"Invalid request method.")  # 400 Bad Request
-
-    try:
-        with transaction.atomic():
-            form = PayPalIPNForm(request.POST)
-            if form.is_valid():
-                ipn_obj = form.save()
-                logger.info(f"Received PayPal IPN: {ipn_obj}")
-                verification_result = ipn_obj.verify()
-                logger.info(f"PayPal IPN Verification Result: {verification_result}")
-
-                if verification_result:
-                    payment_status = ipn_obj.payment_status
-                    logger.info(f"PayPal Payment Status: {payment_status}")
-
-                    if payment_status == "Completed":
-                        try:
-                            order_id = int(ipn_obj.custom)
-                            order = PedidoCarrinho.objects.get(pk=order_id)
-                            if float(ipn_obj.mc_gross) == float(order.preco):
-                                order.status_pagamento = True
-                                order.paypal_txn_id = ipn_obj.txn_id #Update the transaction ID
-                                order.payment_date = timezone.now() #Update the payment date
-                                order.save()
-                                logger.info(f"PayPal payment completed successfully for order {order_id}, Transaction ID: {ipn_obj.txn_id}")
-                                # ... your cart clearing logic ...
-                            else:
-                                logger.error(f"PayPal IPN: Amount mismatch. Order ID: {order_id}, Paid: {ipn_obj.mc_gross}, Expected: {order.preco}")
-                                # Handle the amount mismatch appropriately (e.g., send notification)
-                        except PedidoCarrinho.DoesNotExist:
-                            logger.error(f"PayPal IPN: Order not found for order ID: {ipn_obj.custom}")
-                        except ValueError:
-                            logger.error(f"PayPal IPN: Invalid order ID: {ipn_obj.custom}")
-                        except Exception as e:
-                            logger.exception(f"An unexpected error occurred while processing the order: {e}")
-                            return HttpResponseServerError(b"An unexpected error occurred.")
-                    elif payment_status in ["Pending", "Reversed", "Refunded"]:
-                        logger.info(f"PayPal Payment Status {payment_status} for order {ipn_obj.custom}.")
-                    else:
-                        logger.warning(f"PayPal Payment Status {payment_status} for order {ipn_obj.custom}.")
-                    return HttpResponse(b"OK")
-                else:
-                    logger.error(f"Invalid PayPal IPN: Verification failed.")
-                    return HttpResponseBadRequest(b"Invalid IPN.")
-            else:
-                logger.error(f"Invalid PayPal IPN: Form errors: {form.errors}")
-                return HttpResponseBadRequest(b"Invalid IPN data.")
-    except Exception as e:
-        logger.exception(f"A critical error occurred: {e}")
-        return HttpResponseServerError(b"An unexpected server error occurred.")
