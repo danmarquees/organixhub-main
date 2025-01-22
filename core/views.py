@@ -25,6 +25,8 @@ from paypal.standard.ipn.forms import PayPalIPNForm # Importa a classe PayPalIPN
 import stripe
 from paypal.standard.forms import PayPalPaymentsForm
 from core import models
+from django.db.models import Q
+
 
 def index(request):
     produtos = Produto.objects.filter(status_produto="published", destaque=True)
@@ -570,16 +572,21 @@ def checkout(request):
         if not order:
             order = PedidoCarrinho.objects.create(
                 user=request.user,
+                nome=request.POST.get('nome'),
+                email=request.POST.get('email'),
+                telefone=request.POST.get('telefone'),
+                endereco=request.POST.get('endereco'),
+                cidade=request.POST.get('cidade'),
+                estado=request.POST.get('estado'),
                 preco=cart_total_amount,
                 status_pagamento=False,
                 data_pedido=timezone.now(),
-                paypal_txn_id=request.GET.get('orderId')  # Adicione o ID do PayPal
             )
             # Adiciona os itens do carrinho ao pedido
             for product_id, item in cart_data.items():
                 try:
-                    produto = Produto.objects.get(pk=product_id)
-                    ItensPedidoCarrinho.objects.create(
+                    produto = models.Produto.objects.get(pk=product_id)
+                    models.ItensPedidoCarrinho.objects.create(
                         pedido=order,
                         num_fatura=order.num_fatura,
                         status_produto=order.status_produto,
@@ -589,7 +596,7 @@ def checkout(request):
                         preco=item['price'],
                         total=item['price'] * item['qty'],
                     )
-                except Produto.DoesNotExist:
+                except models.Produto.DoesNotExist:
                     errors.append(f"Produto com ID {product_id} não encontrado.")
     except Exception as e:
         errors.append(f"Erro ao buscar ou criar pedido: {str(e)}")
@@ -602,11 +609,11 @@ def checkout(request):
             messages.warning(request, "Por favor, insira um código de cupom.")
             return redirect("core:checkout")
         try:
-            coupon = Coupon.objects.get(codigo=codigo, ativo=True)
+            coupon = models.Coupon.objects.get(codigo=codigo, ativo=True)
             if order: #check if order exists before applying coupon
                 order.apply_coupon(coupon)  # Aplica o cupom ao pedido
             messages.success(request, f"Cupom '{codigo}' aplicado com sucesso!")
-        except Coupon.DoesNotExist:
+        except models.Coupon.DoesNotExist:
             messages.warning(request, "Cupom inválido ou inativo.")
         except ValueError as ve:
             messages.warning(request, str(ve))
@@ -614,8 +621,9 @@ def checkout(request):
             messages.error(request, f"Erro ao aplicar cupom: {str(e)}")
         return redirect("core:checkout")
 
-    # Calcula o total final com desconto, se aplicável
-    final_amount = order.get_final_price() if order and order.coupons.exists() else cart_total_amount
+    # Configurações do PayPal
+    final_amount = cart_total_amount #added this line to solve undefined variable error
+
 
     # Contexto para o template
     context = {
@@ -631,41 +639,101 @@ def checkout(request):
 
 
 
+import uuid
+import logging
+
+logger = logging.getLogger(__name__)
 @login_required
 def pagamento_efetuado(request):
-    # Obtém os parâmetros da requisição
-    order_id = request.GET.get('orderId')
-    status = request.GET.get('status')
+    # Verifica se há dados de carrinho na sessão
+    if 'cart_data_obj' in request.session:
+        # Obtém os dados do carrinho
+        cart_data = request.session['cart_data_obj']
+        # Busca ou cria o pedido atual do usuário
+        try:
+            order = PedidoCarrinho.objects.filter(user=request.user, status_pagamento=False).order_by('-data_pedido').first()
+            if not order:
+                order = PedidoCarrinho.objects.create(
+                    user=request.user,
+                    nome=request.POST.get('nome'),
+                    email=request.POST.get('email'),
+                    telefone=request.POST.get('telefone'),
+                    endereco=request.POST.get('endereco'),
+                    cidade=request.POST.get('cidade'),
+                    estado=request.POST.get('estado'),
+                    preco=Decimal('0.00'),  # Initialize price to zero
+                    status_pagamento=True,  # Set payment status to True
+                    data_pedido=timezone.now(),
+                    payment_date=timezone.now() #Set payment date
+                )
+                # Adiciona os itens do carrinho ao pedido
+                for product_id, item in cart_data.items():
+                    try:
+                        produto = models.Produto.objects.get(pk=product_id)
+                        models.ItensPedidoCarrinho.objects.create(
+                            pedido=order,
+                            num_fatura=order.num_fatura,
+                            status_produto=order.status_produto,
+                            item=item['title'],
+                            imagem=item['image'],
+                            qtd=item['qty'],
+                            preco=item['price'],
+                            total=item['price'] * item['qty'],
+                        )
+                    except models.Produto.DoesNotExist:
+                        print(f"Produto com ID {product_id} não encontrado.")  # Handle missing products gracefully
 
-    # Verifica se os parâmetros são válidos
-    if not order_id or status != 'COMPLETED':
-        return render(request, 'core/payment-failed.html', {'error': 'Pagamento não confirmado ou inválido.'})
+            # Limpa os dados do carrinho da sessão
+            del request.session['cart_data_obj']
+            request.session.modified = True
 
-    try:
-        # Busca pelo ID do PayPal ou pela chave primária do pedido
-        pedido = PedidoCarrinho.objects.filter(user=request.user).filter(
-            models.Q(paypal_txn_id=order_id) | models.Q(pk=order_id)
-        ).first()
+        except Exception as e:
+            print(f"Erro ao criar pedido: {e}")  # Log the error
+            # Handle the error appropriately, e.g., display an error message to the user
+            return render(request, 'core/payment-failed.html', {'error_message': 'Ocorreu um erro ao processar seu pagamento. Por favor, tente novamente.'})
 
-        if not pedido:
-            raise PedidoCarrinho.DoesNotExist("Nenhum pedido correspondente encontrado.")
 
-        # Atualiza o status de pagamento
-        pedido.status_pagamento = True
-        pedido.payment_date = timezone.now()
-        pedido.paypal_txn_id = order_id  # Salva o ID do PayPal, se ainda não foi salvo
-        pedido.save()
+    # Renderiza o template de pagamento concluído
+    return render(request, 'core/payment-completed.html')
 
-        messages.success(request, "Pagamento registrado com sucesso!")
-        return render(request, 'core/payment-completed.html', {'order': pedido})
+@login_required
+def save_checkout_info(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        telefone = request.POST.get('telefone')
+        endereco = request.POST.get('endereco')
+        cidade = request.POST.get('cidade')
+        estado = request.POST.get('estado')
 
-    except PedidoCarrinho.DoesNotExist:
-        logger.error(f"Pedido não encontrado: orderId={order_id}, user={request.user}")
-        return render(request, 'core/payment-failed.html', {'error': 'Pedido não encontrado.'})
-
-    except Exception as e:
-        logger.exception(f"Erro inesperado ao registrar pagamento: {e}")
-        return render(request, 'core/payment-failed.html', {'error': 'Ocorreu um erro inesperado. Entre em contato com o suporte.'})
+        try:
+            order = PedidoCarrinho.objects.filter(user=request.user, status_pagamento=False).order_by('-data_pedido').first()
+            if not order:
+                order = PedidoCarrinho.objects.create(
+                    user=request.user,
+                    nome=nome,
+                    email=email,
+                    telefone=telefone,
+                    endereco=endereco,
+                    cidade=cidade,
+                    estado=estado,
+                    preco=Decimal('0.00'), # Initialize price to zero
+                    status_pagamento=False,
+                    data_pedido=timezone.now(),
+                )
+            else:
+                order.nome = nome
+                order.email = email
+                order.telefone = telefone
+                order.endereco = endereco
+                order.cidade = cidade
+                order.estado = estado
+                order.save()
+            return JsonResponse({'success': True, 'message': 'Informações de checkout salvas com sucesso!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Erro ao salvar informações de checkout: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'success': False, 'message': 'Método de requisição inválido'}, status=405)
 
 
 @login_required
@@ -810,8 +878,6 @@ def make_address_default(request):
     else:
         return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
 
-
-
 @login_required
 def delete_address(request):
     if request.method == 'POST':
@@ -831,7 +897,6 @@ def delete_address(request):
             return JsonResponse({"success": False, "error": f"An unexpected error occurred: {e}"}, status=500)
     else:
         return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
-
 
 def buscar_endereco(request):
     cep = request.GET.get('cep', '').replace('-', '').strip()

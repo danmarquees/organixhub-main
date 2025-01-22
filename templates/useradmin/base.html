@@ -33,7 +33,7 @@
         <div class="screen-overlay"></div>
         <aside class="navbar-aside" id="offcanvas_aside">
             <div class="aside-top">
-                <a href="index.html" class="brand-wrap">
+                <a href="{% url 'core:index' %}" class="brand-wrap">
                     <img
                         src="{% static 'assets2/imgs/theme/logo.png' %}"
                         class="logo"
@@ -195,6 +195,7 @@
                 <br />
             </nav>
         </aside>
+
         {% block content %} {% endblock content %}
 
         <script src="{% static 'assets2/js/vendors/jquery-3.6.0.min.js' %}"></script>

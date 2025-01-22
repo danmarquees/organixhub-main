@@ -21,10 +21,20 @@ class VendedorAdmin(admin.ModelAdmin):
 
 
 class PedidoCarrinhoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'status_pagamento', 'paypal_txn_id', 'payment_date', 'preco')
-    search_fields = ('id', 'paypal_txn_id', 'user__username')
-    list_filter = ('status_pagamento', 'payment_date')
+    list_display = ['num_fatura', 'user', 'data_pedido', 'status_pagamento', 'preco', 'get_discount_amount', 'get_original_price', 'get_final_price']
+    readonly_fields = ('order_uuid', 'num_fatura', 'payment_date')
 
+    def get_discount_amount(self, obj):
+        return obj.get_discount_amount()
+    get_discount_amount.short_description = "Valor do Desconto"
+
+    def get_original_price(self, obj):
+        return obj.get_original_price()
+    get_original_price.short_description = "Preço Original"
+
+    def get_final_price(self, obj):
+        return obj.get_final_price()
+    get_final_price.short_description = "Preço Final"
 
 
 

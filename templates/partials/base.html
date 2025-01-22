@@ -289,10 +289,12 @@
                                                 <a href="{% url 'core:dashboard' %}"><i
                                                         class="fi fi-rs-user mr-10"></i>Minha Conta</a>
                                             </li>
-                                            <li>
-                                                <a href="{% url 'useradmin:dashboard' %}"><i
-                                                        class="fa solid fa-chart-line"></i> Admin Dashboard</a>
-                                            </li>
+                                                {% if request.user.is_superuser %}
+                                                <li>
+                                                    <a href="{% url 'useradmin:dashboard' %}"><i
+                                                            class="fa solid fa-chart-line"></i> Admin Dashboard</a>
+                                                </li>
+                                                {% endif %}
                                             <li>
                                                 <a href="page-account.html"><i
                                                         class="fi fi-rs-location-alt mr-10"></i>Rastrear Pedido</a>

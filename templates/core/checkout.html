@@ -180,53 +180,54 @@
 <script src="https://www.paypal.com/sdk/js?client-id=AUeZJX-aqir88NyR8g3c3u17mbsnji-NaUaR4iUTnoc5w9PBypCTm4lx7ngDoeYKNJM0xc3QvUkBShbK&currency=BRL"></script>
 
 <script>
-    paypal.Buttons({
-        style: {
-            shape: 'rect',
-            color: 'gold',
-            layout: 'vertical',
-            label: 'paypal',
-        },
+paypal.Buttons({
+    style: {
+        shape: 'rect',
+        color: 'gold',
+        layout: 'vertical',
+        label: 'paypal',
+    },
 
-        // Criação do pedido
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        currency_code: "BRL",
-                        value: '{{ final_amount }}', // Substituído dinamicamente pelo Django template
-                    }
-                }]
-            });
-        },
+    // Criação do pedido
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    currency_code: "BRL",
+                    value: '{{ final_amount }}', // Substituído dinamicamente pelo Django template
+                }
+            }]
+        });
+    },
 
-        // Pagamento aprovado
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(orderData) {
-                console.log('Pagamento aprovado:', orderData);
-                console.log('Redirecting with Order ID:', orderData.id);
-                console.log('Payment Status:', orderData.status);
-                window.location.href = "{% url 'core:payment-completed' %}" +
-                    "?status=" + orderData.status +
-                    "&orderId=" + orderData.id;
-            }).catch(function(err) {
-                console.error('Erro ao capturar o pagamento:', err);
-                alert('Não foi possível concluir o pagamento. Por favor, tente novamente ou entre em contato com o suporte.');
-            });
-        },
+    // Pagamento aprovado
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(orderData) {
+            console.log('Pagamento aprovado:', orderData);
+            console.log('Redirecting with Order ID:', orderData.id);
+            console.log('Payment Status:', orderData.status);
+            window.location.href = "{% url 'core:payment-completed' %}" +
+                "?status=" + orderData.status +
+                "&orderId=" + orderData.id;
+        }).catch(function(err) {
+            console.error('Erro ao capturar o pagamento:', err);
+            alert('Não foi possível concluir o pagamento. Por favor, tente novamente ou entre em contato com o suporte.');
+        });
+    },
 
-        // Erros no processo
-        onError: function(err) {
-            console.error('Erro no PayPal:', err);
-            alert('Ocorreu um erro ao processar o pagamento. Por favor, tente novamente.');
-        },
+    // Erros no processo
+    onError: function(err) {
+        console.error('Erro no PayPal:', err);
+        alert('Ocorreu um erro ao processar o pagamento. Por favor, tente novamente.');
+    },
 
-        // Pagamento cancelado pelo usuário
-        onCancel: function(data) {
-            console.log('Pagamento cancelado pelo usuário:', data);
-            alert('O pagamento foi cancelado.');
-        }
-    }).render('#paypal-button-container');
+    // Pagamento cancelado pelo usuário
+    onCancel: function(data) {
+        console.log('Pagamento cancelado pelo usuário:', data);
+        alert('O pagamento foi cancelado.');
+    }
+}).render('#paypal-button-container');
+
 </script>
 
 

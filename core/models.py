@@ -7,6 +7,7 @@ from django_ckeditor_5.fields import CKEditor5Field
 from multiselectfield import MultiSelectField
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+import uuid
 
 
 STATUS_CHOICES = (
@@ -198,75 +199,115 @@ class PedidoCarrinho(models.Model):
     cidade = models.CharField(max_length=200, null=True, blank=True)
     estado = models.CharField(max_length=200, null=True, blank=True)
     status_pagamento = models.BooleanField(default=False)
+    order_uuid = models.UUIDField(default=uuid.uuid4, editable=False) # Added UUID field
     sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="sku", alphabet="1234567890")
     preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99)
     data_pedido = models.DateTimeField(auto_now_add=True)
     status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing")
     coupons = models.ManyToManyField('Coupon', blank=True)
-    paypal_txn_id = models.CharField(max_length=255, blank=True, null=True)  # Add this field
-    payment_date = models.DateTimeField(blank=True, null=True)
     num_fatura = models.CharField(max_length=255, blank=True, null=True) # Novo campo
+    payment_date = models.DateTimeField(null=True, blank=True) # Added payment date field
 
     class Meta:
         verbose_name_plural = "Pedidos"
 
     def save(self, *args, **kwargs):
+        """
+        Sobrescreve o método save para gerar um número de fatura único se ele não existir.
+        """
         if not self.num_fatura:
+            # Gera um número de fatura com o formato INV-AAAAAMMDDHHMMSS
             self.num_fatura = f"INV-{timezone.now().strftime('%Y%m%d%H%M%S')}"
+        # Chama o método save da classe pai
         super().save(*args, **kwargs)
 
     def get_discount_amount(self):
+        """
+        Calcula o valor total do desconto aplicado aos cupons.
+        """
         from decimal import Decimal
-        if not self.coupons.all().exists():
+        # Se não houver cupons aplicados, retorna 0.00
+        if not self.coupons.all():
             return Decimal('0.00')
+        # Obtém o preço original do pedido antes dos descontos
         preco_original = self.get_original_price()
+        # Calcula e retorna o valor total do desconto
         return Decimal(str(preco_original)) - Decimal(str(self.preco))
 
 
     def get_original_price(self):
+        """
+        Calcula o preço original do pedido antes dos descontos.
+        """
         from decimal import Decimal
-        active_coupons = self.coupons.all().filter(ativo=True)
-        if not active_coupons.exists():
+        # Obtém os cupons ativos aplicados ao pedido
+        active_coupons = self.coupons.filter(ativo=True)
+        # Se não houver cupons ativos, retorna o preço atual
+        if not active_coupons:
             return self.preco
 
+        # Converte o preço atual para Decimal
         preco_atual = Decimal(str(self.preco))
+        # Inicializa o fator de desconto acumulado com 1.0
         cumulative_discount_factor = Decimal('1.0')
 
+        # Itera sobre os cupons ativos
         for coupon in active_coupons:
+            # Calcula o desconto percentual de cada cupom
             discount = Decimal(str(coupon.desconto)) / Decimal('100.0')
+            # Atualiza o fator de desconto acumulado
             cumulative_discount_factor *= (Decimal('1.0') - discount)
 
+        # Se o fator de desconto acumulado for menor ou igual a 0, retorna 0.0
         if cumulative_discount_factor <= 0:
             return Decimal('0.0')
 
+        # Calcula e retorna o preço original
         original_price = preco_atual / cumulative_discount_factor
         return original_price
 
     def get_final_price(self):
+        """
+        Calcula o preço final do pedido após aplicar os descontos.
+        """
         final_price = self.preco
+        # Itera sobre os cupons aplicados
         for coupon in self.coupons.all():
+            # Subtrai o valor do desconto de cada cupom do preço final
             final_price -= coupon.get_discount_amount(self.preco)
         return final_price
 
     def apply_coupon(self, coupon):
+        """
+        Aplica um cupom ao pedido.
+        """
         from decimal import Decimal
 
+        # Verifica se o cupom já foi aplicado
         if coupon in self.coupons.all():
             raise ValueError("Este cupom já está aplicado ao pedido")
 
+        # Verifica a validade do cupom
         if not coupon.is_valid():
             raise ValueError("Cupom inválido ou expirado")
 
+        # Calcula o valor do desconto
         desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0')) * Decimal(str(self.preco))
+        # Calcula o novo preço após aplicar o desconto
         novo_preco = self.preco - desconto
 
+        # Adiciona o cupom ao pedido
         self.coupons.add(coupon)
+        # Atualiza o preço do pedido
         self.preco = max(Decimal('0.00'), novo_preco)
+        # Salva as alterações no pedido
         self.save()
 
+        # Atualiza o número de usos do cupom
         coupon.usos_atuais += 1
         coupon.save()
 
+        # Retorna o valor do desconto
         return desconto
 
 
@@ -291,6 +332,7 @@ class ItensPedidoCarrinho(models.Model):
 
     def imagem_pedido(self):
             return mark_safe('<img src= "/media/%s" width="50" height="50" />' % (self.imagem))
+
 
 ######################################Avaliação do Produto, Lista de Desejos, Endereço##################################
 ######################################Avaliação do Produto, Lista de Desejos, Endereço##################################
