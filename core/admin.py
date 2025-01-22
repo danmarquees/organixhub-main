@@ -21,9 +21,10 @@ class VendedorAdmin(admin.ModelAdmin):
 
 
 class PedidoCarrinhoAdmin(admin.ModelAdmin):
-    list_display = ('user', 'num_fatura', 'data_pedido', 'preco', 'status_pagamento', 'paypal_txn_id', 'payment_date', 'get_final_price')
-    list_filter = ('status_pagamento', 'data_pedido', 'payment_date')
-    search_fields = ('user__username', 'num_fatura', 'paypal_txn_id')
+    list_display = ('id', 'user', 'status_pagamento', 'paypal_txn_id', 'payment_date', 'preco')
+    search_fields = ('id', 'paypal_txn_id', 'user__username')
+    list_filter = ('status_pagamento', 'payment_date')
+
 
 
 
