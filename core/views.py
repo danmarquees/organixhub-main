@@ -692,9 +692,10 @@ def pagamento_efetuado(request):
             # Handle the error appropriately, e.g., display an error message to the user
             return render(request, 'core/payment-failed.html', {'error_message': 'Ocorreu um erro ao processar seu pagamento. Por favor, tente novamente.'})
 
-
     # Renderiza o template de pagamento concluído
     return render(request, 'core/payment-completed.html')
+
+
 
 @login_required
 def save_checkout_info(request):

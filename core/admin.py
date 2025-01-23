@@ -22,7 +22,7 @@ class VendedorAdmin(admin.ModelAdmin):
 
 class PedidoCarrinhoAdmin(admin.ModelAdmin):
     list_display = ['num_fatura', 'user', 'data_pedido', 'status_pagamento', 'preco', 'get_discount_amount', 'get_original_price', 'get_final_price']
-    readonly_fields = ('order_uuid', 'num_fatura', 'payment_date')
+    readonly_fields = ('num_fatura', 'payment_date')
 
     def get_discount_amount(self, obj):
         return obj.get_discount_amount()

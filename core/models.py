@@ -199,7 +199,6 @@ class PedidoCarrinho(models.Model):
     cidade = models.CharField(max_length=200, null=True, blank=True)
     estado = models.CharField(max_length=200, null=True, blank=True)
     status_pagamento = models.BooleanField(default=False)
-    order_uuid = models.UUIDField(default=uuid.uuid4, editable=False) # Added UUID field
     sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="sku", alphabet="1234567890")
     preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99)
     data_pedido = models.DateTimeField(auto_now_add=True)
