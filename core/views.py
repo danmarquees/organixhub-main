@@ -29,7 +29,7 @@ from django.db.models import Q
 
 
 def index(request):
-    produtos = Produto.objects.filter(status_produto="published", destaque=True)
+    produtos = Produto.objects.filter(status_produto="published") # Removed destaque=True
     vendedores = Vendedor.objects.all()
     categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
 
@@ -40,17 +40,27 @@ def index(request):
         else:
             p.media_avaliacoes = 0
 
+        p.cart_item_count = 0
+        if request.user.is_authenticated:
+            cart_items = PedidoCarrinho.objects.filter(user=request.user, status_pagamento=False)
+            p.cart_item_count = cart_items.count() if cart_items else 0
+            p.cart_total_amount = 0
+            if cart_items:
+                for item in cart_items:
+                    p.cart_total_amount += item.preco
 
-        #Corrected String Splitting for SQLite
+
         p.badges = list(p.badges) if p.badges is not None else []
-
 
     context = {
         "produtos": produtos,
         "vendedores": vendedores,
         "categorias": categorias,
     }
+
     return render(request, 'core/index.html', context)
+
+
 
 
 def lista_produtos(request):
@@ -597,7 +607,11 @@ def checkout(request):
                         total=item['price'] * item['qty'],
                     )
                 except models.Produto.DoesNotExist:
+                    logger.error(f"Product with ID {product_id} not found during order creation.")  # Log the error
                     errors.append(f"Produto com ID {product_id} não encontrado.")
+                except Exception as e:
+                    logger.exception(f"Error creating order item for product {product_id}: {e}") # Log the full exception
+
     except Exception as e:
         errors.append(f"Erro ao buscar ou criar pedido: {str(e)}")
         order = None
@@ -649,48 +663,62 @@ def pagamento_efetuado(request):
     if 'cart_data_obj' in request.session:
         # Obtém os dados do carrinho
         cart_data = request.session['cart_data_obj']
-        # Busca ou cria o pedido atual do usuário
-        try:
-            order = PedidoCarrinho.objects.filter(user=request.user, status_pagamento=False).order_by('-data_pedido').first()
-            if not order:
-                order = PedidoCarrinho.objects.create(
-                    user=request.user,
-                    nome=request.POST.get('nome'),
-                    email=request.POST.get('email'),
-                    telefone=request.POST.get('telefone'),
-                    endereco=request.POST.get('endereco'),
-                    cidade=request.POST.get('cidade'),
-                    estado=request.POST.get('estado'),
-                    preco=Decimal('0.00'),  # Initialize price to zero
-                    status_pagamento=True,  # Set payment status to True
-                    data_pedido=timezone.now(),
-                    payment_date=timezone.now() #Set payment date
+
+        # Always create a new PedidoCarrinho for each order
+        order = PedidoCarrinho.objects.create(
+            user=request.user,
+            nome=request.POST.get('nome'),
+            email=request.POST.get('email'),
+            telefone=request.POST.get('telefone'),
+            endereco=request.POST.get('endereco'),
+            cidade=request.POST.get('cidade'),
+            estado=request.POST.get('estado'),
+            preco=Decimal('0.00'),  # Initialize price to zero.  Calculate later.
+            status_pagamento=True,  # Set payment status to True
+            data_pedido=timezone.now(),
+            payment_date=timezone.now() #Set payment date
+        )
+
+        # Calcula o preço total do pedido após a criação
+        cart_total_amount = Decimal('0.00')
+        for product_id, item in cart_data.items():
+            try:
+                qty = int(item['qty'])
+                price = Decimal(str(item['price']))
+                if qty <= 0 or price <= 0:
+                    logger.warning(f"Invalid item in cart: {item}")
+                    continue
+                cart_total_amount += qty * price
+            except (ValueError, TypeError, KeyError) as e:
+                logger.error(f"Error processing cart item {item}: {e}")
+
+        order.preco = cart_total_amount # Update the order price
+        order.save()
+
+
+        # Adiciona os itens do carrinho ao pedido
+        for product_id, item in cart_data.items():
+            try:
+                produto = models.Produto.objects.get(pk=product_id)
+                models.ItensPedidoCarrinho.objects.create(
+                    pedido=order,
+                    num_fatura=order.num_fatura,
+                    status_produto=order.status_produto,
+                    item=item['title'],
+                    imagem=item['image'],
+                    qtd=item['qty'],
+                    preco=item['price'],
+                    total=item['price'] * item['qty'],
                 )
-                # Adiciona os itens do carrinho ao pedido
-                for product_id, item in cart_data.items():
-                    try:
-                        produto = models.Produto.objects.get(pk=product_id)
-                        models.ItensPedidoCarrinho.objects.create(
-                            pedido=order,
-                            num_fatura=order.num_fatura,
-                            status_produto=order.status_produto,
-                            item=item['title'],
-                            imagem=item['image'],
-                            qtd=item['qty'],
-                            preco=item['price'],
-                            total=item['price'] * item['qty'],
-                        )
-                    except models.Produto.DoesNotExist:
-                        print(f"Produto com ID {product_id} não encontrado.")  # Handle missing products gracefully
+            except models.Produto.DoesNotExist:
+                logger.error(f"Product with ID {product_id} not found during order creation.")
+            except Exception as e:
+                logger.exception(f"Error creating order item for product {product_id}: {e}")
 
-            # Limpa os dados do carrinho da sessão
-            del request.session['cart_data_obj']
-            request.session.modified = True
 
-        except Exception as e:
-            print(f"Erro ao criar pedido: {e}")  # Log the error
-            # Handle the error appropriately, e.g., display an error message to the user
-            return render(request, 'core/payment-failed.html', {'error_message': 'Ocorreu um erro ao processar seu pagamento. Por favor, tente novamente.'})
+        # Limpa os dados do carrinho da sessão
+        del request.session['cart_data_obj']
+        request.session.modified = True
 
     # Renderiza o template de pagamento concluído
     return render(request, 'core/payment-completed.html')
