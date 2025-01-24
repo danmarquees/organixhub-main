@@ -49,7 +49,6 @@ def index(request):
                 for item in cart_items:
                     p.cart_total_amount += item.preco
 
-
         p.badges = list(p.badges) if p.badges is not None else []
 
     context = {

@@ -12,7 +12,7 @@ def dashboard(request):
     all_products = Produto.objects.all()
     all_categories = Categoria.objects.all()
     new_customers = User.objects.all().order_by("-id")[:5]
-    latest_orders = PedidoCarrinho.objects.all().order_by("-data_pedido")[:5] #Added order_by to show latest
+    latest_orders = PedidoCarrinho.objects.filter(status_pagamento=True).order_by("-data_pedido")[:5]
 
     this_month = datetime.datetime.now().month
 

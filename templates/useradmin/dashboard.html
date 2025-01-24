@@ -1,14 +1,19 @@
-{% extends 'useradmin/base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'useradmin/base.html' %} {% load static %} {% block content %}
 
 <main class="main-wrap">
     <header class="main-header navbar">
         <div class="col-search">
             <form class="searchform">
                 <div class="input-group">
-                    <input list="search_terms" type="text" class="form-control" placeholder="Termo de pesquisa" />
-                    <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
+                    <input
+                        list="search_terms"
+                        type="text"
+                        class="form-control"
+                        placeholder="Termo de pesquisa"
+                    />
+                    <button class="btn btn-light bg" type="button">
+                        <i class="material-icons md-search"></i>
+                    </button>
                 </div>
                 <datalist id="search_terms">
                     <option value="Produtos"></option>
@@ -19,39 +24,114 @@
             </form>
         </div>
         <div class="col-nav">
-            <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i class="material-icons md-apps"></i></button>
+            <button
+                class="btn btn-icon btn-mobile me-auto"
+                data-trigger="#offcanvas_aside"
+            >
+                <i class="material-icons md-apps"></i>
+            </button>
             <ul class="nav">
                 <li class="nav-item">
                     <a class="nav-link btn-icon" href="#">
-                        <i class="material-icons md-notifications animation-shake"></i>
+                        <i
+                            class="material-icons md-notifications animation-shake"
+                        ></i>
                         <span class="badge rounded-pill">3</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    <a class="nav-link btn-icon darkmode" href="#">
+                        <i class="material-icons md-nights_stay"></i>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    <a href="#" class="requestfullscreen nav-link btn-icon"
+                        ><i class="material-icons md-cast"></i
+                    ></a>
                 </li>
                 <li class="dropdown nav-item">
-                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
-                    <div class="dropdown-menu dropdown-menu-start" aria-labelledby="dropdownLanguage">
-                        <a class="dropdown-item text-brand" href="#"><img src="{% static 'assets2/imgs/theme/flag-us.png' %}" alt="English" />Português</a>
-                        <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-fr.png' %}" alt="Français" />Français</a>
-                        <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-jp.png' %}" alt="Français" />日本語</a>
-                        <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-cn.png' %}" alt="Français" />中国人</a>
+                    <a
+                        class="dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        href="#"
+                        id="dropdownLanguage"
+                        aria-expanded="false"
+                        ><i class="material-icons md-public"></i
+                    ></a>
+                    <div
+                        class="dropdown-menu dropdown-menu-start"
+                        aria-labelledby="dropdownLanguage"
+                    >
+                        <a class="dropdown-item text-brand" href="#"
+                            ><img
+                                src="{% static 'assets2/imgs/theme/flag-us.png' %}"
+                                alt="English"
+                            />Português</a
+                        >
+                        <a class="dropdown-item" href="#"
+                            ><img
+                                src="{% static 'assets2/imgs/theme/flag-fr.png' %}"
+                                alt="Français"
+                            />Français</a
+                        >
+                        <a class="dropdown-item" href="#"
+                            ><img
+                                src="{% static 'assets2/imgs/theme/flag-jp.png' %}"
+                                alt="Français"
+                            />日本語</a
+                        >
+                        <a class="dropdown-item" href="#"
+                            ><img
+                                src="{% static 'assets2/imgs/theme/flag-cn.png' %}"
+                                alt="Français"
+                            />中国人</a
+                        >
                     </div>
                 </li>
                 <li class="dropdown nav-item">
-                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="{{user.profile.imagem.url}}" alt="User" /></a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                        <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Editar Perfil</a>
-                        <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Configurações da Conta</a>
-                        <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Carteira</a>
-                        <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Cobrança</a>
-                        <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Central de ajuda</a>
+                    <a
+                        class="dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        href="#"
+                        id="dropdownAccount"
+                        aria-expanded="false"
+                    >
+                        <img
+                            class="img-xs rounded-circle"
+                            src="{{user.profile.imagem.url}}"
+                            alt="User"
+                    /></a>
+                    <div
+                        class="dropdown-menu dropdown-menu-end"
+                        aria-labelledby="dropdownAccount"
+                    >
+                        <a class="dropdown-item" href="#"
+                            ><i class="material-icons md-perm_identity"></i
+                            >Editar Perfil</a
+                        >
+                        <a class="dropdown-item" href="#"
+                            ><i class="material-icons md-settings"></i
+                            >Configurações da Conta</a
+                        >
+                        <a class="dropdown-item" href="#"
+                            ><i
+                                class="material-icons md-account_balance_wallet"
+                            ></i
+                            >Carteira</a
+                        >
+                        <a class="dropdown-item" href="#"
+                            ><i class="material-icons md-receipt"></i
+                            >Cobrança</a
+                        >
+                        <a class="dropdown-item" href="#"
+                            ><i class="material-icons md-help_outline"></i
+                            >Central de ajuda</a
+                        >
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Sair</a>
+                        <a class="dropdown-item text-danger" href="#"
+                            ><i class="material-icons md-exit_to_app"></i
+                            >Sair</a
+                        >
                     </div>
                 </li>
             </ul>
@@ -64,18 +144,28 @@
                 <p>Todos os dados sobre seu negócio aqui</p>
             </div>
             <div>
-                <a href="#" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Criar relatório</a>
+                <a href="#" class="btn btn-primary"
+                    ><i class="text-muted material-icons md-post_add"></i>Criar
+                    relatório</a
+                >
             </div>
         </div>
         <div class="row">
             <div class="col-lg-3">
                 <div class="card card-body mb-4">
                     <article class="icontext">
-                        <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                        <span
+                            class="icon icon-sm rounded-circle bg-primary-light"
+                            ><i
+                                class="text-primary material-icons md-monetization_on"
+                            ></i
+                        ></span>
                         <div class="text">
                             <h6 class="mb-1 card-title">Receita</h6>
                             <span>R${{revenue.price|floatformat:2}}</span>
-                            <span class="text-sm"> Taxas de envio não incluídas </span>
+                            <span class="text-sm">
+                                Taxas de envio não incluídas
+                            </span>
                         </div>
                     </article>
                 </div>
@@ -83,11 +173,18 @@
             <div class="col-lg-3">
                 <div class="card card-body mb-4">
                     <article class="icontext">
-                        <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
+                        <span
+                            class="icon icon-sm rounded-circle bg-success-light"
+                            ><i
+                                class="text-success material-icons md-local_shipping"
+                            ></i
+                        ></span>
                         <div class="text">
                             <h6 class="mb-1 card-title">Pedidos</h6>
                             <span>{{total_orders_count}}</span>
-                            <span class="text-sm"> Excluindo pedidos em trânsito </span>
+                            <span class="text-sm">
+                                Excluindo pedidos em trânsito
+                            </span>
                         </div>
                     </article>
                 </div>
@@ -95,7 +192,12 @@
             <div class="col-lg-3">
                 <div class="card card-body mb-4">
                     <article class="icontext">
-                        <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                        <span
+                            class="icon icon-sm rounded-circle bg-warning-light"
+                            ><i
+                                class="text-warning material-icons md-qr_code"
+                            ></i
+                        ></span>
                         <div class="text">
                             <h6 class="mb-1 card-title">Produtos</h6>
                             <span>{{all_products.count}}</span>
@@ -107,11 +209,19 @@
             <div class="col-lg-3">
                 <div class="card card-body mb-4">
                     <article class="icontext">
-                        <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
+                        <span class="icon icon-sm rounded-circle bg-info-light"
+                            ><i
+                                class="text-info material-icons md-shopping_basket"
+                            ></i
+                        ></span>
                         <div class="text">
                             <h6 class="mb-1 card-title">Ganhos Mensais</h6>
-                            <span>R${{monthly_revenue.price|floatformat:2}}</span>
-                            <span class="text-sm"> Baseado no seu horário local. </span>
+                            <span
+                                >R${{monthly_revenue.price|floatformat:2}}</span
+                            >
+                            <span class="text-sm">
+                                Baseado no seu horário local.
+                            </span>
                         </div>
                     </article>
                 </div>
@@ -131,35 +241,74 @@
                             <article class="card-body">
                                 <h5 class="card-title">Novos Membros</h5>
                                 <div class="new-member-list">
-                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div
+                                        class="d-flex align-items-center justify-content-between mb-4"
+                                    >
                                         <div class="d-flex align-items-center">
-                                            <img src="{% static 'assets2/imgs/people/avatar-4.png' %}" alt="" class="avatar" />
+                                            <img
+                                                src="{% static 'assets2/imgs/people/avatar-4.png' %}"
+                                                alt=""
+                                                class="avatar"
+                                            />
                                             <div>
                                                 <h6>Patric Adams</h6>
-                                                <p class="text-muted font-xs">Sanfrancisco</p>
+                                                <p class="text-muted font-xs">
+                                                    Sanfrancisco
+                                                </p>
                                             </div>
                                         </div>
-                                        <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Adicionar</a>
+                                        <a href="#" class="btn btn-xs"
+                                            ><i
+                                                class="material-icons md-add"
+                                            ></i>
+                                            Adicionar</a
+                                        >
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div
+                                        class="d-flex align-items-center justify-content-between mb-4"
+                                    >
                                         <div class="d-flex align-items-center">
-                                            <img src="{% static 'assets2/imgs/people/avatar-2.png' %}" alt="" class="avatar" />
+                                            <img
+                                                src="{% static 'assets2/imgs/people/avatar-2.png' %}"
+                                                alt=""
+                                                class="avatar"
+                                            />
                                             <div>
                                                 <h6>Dilan Specter</h6>
-                                                <p class="text-muted font-xs">Sanfrancisco</p>
+                                                <p class="text-muted font-xs">
+                                                    Sanfrancisco
+                                                </p>
                                             </div>
                                         </div>
-                                        <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Adicionar</a>
+                                        <a href="#" class="btn btn-xs"
+                                            ><i
+                                                class="material-icons md-add"
+                                            ></i>
+                                            Adicionar</a
+                                        >
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div
+                                        class="d-flex align-items-center justify-content-between mb-4"
+                                    >
                                         <div class="d-flex align-items-center">
-                                            <img src="{% static 'assets2/imgs/people/avatar-3.png' %}" alt="" class="avatar" />
+                                            <img
+                                                src="{% static 'assets2/imgs/people/avatar-3.png' %}"
+                                                alt=""
+                                                class="avatar"
+                                            />
                                             <div>
                                                 <h6>Tomas Baker</h6>
-                                                <p class="text-muted font-xs">Sanfrancisco</p>
+                                                <p class="text-muted font-xs">
+                                                    Sanfrancisco
+                                                </p>
                                             </div>
                                         </div>
-                                        <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Adicionar</a>
+                                        <a href="#" class="btn btn-xs"
+                                            ><i
+                                                class="material-icons md-add"
+                                            ></i>
+                                            Adicionar</a
+                                        >
                                     </div>
                                 </div>
                             </article>
@@ -169,69 +318,121 @@
                         <div class="card mb-4">
                             <article class="card-body">
                                 <h5 class="card-title">Atividades recentes</h5>
-                                <ul class="verti-timeline list-unstyled font-sm">
+                                <ul
+                                    class="verti-timeline list-unstyled font-sm"
+                                >
                                     <li class="event-list">
                                         <div class="event-timeline-dot">
-                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                            <i
+                                                class="material-icons md-play_circle_outline font-xxl"
+                                            ></i>
                                         </div>
                                         <div class="media">
                                             <div class="me-3">
-                                                <h6><span>Hoje</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                                <h6>
+                                                    <span>Hoje</span>
+                                                    <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"
+                                                    ></i>
+                                                </h6>
                                             </div>
                                             <div class="media-body">
-                                                <div>Lorem ipsum dolor sit amet consectetur</div>
+                                                <div>
+                                                    Lorem ipsum dolor sit amet
+                                                    consectetur
+                                                </div>
                                             </div>
                                         </div>
                                     </li>
                                     <li class="event-list active">
                                         <div class="event-timeline-dot">
-                                            <i class="material-icons md-play_circle_outline font-xxl animation-fade-right"></i>
+                                            <i
+                                                class="material-icons md-play_circle_outline font-xxl animation-fade-right"
+                                            ></i>
                                         </div>
                                         <div class="media">
                                             <div class="me-3">
-                                                <h6><span>17 Mai</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                                <h6>
+                                                    <span>17 Mai</span>
+                                                    <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"
+                                                    ></i>
+                                                </h6>
                                             </div>
                                             <div class="media-body">
-                                                <div>Debitis nesciunt voluptatum dicta reprehenderit</div>
+                                                <div>
+                                                    Debitis nesciunt voluptatum
+                                                    dicta reprehenderit
+                                                </div>
                                             </div>
                                         </div>
                                     </li>
                                     <li class="event-list">
                                         <div class="event-timeline-dot">
-                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                            <i
+                                                class="material-icons md-play_circle_outline font-xxl"
+                                            ></i>
                                         </div>
                                         <div class="media">
                                             <div class="me-3">
-                                                <h6><span>13 Mai</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                                <h6>
+                                                    <span>13 Mai</span>
+                                                    <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"
+                                                    ></i>
+                                                </h6>
                                             </div>
                                             <div class="media-body">
-                                                <div>Accusamus voluptatibus voluptas.</div>
+                                                <div>
+                                                    Accusamus voluptatibus
+                                                    voluptas.
+                                                </div>
                                             </div>
                                         </div>
                                     </li>
                                     <li class="event-list">
                                         <div class="event-timeline-dot">
-                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                            <i
+                                                class="material-icons md-play_circle_outline font-xxl"
+                                            ></i>
                                         </div>
                                         <div class="media">
                                             <div class="me-3">
-                                                <h6><span>05 Abr</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                                <h6>
+                                                    <span>05 Abr</span>
+                                                    <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"
+                                                    ></i>
+                                                </h6>
                                             </div>
                                             <div class="media-body">
-                                                <div>At vero eos et accusamus et iusto odio dignissi</div>
+                                                <div>
+                                                    At vero eos et accusamus et
+                                                    iusto odio dignissi
+                                                </div>
                                             </div>
                                         </div>
                                     </li>
                                     <li class="event-list">
                                         <div class="event-timeline-dot">
-                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                            <i
+                                                class="material-icons md-play_circle_outline font-xxl"
+                                            ></i>
                                         </div>
                                         <div class="media">
                                             <div class="me-3">
-                                                <h6><span>26 Mar</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                                <h6>
+                                                    <span>26 Mar</span>
+                                                    <i
+                                                        class="material-icons md-trending_flat text-brand ml-15 d-inline-block"
+                                                    ></i>
+                                                </h6>
                                             </div>
                                             <div class="media-body">
-                                                <div>Respondeu à necessidade “Atividades de Voluntariado”</div>
+                                                <div>
+                                                    Respondeu à necessidade
+                                                    “Atividades de Voluntariado”
+                                                </div>
                                             </div>
                                         </div>
                                     </li>
@@ -253,23 +454,53 @@
                         <h5 class="card-title">Canal de Marketing</h5>
                         <span class="text-muted font-xs">Facebook</span>
                         <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: 15%">15%</div>
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                style="width: 15%"
+                            >
+                                15%
+                            </div>
                         </div>
                         <span class="text-muted font-xs">Instagram</span>
                         <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: 65%">65%</div>
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                style="width: 65%"
+                            >
+                                65%
+                            </div>
                         </div>
                         <span class="text-muted font-xs">Google</span>
                         <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: 51%">51%</div>
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                style="width: 51%"
+                            >
+                                51%
+                            </div>
                         </div>
                         <span class="text-muted font-xs">Twitter</span>
                         <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: 80%">80%</div>
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                style="width: 80%"
+                            >
+                                80%
+                            </div>
                         </div>
                         <span class="text-muted font-xs">Outro</span>
                         <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: 80%">80%</div>
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                style="width: 80%"
+                            >
+                                80%
+                            </div>
                         </div>
                     </article>
                 </div>
@@ -297,7 +528,11 @@
                         </div>
                     </div>
                     <div class="col-md-2 col-6">
-                        <input type="date" value="02.05.2021" class="form-control" />
+                        <input
+                            type="date"
+                            value="02.05.2021"
+                            class="form-control"
+                        />
                     </div>
                     <div class="col-md-2 col-6">
                         <div class="custom_select">
@@ -320,134 +555,98 @@
                                 <tr>
                                     <th scope="col" class="text-center">
                                         <div class="form-check align-middle">
-                                            <input class="form-check-input" type="checkbox" id="transactionCheck01" />
-                                            <label class="form-check-label" for="transactionCheck01"></label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                id="transactionCheck01"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="transactionCheck01"
+                                            ></label>
                                         </div>
                                     </th>
-                                    <th class="align-middle" scope="col">ID do Pedido</th>
-                                    <th class="align-middle" scope="col">Nome de Cobrança</th>
-                                    <th class="align-middle" scope="col">Data</th>
-                                    <th class="align-middle" scope="col">Total</th>
-                                    <th class="align-middle" scope="col">Status do Pagamento</th>
-                                    <th class="align-middle" scope="col">Método de Pagamento</th>
-                                    <th class="align-middle" scope="col">Ver Detalhes</th>
+                                    <th class="align-middle" scope="col">
+                                        ID do Pedido
+                                    </th>
+                                    <th class="align-middle" scope="col">
+                                        Nome de Cobrança
+                                    </th>
+                                    <th class="align-middle" scope="col">
+                                        E-mail
+                                    </th>
+                                    <th class="align-middle" scope="col">
+                                        Telefone
+                                    </th>
+                                    <th class="align-middle" scope="col">
+                                        Data
+                                    </th>
+                                    <th class="align-middle" scope="col">
+                                        Total
+                                    </th>
+                                    <th class="align-middle" scope="col">
+                                        Status do Pagamento
+                                    </th>
+                                    <th class="align-middle" scope="col">
+                                        Método de Pagamento
+                                    </th>
+                                    <th class="align-middle" scope="col">
+                                        Ver Detalhes
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for l in latest_orders%}
                                 <tr>
                                     <td class="text-center">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="transactionCheck02" />
-                                            <label class="form-check-label" for="transactionCheck02"></label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                id="transactionCheck02"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="transactionCheck02"
+                                            ></label>
                                         </div>
                                     </td>
-                                    <td><a href="#" class="fw-bold">#SK2540</a></td>
-                                    <td>Neal Matthews</td>
-                                    <td>07 Out, 2021</td>
-                                    <td>$400</td>
                                     <td>
-                                        <span class="badge badge-pill badge-soft-success">Pago</span>
+                                        <a href="#" class="fw-bold"
+                                            >{{ l.num_fatura.upper }}</a
+                                        >
                                     </td>
-                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Mastercard</td>
+                                    <td>{{l.user}}</td>
+                                    <td>{{l.user.email}}</td>
+                                    <td>{{l.user.telefone}}</td>
+                                    <td>{{l.data_pedido}}</td>
+                                    <td>R${{l.preco}}</td>
                                     <td>
-                                        <a href="#" class="btn btn-xs"> Ver detalhes</a>
+                                        {% if l.satus_pagamento == True %}
+                                        <span
+                                            class="badge badge-pill badge-soft-danger"
+                                            >Não Pago</span
+                                        >
+                                        {% else%}
+                                        <span
+                                            class="badge badge-pill badge-soft-success"
+                                            >Pago</span
+                                        >
+                                        {% endif%}
+                                    </td>
+                                    <td>
+                                        <i
+                                            class="material-icons md-payment font-xxl text-muted mr-5"
+                                        ></i>
+                                        Mastercard
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs">
+                                            Ver detalhes</a
+                                        >
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="transactionCheck03" />
-                                            <label class="form-check-label" for="transactionCheck03"></label>
-                                        </div>
-                                    </td>
-                                    <td><a href="#" class="fw-bold">#SK2541</a></td>
-                                    <td>Jamal Burnett</td>
-                                    <td>07 Out, 2021</td>
-                                    <td>$380</td>
-                                    <td>
-                                        <span class="badge badge-pill badge-soft-danger">Estorno</span>
-                                    </td>
-                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Visa</td>
-                                    <td>
-                                        <a href="#" class="btn btn-xs"> Ver detalhes</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="transactionCheck04" />
-                                            <label class="form-check-label" for="transactionCheck04"></label>
-                                        </div>
-                                    </td>
-                                    <td><a href="#" class="fw-bold">#SK2542</a></td>
-                                    <td>Juan Mitchell</td>
-                                    <td>06 Out, 2021</td>
-                                    <td>$384</td>
-                                    <td>
-                                        <span class="badge badge-pill badge-soft-success">Pago</span>
-                                    </td>
-                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Paypal</td>
-                                    <td>
-                                        <a href="#" class="btn btn-xs"> Ver detalhes</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="transactionCheck05" />
-                                            <label class="form-check-label" for="transactionCheck05"></label>
-                                        </div>
-                                    </td>
-                                    <td><a href="#" class="fw-bold">#SK2543</a></td>
-                                    <td>Barry Dick</td>
-                                    <td>05 Out, 2021</td>
-                                    <td>$412</td>
-                                    <td>
-                                        <span class="badge badge-pill badge-soft-success">Pago</span>
-                                    </td>
-                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Mastercard</td>
-                                    <td>
-                                        <a href="#" class="btn btn-xs"> Ver detalhes</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="transactionCheck06" />
-                                            <label class="form-check-label" for="transactionCheck06"></label>
-                                        </div>
-                                    </td>
-                                    <td><a href="#" class="fw-bold">#SK2544</a></td>
-                                    <td>Ronald Taylor</td>
-                                    <td>04 Out, 2021</td>
-                                    <td>$404</td>
-                                    <td>
-                                        <span class="badge badge-pill badge-soft-warning">Reembolso</span>
-                                    </td>
-                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Visa</td>
-                                    <td>
-                                        <a href="#" class="btn btn-xs"> Ver detalhes</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="transactionCheck07" />
-                                            <label class="form-check-label" for="transactionCheck07"></label>
-                                        </div>
-                                    </td>
-                                    <td><a href="#" class="fw-bold">#SK2545</a></td>
-                                    <td>Jacob Hunter</td>
-                                    <td>04 Out, 2021</td>
-                                    <td>$392</td>
-                                    <td>
-                                        <span class="badge badge-pill badge-soft-success">Pago</span>
-                                    </td>
-                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Paypal</td>
-                                    <td>
-                                        <a href="#" class="btn btn-xs"> Ver detalhes</a>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -458,13 +657,25 @@
         <div class="pagination-area mt-30 mb-50">
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">01</a>
+                    </li>
                     <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                        <a class="page-link" href="#">02</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">03</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link dot" href="#">...</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">16</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"
+                            ><i class="material-icons md-chevron_right"></i
+                        ></a>
                     </li>
                 </ul>
             </nav>

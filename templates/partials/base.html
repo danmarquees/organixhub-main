@@ -264,7 +264,7 @@
                                             </ul>
                                             <div class="shopping-cart-footer">
                                                 <div class="shopping-cart-total">
-                                                    <h4>Total <span>R$ {{ cart_total_amount|floatformat:2 }}</span></h4>
+                                                   <h4>Total <span>R$ {{ cart_total_amount|floatformat:2 }}</span></h4>
                                                 </div>
                                                 <div class="shopping-cart-button">
                                                     <a href="{% url 'core:cart' %}" class="outline">Carrinho</a>
@@ -344,49 +344,29 @@
                             <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
                                 <div class="d-flex categori-dropdown-inner">
                                     <ul>
-
                                         {% for c in categorias %}
-                                        <li>
-                                            <a href="{% url 'core:category-product-list' c.cid %}"> <img
-                                                    src="{% static '{{ c.imagem.url }}' %}" alt="" />{{ c.titulo }}</a>
-                                        </li>
-                                        {% endfor%}
-
-
-                                        <ul class="end">
-
-                                        </ul>
-                                </div>
-                                <div class="more_slide_open" style="display: none">
-                                    <div class="d-flex categori-dropdown-inner">
-                                        <ul>
+                                            {% if forloop.counter0 < 5 %}
                                             <li>
-                                                <a href="shop-grid-right.html"> <img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-1.svg' %}"
-                                                        alt="" />Leites e Laticínios</a>
+                                                <a href="{% url 'core:category-product-list' c.cid %}"> <img
+                                                        src="{{ c.imagem.url }}" alt="" />{{ c.titulo }}</a>
                                             </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                    <ul>
+                                        {% for c in categorias %}
+                                            {% if forloop.counter0 >= 5 %}
                                             <li>
-                                                <a href="shop-grid-right.html"> <img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-2.svg' %}"
-                                                        alt="" />Roupas & Beleza</a>
+                                                <a href="{% url 'core:category-product-list' c.cid %}"> <img
+                                                        src="{{ c.imagem.url }}" alt="" />{{ c.titulo }}</a>
                                             </li>
-                                        </ul>
-                                        <ul class="end">
-                                            <li>
-                                                <a href="shop-grid-right.html"> <img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-3.svg' %}"
-                                                        alt="" />Vinhos & Bebidas</a>
-                                            </li>
-                                            <li>
-                                                <a href="shop-grid-right.html"> <img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-4.svg' %}"
-                                                        alt="" />Frutos do Mar Frescos</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                                 <div class="more_categories"><span class="icon"></span> <span
-                                        class="heading-sm-1">Mostrar mais...</span></div>
+                                        class="heading-sm-1">Mostrar mais...</span>
+                                </div>
                             </div>
                         </div>
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
@@ -547,21 +527,22 @@
                     </div>
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="{% url 'core:wishlist' %}">
+                                        <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
+                                        <span class="pro-count white">{{wishlist_count}}</span>
+                                    </a>
+                                </div>
+                        </div>
                             <div class="header-action-icon-2">
-                                <a href="{% url 'core:wishlist' %}">
-                                    <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
-                                    <span class="pro-count white">{{wishlist_count}}</span>
-                                </a>
-                            </div>
-                            <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" id="mini-cart-content" href="{% url 'core:cart' %}">
+                                <a class="mini-cart-icon" href="{% url 'core:cart' %}">
                                     <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                    <span class="pro-count white cart-items-count">{{
-                                        request.session.cart_data_obj|length }}</span>
+                                    <span class="pro-count white cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                 </a>
-                                <div class="cart-dropdown-wrap cart-dropdown-hm2" id="mini-cart-content">
+                                {% if request.session.cart_data_obj %}
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                     <ul>
-                                        {% for product_id, item in cart_data.items %}
+                                        {% for product_id, item in request.session.cart_data_obj.items %}
                                         <li class="d-flex align-items-center">
                                             <div class="shopping-cart-img">
                                                 <a href="{% url 'core:product-detail' item.pid %}"><img
@@ -569,7 +550,7 @@
                                             </div>
                                             <div class="shopping-cart-title">
                                                 <h4><a href="{% url 'core:product-detail' item.pid %}">{{ item.title|truncatechars:20 }}</a></h4>
-                                                <h3><span>{{ item.qty }} × </span>R${{ item.price }}</h3>
+                                                <h3><span>{{ item.qty }} × </span>R${{ item.price|floatformat:2 }}</h3>
                                             </div>
                                             <div class="shopping-cart-delete">
                                                 <a href="#" data-product-id="{{ product_id }}"
@@ -580,7 +561,7 @@
                                     </ul>
                                     <div class="shopping-cart-footer">
                                         <div class="shopping-cart-total">
-                                            <h4>Total <span>R${{ cart_total_amount }}</span></h4>
+                                            <h4>Total <span>R${{ cart_total_amount|floatformat:2 }}</span></h4>
                                         </div>
                                         <div class="shopping-cart-button">
                                             <a href="{% url 'core:cart' %}" class="outline">Carrinho</a>
@@ -588,6 +569,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% else %}
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                    <p>Seu carrinho está vazio.</p>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
