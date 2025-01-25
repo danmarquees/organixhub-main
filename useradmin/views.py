@@ -3,7 +3,7 @@ from core.models import Produto, Categoria, PedidoCarrinho
 from django.db.models import Sum
 from userauths.models import User
 import datetime
-
+from useradmin.forms import AddProductForm
 # Create your views here.
 
 def dashboard(request):
@@ -30,7 +30,7 @@ def dashboard(request):
     return render(request, "useradmin/dashboard.html", context)
 
 def products(request):
-    all_products = Produto.objects.all()
+    all_products = Produto.objects.all().order_by("-id")
     all_categories = Categoria.objects.all()
 
 
@@ -39,3 +39,23 @@ def products(request):
         "all_categories": all_categories,
     }
     return render(request, "useradmin/products.html", context)
+
+
+def add_product(request):
+    from django.shortcuts import redirect
+    if request.method == "POST":
+       form = AddProductForm(request.POST, request.FILES)
+       if form.is_valid():
+           new_form = form.save(commit=False)
+           new_form.user = request.user
+           new_form.save()
+           form.save_m2m()
+           return redirect("useradmin:dashboard")
+    else:
+        form = AddProductForm()
+
+    context = {
+        "form": form
+    }
+
+    return render(request, "useradmin/add-product.html", context)

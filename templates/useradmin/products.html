@@ -12,7 +12,11 @@
         <div>
             <a href="#" class="btn btn-light rounded font-md">Exportar</a>
             <a href="#" class="btn btn-light rounded font-md">Importar</a>
-            <a href="#" class="btn btn-primary btn-sm rounded">Criar novo</a>
+            <a
+                href="{% url 'useradmin:add-product' %}"
+                class="btn btn-primary btn-sm rounded"
+                >Criar novo</a
+            >
         </div>
     </div>
     <div class="card mb-4">
@@ -131,7 +135,5 @@
         </nav>
     </div>
 </section>
-```
-<!-- content-main end// -->
 
 {% endblock content %}

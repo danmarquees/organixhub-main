@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     #terceiros
     'taggit',
     'django_ckeditor_5',
+    'django_humanize',
 
     #Paypal Integration
     'paypal.standard.ipn',
@@ -71,8 +72,6 @@ INSTALLED_APPS = [
     #Custom Apps
     'core',
     'userauths',
-
-
 ]
 
 MIDDLEWARE = [
