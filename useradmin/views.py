@@ -28,3 +28,14 @@ def dashboard(request):
         "monthly_revenue": monthly_revenue,
     }
     return render(request, "useradmin/dashboard.html", context)
+
+def products(request):
+    all_products = Produto.objects.all()
+    all_categories = Categoria.objects.all()
+
+
+    context = {
+        "all_products": all_products,
+        "all_categories": all_categories,
+    }
+    return render(request, "useradmin/products.html", context)
