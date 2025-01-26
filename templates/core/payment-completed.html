@@ -1,306 +1,36 @@
 {% extends 'partials/base.html' %} {% load static %} {% block content %}
-
-<body>
-    <div class="invoice invoice-content invoice-3">
-        <div class="back-top-home hover-up mt-30 ml-30">
-            <a class="hover-up" href="index.html"
-                ><i class="fi-rs-home mr-5"></i> Homepage</a
-            >
-        </div>
+<main class="main page-404">
+    <div class="page-content pt-150 pb-150">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="invoice-inner">
-                        <div class="invoice-info" id="invoice_wrapper">
-                            <div class="invoice-header">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="invoice-name">
-                                            <div class="logo">
-                                                <a href="{% url 'core:index' %}"
-                                                    ><img
-                                                        src="{% static 'assets/imgs/theme/logo.png' %}"
-                                                        alt="logo"
-                                                /></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 text-end">
-                                        <div class="invoice-numb">
-                                            <h4
-                                                class="invoice-header-1 mb-10 mt-20"
-                                            >
-                                                Invoice No:
-                                                <span class="text-heading"
-                                                    >{{ order_number }}</span
-                                                >
-                                            </h4>
-                                            <h6>
-                                                Invoice Date:
-                                                <span class="text-heading"
-                                                    >{{ order_date }}</span
-                                                >
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="invoice-top">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="invoice-number">
-                                            <h4 class="invoice-title-1 mb-10">
-                                                Invoice To
-                                            </h4>
-                                            <p class="invoice-addr-1">
-                                                <strong
-                                                    >Organyxhub
-                                                    Marketplace</strong
-                                                >
-                                                <br />
-                                                Rua Augusta, 1550, Jardim
-                                                Paulista<br />
-                                                São Paulo - SP, 01304-001,
-                                                Brasil<br />
-                                                <abbr title="Phone"
-                                                    >Telefone:</abbr
-                                                >
-                                                (+123) 456-7890<br />
-                                                <abbr title="Email"
-                                                    >Email: </abbr
-                                                >contact@nestmart.com<br />
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="invoice-number">
-                                            <h4 class="invoice-title-1 mb-10">
-                                                Bill To
-                                            </h4>
-                                            <p class="invoice-addr-1">
-                                                <strong>Webz Poland</strong>
-                                                <br />
-                                                Madalinskiego 8<br />
-                                                71-101 Szczecin, Poland<br />
-                                                <abbr title="Phone"
-                                                    >Phone:</abbr
-                                                >
-                                                +48 444 666 3333<br />
-                                                <abbr title="Email"
-                                                    >Email: </abbr
-                                                >nfo@webz.com.pl<br />
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="invoice-number">
-                                            <h4 class="invoice-title-1 mb-10">
-                                                Overview
-                                            </h4>
-                                            <p class="invoice-addr-1">
-                                                <strong>Invoice Data:</strong>
-                                                Aug 27, 2022 <br />
-                                                <strong>Due Data:</strong> Aug
-                                                27, 2022<br />
-                                                <strong>Payment Method:</strong>
-                                                Payoneer<br />
-                                                <strong>Status:</strong>
-                                                <span class="text-brand"
-                                                    >Completed</span
-                                                >
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="invoice-center">
-                                <div class="table-responsive">
-                                    <table
-                                        class="table table-striped invoice-table"
-                                    >
-                                        <thead class="bg-active">
-                                            <tr>
-                                                <th>Item</th>
-                                                <th class="text-center">
-                                                    Preço Unitário
-                                                </th>
-                                                <th class="text-center">
-                                                    Quantidade
-                                                </th>
-                                                <th class="text-right">
-                                                    Total
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for item in
-                                            order.itemspedidocarrinho_set.all %}
-                                            <tr>
-                                                <td>
-                                                    <div class="item-desc-1">
-                                                        <span
-                                                            >{{ item.item
-                                                            }}</span
-                                                        >
-                                                        <small
-                                                            >SKU: {{ item.item
-                                                            }}</small
-                                                        >
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    R${{ item.preco }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ item.qtd }}
-                                                </td>
-                                                <td class="text-right">
-                                                    R${{ item.total }}
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                            <tr>
-                                                <td
-                                                    colspan="3"
-                                                    class="text-end f-w-600"
-                                                >
-                                                    SubTotal
-                                                </td>
-                                                <td class="text-right">
-                                                    R${{ order.preco }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    colspan="3"
-                                                    class="text-end f-w-600"
-                                                >
-                                                    Tax
-                                                </td>
-                                                <td class="text-right">
-                                                    R$0.00
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    colspan="3"
-                                                    class="text-end f-w-600"
-                                                >
-                                                    Grand Total
-                                                </td>
-                                                <td class="text-right f-w-600">
-                                                    R${{ order.preco }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="invoice-bottom">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div>
-                                            <h3 class="invoice-title-1">
-                                                Nota Importante
-                                            </h3>
-                                            <ul class="important-notes-list-1">
-                                                <li>
-                                                    Todos os valores
-                                                    apresentados nesta fatura
-                                                    estão em dólares americanos
-                                                </li>
-                                                <li>
-                                                    Uma taxa de juros de 1,5%
-                                                    será cobrada sobre saldos
-                                                    não pagos após 30 dias.
-                                                </li>
-                                                <li>
-                                                    Após a finalização do
-                                                    pedido, o valor não poderá
-                                                    ser reembolsado
-                                                </li>
-                                                <li>
-                                                    A entrega poderá sofrer
-                                                    atrasos devido a algumas
-                                                    dependências externas
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-offsite">
-                                        <div class="text-end">
-                                            <p class="mb-0 text-13">
-                                                Obrigado pela preferência
-                                            </p>
-                                            <p>
-                                                <strong
-                                                    >Organyxhub
-                                                    Marketplace</strong
-                                                >
-                                            </p>
-                                            <div
-                                                class="mobile-social-icon mt-50 print-hide"
-                                            >
-                                                <h6>Siga Nos</h6>
-                                                <a href="#"
-                                                    ><img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-facebook-white.svg' %}"
-                                                        alt=""
-                                                /></a>
-                                                <a href="#"
-                                                    ><img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-twitter-white.svg' %}"
-                                                        alt=""
-                                                /></a>
-                                                <a href="#"
-                                                    ><img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-instagram-white.svg' %}"
-                                                        alt=""
-                                                /></a>
-                                                <a href="#"
-                                                    ><img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-pinterest-white.svg' %}"
-                                                        alt=""
-                                                /></a>
-                                                <a href="#"
-                                                    ><img
-                                                        src="{% static 'assets/imgs/theme/icons/icon-youtube-white.svg' %}"
-                                                        alt=""
-                                                /></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="invoice-btn-section clearfix d-print-none">
-                            <a
-                                href="javascript:window.print()"
-                                class="btn btn-lg btn-custom btn-print hover-up"
-                            >
-                                <img
-                                    src="{% static 'assets/imgs/theme/icons/icon-print.svg' %}"
-                                    alt=""
-                                />
-                                Print
-                            </a>
-                            <a
-                                id="invoice_download_btn"
-                                class="btn btn-lg btn-custom btn-download hover-up"
-                            >
-                                <img
-                                    src="{% static 'assets/imgs/theme/icons/icon-download.svg' %}"
-                                    alt=""
-                                />
-                                Download
-                            </a>
-                        </div>
-                    </div>
+                <div class="col-xl-8 col-lg-10 col-md-12 m-auto text-center">
+                    <p class="mb-20">
+                        <img
+                            src="{% static 'assets/imgs/page/success.png' %}"
+                            alt=""
+                            class="hover-up"
+                        />
+                    </p>
+                    <h1 class="display-2 mb-30">
+                        Pagamento efetuado com sucesso!
+                    </h1>
+                    {%for p in pedidocarrinho%}
+                    <h3 class="font-lg text-grey-700 mb-30">
+                        Seu pagamento foi aprovado com sucesso. O número do seu
+                        pedido é #{{p.orderid}}.
+                    </h3>
+                    {%endfor%}
+                    <a
+                        class="btn btn-default submit-auto-width font-xs hover-up mt-30"
+                        href="{% url 'core:index' %}"
+                        ><i class="fi-rs-home mr-5"></i> Voltar para a Home
+                        Page</a
+                    >
                 </div>
             </div>
         </div>
     </div>
-</body>
+</main>
 <br />
 {% endblock content %} {% block extrajs %}
 <script src="{% static 'assets/js/invoice/jspdf.min.js' %}"></script>

@@ -60,9 +60,6 @@ def index(request):
 
     return render(request, 'core/index.html', context)
 
-
-
-
 def lista_produtos(request):
     # Pega o slug da tag da requisição GET
     tag_slug = request.GET.get('tag')
@@ -99,8 +96,6 @@ def lista_produtos(request):
     # Renderiza o template product-list.html com o contexto
     return render(request, 'core/product-list.html', context)
 
-
-
 def lista_categorias(request):
     # Busca todas as categorias e conta a quantidade de produtos em cada categoria
     categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
@@ -108,7 +103,6 @@ def lista_categorias(request):
     context = {"categorias": categorias}
     # Renderiza o template category-list.html com o contexto
     return render(request, 'core/category-list.html', context)
-
 
 def categoria_produtos(request, cid):
     # Busca a categoria pelo ID
@@ -120,7 +114,6 @@ def categoria_produtos(request, cid):
     # Renderiza o template category-product-list.html com o contexto
     return render(request, "core/category-product-list.html", context)
 
-
 def lista_vendedores(request):
     # Busca todos os vendedores
     vendedores = Vendedor.objects.all()
@@ -128,7 +121,6 @@ def lista_vendedores(request):
     context = {"vendedores": vendedores, "categorias": Categoria.objects.all()}
     # Renderiza o template vendor-list.html com o contexto
     return render(request, "core/vendor-list.html", context)
-
 
 def descricao_vendedores(request, vid):
     # Busca o vendedor pelo ID, retorna 404 se não encontrar
@@ -148,7 +140,6 @@ def descricao_vendedores(request, vid):
     }
     # Renderiza o template vendor-detail.html com o contexto
     return render(request, "core/vendor-detail.html", context)
-
 
 def detalhes_produto(request, pid):
     # Busca o produto pelo ID, retorna 404 se não encontrar
@@ -197,7 +188,6 @@ def detalhes_produto(request, pid):
     # Renderiza o template product-detail.html com o contexto
     return render(request, "core/product-detail.html", context)
 
-
 def tag_list(request, tag_slug=None):
     # Busca produtos publicados, ordenados pelo ID
     produtos = Produto.objects.filter(status_produto="published").order_by("-id")
@@ -219,10 +209,7 @@ def tag_list(request, tag_slug=None):
     # Renderiza o template tag.html com o contexto
     return render(request, "core/tag.html", context)
 
-
-
 import logging
-
 logger = logging.getLogger(__name__)
 @login_required
 def ajax_add_review(request, pid):
@@ -264,8 +251,6 @@ def ajax_add_review(request, pid):
     else:
         return JsonResponse({'bool': False, 'errors': 'Método de requisição inválido'}, status=405)
 
-
-
 def search(request):
     # Pega a query de busca da requisição
     query = request.GET.get("q")
@@ -280,7 +265,6 @@ def search(request):
     }
     # Renderiza o template search.html com o contexto
     return render(request, "core/search.html", context)
-
 
 def filter_product(request):
     categorias = request.GET.getlist("categoria[]")
@@ -305,7 +289,6 @@ def filter_product(request):
     data = render_to_string("core/async/product-list.html",{"produtos": produtos})
     return JsonResponse({"data": data})
 
-
 def about(request):
     # Busca produtos publicados e em destaque
     produto = Produto.objects.filter(status_produto="published", destaque=True)
@@ -319,7 +302,6 @@ def about(request):
     }
     # Renderiza o template index.html com o contexto
     return render(request, 'core/about.html', context)
-
 
 def privacy_policy(request):
     # Busca produtos publicados e em destaque
@@ -335,7 +317,6 @@ def privacy_policy(request):
     # Renderiza o template index.html com o contexto
     return render(request, 'core/privacy-policy.html', context)
 
-
 def service_terms(request):
     # Busca produtos publicados e em destaque
     produto = Produto.objects.filter(status_produto="published", destaque=True)
@@ -349,7 +330,6 @@ def service_terms(request):
     }
     # Renderiza o template index.html com o contexto
     return render(request, 'core/service-terms.html', context)
-
 
 def add_to_cart(request):
     try:
@@ -392,9 +372,7 @@ def add_to_cart(request):
     return JsonResponse({"data": cart, 'totalcartitems': len(cart)})
 
 import logging
-
 logger = logging.getLogger(__name__)
-
 def cart_view(request):
     cart_total_amount = 0
     cart_data_formatted = {}
@@ -436,7 +414,6 @@ def cart_view(request):
     else:
         messages.warning(request, "Seu Carrinho Está Vazio.")
         return redirect("core:index")
-
 
 def delete_item_from_cart(request):
     product_id = str(request.GET.get('id'))
@@ -481,7 +458,6 @@ def delete_item_from_cart(request):
             return JsonResponse({"error": "Product not found in cart."}, status=404)
     else:
         return JsonResponse({"error": "Cart is empty."}, status=404)
-
 
 import logging
 logger = logging.getLogger(__name__)
@@ -545,8 +521,6 @@ def update_from_cart(request):
         logger.exception(f"Error updating cart: {e}")
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
-
-
 @login_required
 def checkout(request):
     # Inicializa variáveis
@@ -591,6 +565,10 @@ def checkout(request):
                 preco=cart_total_amount,
                 status_pagamento=False,
                 data_pedido=timezone.now(),
+                metodo_entrega=request.POST.get('metodo_entrega', 'delivery'), # Adiciona o método de entrega
+                impostos=Decimal(request.POST.get('impostos', '0.00')), # Adiciona impostos
+                taxas=Decimal(request.POST.get('taxas', '0.00')) # Adiciona taxas
+
             )
             # Adiciona os itens do carrinho ao pedido
             for product_id, item in cart_data.items():
@@ -652,11 +630,8 @@ def checkout(request):
 
     return render(request, "core/checkout.html", context)
 
-
-
 import uuid
 import logging
-
 logger = logging.getLogger(__name__)
 @login_required
 def pagamento_efetuado(request):
@@ -677,7 +652,10 @@ def pagamento_efetuado(request):
             preco=Decimal('0.00'),  # Initialize price to zero.  Calculate later.
             status_pagamento=True,  # Set payment status to True
             data_pedido=timezone.now(),
-            payment_date=timezone.now() #Set payment date
+            payment_date=timezone.now(), #Set payment date
+            metodo_entrega=request.POST.get('metodo_entrega', 'delivery'), # Adiciona o método de entrega
+            impostos=Decimal(request.POST.get('impostos', '0.00')), # Adiciona impostos
+            taxas=Decimal(request.POST.get('taxas', '0.00')) # Adiciona taxas
         )
 
         # Calcula o preço total do pedido após a criação
@@ -771,17 +749,21 @@ def create_checkout_session(request, oid):
         logger.exception(e)
         return JsonResponse({'error': f'Erro inesperado: {e}'}, status=500)
 
-
-
 @login_required
 def save_checkout_info(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
         email = request.POST.get('email')
         telefone = request.POST.get('telefone')
-        endereco = request.POST.get('endereco')
-        cidade = request.POST.get('cidade')
-        estado = request.POST.get('estado')
+        cep = request.POST.get('cep')
+        logradouro = request.POST.get('logradouro')
+        complemento = request.POST.get('complemento')
+        bairro = request.POST.get('bairro')
+        localidade = request.POST.get('localidade')
+        uf = request.POST.get('uf')
+        numero = request.POST.get('numero')
+        celular = request.POST.get('celular')
+
 
         try:
             order = PedidoCarrinho.objects.filter(user=request.user, status_pagamento=False).order_by('-data_pedido').first()
@@ -791,9 +773,6 @@ def save_checkout_info(request):
                     nome=nome,
                     email=email,
                     telefone=telefone,
-                    endereco=endereco,
-                    cidade=cidade,
-                    estado=estado,
                     preco=Decimal('0.00'), # Initialize price to zero
                     status_pagamento=False,
                     data_pedido=timezone.now(),
@@ -802,16 +781,34 @@ def save_checkout_info(request):
                 order.nome = nome
                 order.email = email
                 order.telefone = telefone
-                order.endereco = endereco
-                order.cidade = cidade
-                order.estado = estado
                 order.save()
+
+            # Create or update address
+            address_data = {
+                'cep': cep,
+                'logradouro': logradouro,
+                'complemento': complemento,
+                'bairro': bairro,
+                'localidade': localidade,
+                'uf': uf,
+                'numero': numero,
+                'celular': celular,
+                'user': request.user,
+                'status': False,
+            }
+            try:
+                address = Endereco.objects.get(user=request.user, status=False)
+                for key, value in address_data.items():
+                    setattr(address, key, value)
+                address.save()
+            except Endereco.DoesNotExist:
+                address = Endereco.objects.create(**address_data)
+
             return JsonResponse({'success': True, 'message': 'Informações de checkout salvas com sucesso!'})
         except Exception as e:
             return JsonResponse({'success': False, 'message': f'Erro ao salvar informações de checkout: {str(e)}'}, status=500)
     else:
         return JsonResponse({'success': False, 'message': 'Método de requisição inválido'}, status=405)
-
 
 @login_required
 def pagamento_falha(request):
@@ -819,9 +816,7 @@ def pagamento_falha(request):
 
 
 import logging
-
 logger = logging.getLogger(__name__)
-
 @login_required
 def customer_dashboard(request):
     orders_list = PedidoCarrinho.objects.filter(user=request.user).order_by("-id")
@@ -905,7 +900,6 @@ def customer_dashboard(request):
     }
     return render(request, 'core/dashboard.html', context)
 
-
 def order_detail(request, id):
     try:
         order = get_object_or_404(PedidoCarrinho, user=request.user, id=id)
@@ -922,7 +916,6 @@ def order_detail(request, id):
     except Exception as e:
         logger.exception(f"An error occurred while retrieving order details: {e}")
         return HttpResponseNotFound("Ocorreu um erro.")
-
 
 def make_address_default(request):
     if request.method == 'POST':
@@ -986,7 +979,6 @@ def buscar_endereco(request):
     except Exception as e:
         return JsonResponse({'erro': str(e)}, status=500)
 
-
 def product_quickview(request, pid):
     if request.method == 'GET':
         try:
@@ -1023,8 +1015,6 @@ def wishlist(request):
     }
     return render(request, 'core/wishlist.html', context)
 
-
-
 def add_to_wishlist(request):
     if request.method == 'GET':
         try:
@@ -1044,7 +1034,6 @@ def add_to_wishlist(request):
             return JsonResponse({"bool": False, "message": f"Erro ao adicionar à lista de desejos: {e}"}, status=500)
     else:
         return JsonResponse({"bool": False, "message": "Método de requisição inválido."}, status=405)
-
 
 @csrf_exempt
 @login_required
@@ -1079,11 +1068,8 @@ def delete_wishlist_item(request):
         logger.warning(f"Parâmetro 'id' ausente na requisição de exclusão de item da Wishlist do usuário: {request.user.id}")
         return JsonResponse({"bool": False, "message": "Parâmetro 'id' ausente."}, status=400)
 
-
-
 def contact(request):
     return render(request, 'core/contact.html')
-
 
 def ajax_contato(request):
     if request.method == 'POST':
@@ -1107,7 +1093,6 @@ def ajax_contato(request):
 
     else:
         return JsonResponse({"success": False, "message": "Método de requisição inválido."}, status=405)
-
 
 def purchase_guide(request):
     return render(request, "core/purchase-guide.html")

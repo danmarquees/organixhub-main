@@ -105,6 +105,8 @@ class Vendedor(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     data = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    reputacao = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
+
 
 
     class Meta:
@@ -140,6 +142,11 @@ class Produto(models.Model):
     qtd_estoque = models.IntegerField(default=10, null=True, blank=True) # Changed to IntegerField
     validade = models.CharField(max_length=100, default="100 dias", null=True, blank=True)
     data_fab = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+
+    meta_titulo = models.CharField(max_length=150, null=True, blank=True)
+    meta_descricao = models.TextField(null=True, blank=True)
+    palavras_chave = models.CharField(max_length=255, null=True, blank=True)
+
 
     tags = TaggableManager(blank=True)
 
@@ -185,27 +192,46 @@ class ImagemProduto(models.Model):
     class Meta:
         verbose_name_plural = "Imagens do Produto"
 
+class VariacaoProduto(models.Model):
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name="variacoes")
+    nome = models.CharField(max_length=50)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    estoque = models.IntegerField(default=0)
+
+
 ######################################Carrinho, Pedido, Itens e Endereço##################################
 ######################################Carrinho, Pedido, Itens e Endereço##################################
 ######################################Carrinho, Pedido, Itens e Endereço##################################
 ######################################Carrinho, Pedido, Itens e Endereço##################################
 
 class PedidoCarrinho(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    nome = models.CharField(max_length=200, null=True, blank=True)
-    email = models.EmailField(max_length=200, null=True, blank=True)
-    telefone = models.CharField(max_length=20, null=True, blank=True)
-    endereco = models.CharField(max_length=200, null=True, blank=True)
-    cidade = models.CharField(max_length=200, null=True, blank=True)
-    estado = models.CharField(max_length=200, null=True, blank=True)
-    status_pagamento = models.BooleanField(default=False)
-    sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="sku", alphabet="1234567890")
-    preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99)
-    data_pedido = models.DateTimeField(auto_now_add=True)
-    status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing")
-    coupons = models.ManyToManyField('Coupon', blank=True)
-    num_fatura = models.CharField(max_length=255, blank=True, null=True) # Novo campo
-    payment_date = models.DateTimeField(null=True, blank=True) # Added payment date field
+    user = models.ForeignKey(User, on_delete=models.CASCADE) # Chave estrangeira para o modelo User, definindo o usuário que fez o pedido. Se o usuário for excluído, o pedido também será excluído.
+
+    nome = models.CharField(max_length=200, null=True, blank=True) # Nome do cliente, permite valores nulos e em branco.
+    email = models.EmailField(max_length=200, null=True, blank=True) # Email do cliente, permite valores nulos e em branco.
+    telefone = models.CharField(max_length=20, null=True, blank=True) # Número de telefone do cliente, permite valores nulos e em branco.
+    endereco = models.CharField(max_length=200, null=True, blank=True) # Endereço do cliente, permite valores nulos e em branco.
+    cidade = models.CharField(max_length=200, null=True, blank=True) # Cidade do cliente, permite valores nulos e em branco.
+    estado = models.CharField(max_length=200, null=True, blank=True) # Estado do cliente, permite valores nulos e em branco.
+
+    status_pagamento = models.BooleanField(default=False) # Campo booleano indicando se o pagamento foi feito, padrão False.
+    sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="sku", alphabet="1234567890") # Campo ShortUUID para SKU, não único.
+    orderid = ShortUUIDField(unique=False, length=4, max_length=10, alphabet="1234567890") # Campo ShortUUID para ID do pedido, não único.
+
+    preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99) # Preço total do pedido, padrão 1.99.
+    desconto = models.DecimalField(max_digits=10, decimal_places=2, default=1.99) # Desconto aplicado ao pedido, padrão 1.99.
+    data_pedido = models.DateTimeField(auto_now_add=True) # Registra automaticamente a data e hora do pedido.
+
+    status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing") # Status do pedido, as opções são definidas em STATUS_CHOICES.
+    coupons = models.ManyToManyField('Coupon', blank=True) # Relacionamento muitos-para-muitos com o modelo Coupon, permitindo múltiplos cupons por pedido.
+    num_fatura = models.CharField(max_length=255, blank=True, null=True) # Número da fatura, permite valores nulos e em branco.
+
+    payment_date = models.DateTimeField(null=True, blank=True) # Data e hora do pagamento, permite valores nulos e em branco.
+    metodo_entrega = models.CharField(max_length=100, choices=[('delivery', 'Entrega'), ('pickup', 'Retirada')], default='delivery') # Método de entrega, as opções são 'delivery' ou 'pickup'.
+    id_rastreamento = models.CharField(max_length=255, blank=True, null=True) # ID de rastreamento, permite valores nulos e em branco.
+    impostos = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) # Valor dos impostos, padrão 0.00.
+    taxas = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) # Valor das taxas, padrão 0.00.
+
 
     class Meta:
         verbose_name_plural = "Pedidos"
@@ -382,7 +408,8 @@ class Endereco(models.Model):
     numero = models.CharField(max_length=10, null=True, blank=True)
     celular = models.CharField(max_length=20, null=True, blank=True) # Added cellphone field
     status = models.BooleanField(default=False)
-
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
     class Meta:
             verbose_name_plural = "Endereço"
@@ -397,6 +424,8 @@ class Coupon(models.Model):
     valor_minimo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     usos_maximos = models.IntegerField(null=True, blank=True)
     usos_atuais = models.IntegerField(default=0)
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)
+
 
     class Meta:
         verbose_name = 'Cupom'
@@ -433,3 +462,30 @@ class Coupon(models.Model):
             raise ValueError("Este cupom atingiu o limite máximo de usos")
 
         return True
+
+
+class Chat(models.Model):
+    remetente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="mensagens_enviadas")
+    destinatario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="mensagens_recebidas")
+    mensagem = models.TextField()
+    lida = models.BooleanField(default=False)
+    data_envio = models.DateTimeField(auto_now_add=True)
+
+
+class HistoricoAtividade(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    acao = models.CharField(max_length=255)
+    data = models.DateTimeField(auto_now_add=True)
+
+
+class RelatorioVendas(models.Model):
+    vendedor = models.ForeignKey(Vendedor, on_delete=models.CASCADE)
+    data_inicio = models.DateField()
+    data_fim = models.DateField()
+    total_vendas = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
+
+class MetodoPagamento(models.Model):
+    nome = models.CharField(max_length=100)
+    taxa = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    ativo = models.BooleanField(default=True)
