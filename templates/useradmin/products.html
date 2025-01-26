@@ -86,13 +86,13 @@
                     </div>
                     <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
                         <a
-                            href="#"
+                            href="{% url 'useradmin:edit-product' p.pid %}"
                             class="btn btn-sm font-sm rounded btn-brand"
                         >
                             <i class="material-icons md-edit"></i> Editar
                         </a>
                         <a
-                            href="#"
+                            href="{% url 'useradmin:delete-product' p.pid %}"
                             class="btn btn-sm font-sm btn-light rounded"
                         >
                             <i class="material-icons md-delete_forever"></i>

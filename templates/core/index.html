@@ -665,12 +665,11 @@ ted animate__fadeIn"
                     <h5 class="section-title style-1 mb-30">Categorias</h5>
                     <ul>
 
-                        {% for c in categorias %}
+                        {% for c in categorias|slice:":5" %}
                         <li>
                             <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{ c.imagem.url }}" />{{ c.titulo }}</a><span class="count">{{ c.produto_count }}</span>
                         </li>
                         {% endfor %}
-
                     </ul>
                 </div>
                 <!-- Fillter By Price -->
@@ -757,112 +756,28 @@ ted animate__fadeIn"
             </div>
             <div class="carausel-8-columns-cover position-relative">
                 <div class="carausel-8-columns" id="carausel-8-columns">
+                    {% for c in categorias %}
                     <div class="card-1">
                         <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" /></a>
+                            <a href="{% url 'core:category-product-list' c.cid %}"><img
+                                    src="{{ c.imagem.url }}" alt="{{ c.titulo }}" /></a>
                         </figure>
                         <h6>
-                            <a href="shop-grid-right.html">Leites e <br />Laticínios</a>
+                            <a href="{% url 'core:category-product-list' c.cid %}">{{ c.titulo }}</a>
                         </h6>
                     </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-2.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6>
-                            <a href="shop-grid-right.html">Vinhos & <br />
-                                Bebidas</a>
-                        </h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-3.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6>
-                            <a href="shop-grid-right.html">Roupas & <br />Beleza</a>
-                        </h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-4.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6>
-                            <a href="shop-grid-right.html">Ração para Pets <br />& Brinquedos</a>
-                        </h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-5.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6>
-                            <a href="shop-grid-right.html">Fast food <br />embalado</a>
-                        </h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-6.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6>
-                            <a href="shop-grid-right.html">Material para <br />Confeitaria</a>
-                        </h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-7.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6>
-                            <a href="shop-grid-right.html">Legumes <br />& tubérculos</a>
-                        </h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-8.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6>
-                            <a href="shop-grid-right.html">Frutos do Mar <br />Frescos</a>
-                        </h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-9.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6>
-                            <a href="shop-grid-right.html">Macarrão <br />Arroz</a>
-                        </h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-10.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6><a href="shop-grid-right.html">Fast food</a></h6>
-                    </div>
-                    <div class="card-1">
-                        <figure class="img-hover-scale overflow-hidden">
-                            <a href="shop-grid-right.html"><img
-                                    src="{% static 'assets/imgs/theme/icons/category-11.svg' %}" alt="" /></a>
-                        </figure>
-                        <h6><a href="shop-grid-right.html">Sorvete</a></h6>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </section>
+
     <!--End category slider-->
     <section class="section-padding mb-30">
         <div class="container">
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-sm-5 mb-md-0">
-                    <h4 class="section-title style-1 mb-30 animated animated">Top Selling</h4>
+                    <h4 class="section-title style-1 mb-30 animated animated">Mais Vendidos</h4>
                     <div class="product-list-small animated animated">
                         <article class="row align-items-center hover-up">
                             <figure class="col-md-4 mb-0">
@@ -930,7 +845,7 @@ ted animate__fadeIn"
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-md-0">
-                    <h4 class="section-title style-1 mb-30 animated animated">Trending Products</h4>
+                    <h4 class="section-title style-1 mb-30 animated animated">Tendências</h4>
                     <div class="product-list-small animated animated">
                         <article class="row align-items-center hover-up">
                             <figure class="col-md-4 mb-0">
@@ -960,6 +875,7 @@ ted animate__fadeIn"
                             </figure>
                             <div class="col-md-8 mb-0">
                                 <h6>
+
                                     <a href="shop-product-right.html">Seeds of Change Organic Quinoa, Brown, & Red
                                         Rice</a>
                                 </h6>
@@ -1000,7 +916,7 @@ ted animate__fadeIn"
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-sm-5 mb-md-0 d-none d-lg-block">
-                    <h4 class="section-title style-1 mb-30 animated animated">Recently added</h4>
+                    <h4 class="section-title style-1 mb-30 animated animated">Recém Adicionados</h4>
                     <div class="product-list-small animated animated">
                         <article class="row align-items-center hover-up">
                             <figure class="col-md-4 mb-0">
@@ -1068,7 +984,7 @@ ted animate__fadeIn"
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-sm-5 mb-md-0 d-none d-xl-block">
-                    <h4 class="section-title style-1 mb-30 animated animated">Top Rated</h4>
+                    <h4 class="section-title style-1 mb-30 animated animated">Bem Classificados</h4>
                     <div class="product-list-small animated animated">
                         <article class="row align-items-center hover-up">
                             <figure class="col-md-4 mb-0">

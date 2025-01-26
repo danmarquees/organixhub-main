@@ -55,6 +55,7 @@ def index(request):
         "produtos": produtos,
         "vendedores": vendedores,
         "categorias": categorias,
+        "cart_items": cart_items,
     }
 
     return render(request, 'core/index.html', context)
@@ -646,6 +647,7 @@ def checkout(request):
         "final_amount": "{:.2f}".format(final_amount),
         "order": order,
         "errors": errors,
+        "stripe_publishable_key": settings.STRIPE_PUBLIC_KEY,
     }
 
     return render(request, "core/checkout.html", context)
@@ -723,6 +725,53 @@ def pagamento_efetuado(request):
     return render(request, 'core/payment-completed.html')
 
 
+@login_required
+def create_checkout_session(request, oid):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método de requisição inválido'}, status=405)
+
+    try:
+        order = PedidoCarrinho.objects.get(pk=oid)
+    except PedidoCarrinho.DoesNotExist:
+        return JsonResponse({'error': 'Pedido não encontrado'}, status=404)
+
+    try:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        email = request.POST.get('email')
+        checkout_session = stripe.checkout.Session.create(
+            customer_email=email or order.email,
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': "BRL",
+                        'product_data': {
+                            'name': order.nome,
+                        },
+                        'unit_amount': int(order.preco * 100),
+                    },
+                    'quantity': 1
+                }
+            ],
+            mode='payment',
+            success_url=request.build_absolute_url(reverse("core:payment-completed")),
+            cancel_url=request.build_absolute_url(reverse("core:payment-failed"))
+        )
+
+        order.status_pagamento = True
+        order.stripe_payment_intent = checkout_session.id
+        order.save()
+        return JsonResponse({'sessionId': checkout_session.id})
+
+    except stripe.error.CardError as e:
+        return JsonResponse({'error': f'Erro no cartão: {e.user_message}'}, status=400)
+    except stripe.error.StripeError as e:
+        return JsonResponse({'error': f'Erro do Stripe: {e}'}, status=500)
+    except Exception as e:
+        logger.exception(e)
+        return JsonResponse({'error': f'Erro inesperado: {e}'}, status=500)
+
+
 
 @login_required
 def save_checkout_info(request):
@@ -767,7 +816,6 @@ def save_checkout_info(request):
 @login_required
 def pagamento_falha(request):
     return render(request, 'core/payment-failed.html')
-
 
 
 import logging

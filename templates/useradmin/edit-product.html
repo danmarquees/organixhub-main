@@ -1,0 +1,234 @@
+{% extends 'useradmin/base.html' %} {% load static %} {% load humanizelib%}
+{{form.media }} {% block content %}
+
+<section class="content-main">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token%}
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Editar Informações do Produto</h2>
+                    <div>
+                        <button
+                            class="btn btn-light rounded font-sm mr-5 text-body hover-up"
+                        >
+                            Salvar como rascunho
+                        </button>
+                        <button class="btn btn-md rounded font-sm hover-up">
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Básico</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{form.errors}}</strong>
+                        </div>
+                        {% endif %}
+                        <form>
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label"
+                                    >Título do produto</label
+                                >
+                                {{form.titulo}}
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label"
+                                    >Descrição completa</label
+                                >
+                                {{form.descricao}}
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Preço</label>
+                                        <div class="row gx-2">
+                                            {{form.preco}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label"
+                                            >Preço Antigo</label
+                                        >
+                                        {{form.preco_antigo}}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="form-label"
+                                        >Data de Fabricação</label
+                                    >
+                                    {{form.data_fab}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Tipo</label>
+                                        {{form.tipo}}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label"
+                                            >Qtde. em Estoque</label
+                                        >
+                                        {{form.qtd_estoque}}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label"
+                                            >Validade</label
+                                        >
+                                        {{form.validade}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label"
+                                    >Alíquota de imposto</label
+                                >
+                                <input
+                                    type="text"
+                                    placeholder="%"
+                                    class="form-control"
+                                    id="product_name"
+                                />
+                            </div>
+                            <label class="form-check mb-4">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value=""
+                                />
+                                <span class="form-check-label">
+                                    Criar um modelo
+                                </span>
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Envio</h4>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <label
+                                            for="product_name"
+                                            class="form-label"
+                                            >Largura</label
+                                        >
+                                        <input
+                                            type="text"
+                                            placeholder="polegadas"
+                                            class="form-control"
+                                            id="product_name"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <label
+                                            for="product_name"
+                                            class="form-label"
+                                            >Altura</label
+                                        >
+                                        <input
+                                            type="text"
+                                            placeholder="polegadas"
+                                            class="form-control"
+                                            id="product_name"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label"
+                                    >Peso</label
+                                >
+                                <input
+                                    type="text"
+                                    placeholder="gramas"
+                                    class="form-control"
+                                    id="product_name"
+                                />
+                            </div>
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label"
+                                    >Taxas de envio</label
+                                >
+                                <input
+                                    type="text"
+                                    placeholder="$"
+                                    class="form-control"
+                                    id="product_name"
+                                />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- card end// -->
+            </div>
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Mídia</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-upload">
+                            <img src="{{product.imagem.url}}" alt="" />
+                            {{form.imagem}}
+                        </div>
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Organização</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row gx-2">
+                            <div class="col-sm-6 mb-3">
+                                <label class="form-label">Categoria</label>
+                                {{form.categoria}}
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label class="form-label">Subcategoria</label>
+                                <select class="form-select">
+                                    <option>Nissan</option>
+                                    <option>Honda</option>
+                                    <option>Mercedes</option>
+                                    <option>Chevrolet</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label"
+                                    >Tags</label
+                                >
+                                {{form.tags}}
+                            </div>
+                        </div>
+                        <!-- row.// -->
+                    </div>
+                </div>
+                <!-- card end// -->
+            </div>
+        </div>
+    </form>
+</section>
+
+{% endblock content %}

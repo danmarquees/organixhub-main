@@ -178,6 +178,7 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=AUeZJX-aqir88NyR8g3c3u17mbsnji-NaUaR4iUTnoc5w9PBypCTm4lx7ngDoeYKNJM0xc3QvUkBShbK&currency=BRL"></script>
+<script src="https://js.stripe.com/v3/"></script>
 
 <script>
 paypal.Buttons({
@@ -228,6 +229,48 @@ paypal.Buttons({
     }
 }).render('#paypal-button-container');
 
+</script>
+
+
+
+<script>
+var stripe = Stripe("{{stripe_publishable_key}}");
+var checkoutButton = document.getElementById("checkout-button");
+
+checkoutButton.addEventListener("click", function() {
+    checkoutButton.disabled = true; // Disable button to prevent multiple clicks
+    checkoutButton.textContent = "Processando...";
+
+    fetch(`/api/create_checkout_session/{{oid}}/`, { // Use order.pk here, and correct the URL
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email: "{{order.email}}"}) // Send the email
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(session => {
+        return stripe.redirectToCheckout({ sessionId: session.id });
+    })
+    .then(result => {
+        if (result.error) {
+            checkoutButton.disabled = false; // Re-enable button on error
+            checkoutButton.textContent = "Pagar com Stripe";
+            alert(result.error.message);
+        }
+    })
+    .catch(error => {
+        checkoutButton.disabled = false; // Re-enable button on error
+        checkoutButton.textContent = "Pagar com Stripe";
+        console.error("Error:", error);
+        alert("Ocorreu um erro ao processar o pagamento. Por favor, tente novamente.");
+    });
+});
 </script>
 
 
