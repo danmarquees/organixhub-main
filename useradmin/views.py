@@ -5,6 +5,7 @@ from userauths.models import User
 import datetime
 from useradmin.forms import AddProductForm
 from django.shortcuts import redirect
+from core.models import ItensPedidoCarrinho
 
 # Create your views here.
 
@@ -89,3 +90,24 @@ def delete_product(request, pid):
     product = Produto.objects.get(pid=pid)
     product.delete()
     return redirect("useradmin:products")
+
+
+def orders(request):
+    orders = PedidoCarrinho.objects.all()
+    context = {
+        "orders": orders,
+    }
+
+    return render(request, "useradmin/orders.html", context)
+
+
+def order_detail(request, id):
+    order = PedidoCarrinho.objects.get(orderid=id)
+    order_items = ItensPedidoCarrinho.objects.filter(pedido=order)
+
+    context = {
+        "order": order,
+        "order_items": order_items,
+    }
+
+    return render(request, "useradmin/order-detail.html", context)

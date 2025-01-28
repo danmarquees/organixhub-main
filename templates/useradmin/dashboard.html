@@ -482,7 +482,10 @@
                                     Mastercard
                                 </td>
                                 <td>
-                                    <a href="#" class="btn btn-xs">
+                                    <a
+                                        href="{% url 'useradmin:order-detail' l.orderid %}"
+                                        class="btn btn-xs"
+                                    >
                                         Ver detalhes</a
                                     >
                                 </td>

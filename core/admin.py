@@ -39,7 +39,7 @@ class PedidoCarrinhoAdmin(admin.ModelAdmin):
 
 
 class ItensPedidoCarrinhoAdmin(admin.ModelAdmin):
-    list_display = ['pedido', 'num_fatura', 'item','imagem', 'qtd', 'preco', 'total']
+    list_display = ['pedido', 'item', 'qtd', 'preco', 'total']
 
 
 class AvaliacaoProdutoAdmin(admin.ModelAdmin):

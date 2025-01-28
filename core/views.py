@@ -55,7 +55,6 @@ def index(request):
         "produtos": produtos,
         "vendedores": vendedores,
         "categorias": categorias,
-        "cart_items": cart_items,
     }
 
     return render(request, 'core/index.html', context)
@@ -635,30 +634,10 @@ import logging
 logger = logging.getLogger(__name__)
 @login_required
 def pagamento_efetuado(request):
-    # Verifica se há dados de carrinho na sessão
     if 'cart_data_obj' in request.session:
-        # Obtém os dados do carrinho
         cart_data = request.session['cart_data_obj']
 
-        # Always create a new PedidoCarrinho for each order
-        order = PedidoCarrinho.objects.create(
-            user=request.user,
-            nome=request.POST.get('nome'),
-            email=request.POST.get('email'),
-            telefone=request.POST.get('telefone'),
-            endereco=request.POST.get('endereco'),
-            cidade=request.POST.get('cidade'),
-            estado=request.POST.get('estado'),
-            preco=Decimal('0.00'),  # Initialize price to zero.  Calculate later.
-            status_pagamento=True,  # Set payment status to True
-            data_pedido=timezone.now(),
-            payment_date=timezone.now(), #Set payment date
-            metodo_entrega=request.POST.get('metodo_entrega', 'delivery'), # Adiciona o método de entrega
-            impostos=Decimal(request.POST.get('impostos', '0.00')), # Adiciona impostos
-            taxas=Decimal(request.POST.get('taxas', '0.00')) # Adiciona taxas
-        )
-
-        # Calcula o preço total do pedido após a criação
+        # Calcula o preço total ANTES de criar o PedidoCarrinho
         cart_total_amount = Decimal('0.00')
         for product_id, item in cart_data.items():
             try:
@@ -671,19 +650,32 @@ def pagamento_efetuado(request):
             except (ValueError, TypeError, KeyError) as e:
                 logger.error(f"Error processing cart item {item}: {e}")
 
-        order.preco = cart_total_amount # Update the order price
-        order.save()
+        order = PedidoCarrinho.objects.create(
+            user=request.user,
+            nome=request.POST.get('nome'),
+            email=request.POST.get('email'),
+            telefone=request.POST.get('telefone'),
+            endereco=request.POST.get('endereco'),
+            cidade=request.POST.get('cidade'),
+            estado=request.POST.get('estado'),
+            preco=cart_total_amount,  # Preço total calculado corretamente
+            status_pagamento=True,
+            data_pedido=timezone.now(),
+            payment_date=timezone.now(),
+            metodo_entrega=request.POST.get('metodo_entrega', 'delivery'),
+            impostos=Decimal(request.POST.get('impostos', '0.00')),
+            taxas=Decimal(request.POST.get('taxas', '0.00'))
+        )
 
-
-        # Adiciona os itens do carrinho ao pedido
+        # Adiciona os itens do carrinho ao pedido APÓS criar o PedidoCarrinho
         for product_id, item in cart_data.items():
             try:
-                produto = models.Produto.objects.get(pk=product_id)
+                produto = models.Produto.objects.get(pk=product_id) # Obtem o objeto Produto
                 models.ItensPedidoCarrinho.objects.create(
                     pedido=order,
                     num_fatura=order.num_fatura,
                     status_produto=order.status_produto,
-                    item=item['title'],
+                    item=produto, # Usa o objeto Produto, e não só o título
                     imagem=item['image'],
                     qtd=item['qty'],
                     preco=item['price'],
@@ -694,14 +686,10 @@ def pagamento_efetuado(request):
             except Exception as e:
                 logger.exception(f"Error creating order item for product {product_id}: {e}")
 
-
-        # Limpa os dados do carrinho da sessão
         del request.session['cart_data_obj']
         request.session.modified = True
 
-    # Renderiza o template de pagamento concluído
     return render(request, 'core/payment-completed.html')
-
 
 @login_required
 def create_checkout_session(request, oid):

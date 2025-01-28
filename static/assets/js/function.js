@@ -419,51 +419,7 @@ function getCookie(name) {
   return cookieValue;
 }
 
-$(document).ready(() => {
-  $("#cep_0").on("blur", () => {
-    const postalCode = $("#cep_0").val().replace("-", "").trim();
-    const isValidPostalCode =
-      postalCode.length === 8 && /^\d+$/.test(postalCode);
 
-    if (!isValidPostalCode) {
-      alert("CEP inválido! Deve conter 8 dígitos.");
-      $("#cep_0").val("");
-      return;
-    }
-
-    $("#cep_0").addClass("loading"); // Add a loading class for visual feedback (requires CSS styling)
-    $.ajax({
-      url: "/buscar-endereco/",
-      data: { cep: postalCode },
-      dataType: "json",
-      success: (response) => {
-        $("#cep_0").removeClass("loading"); // Remove loading class
-        if (response.erro) {
-          alert(`Erro ao buscar endereço: ${response.erro}`);
-          return;
-        }
-        $("#logradouro_0").val(response.logradouro);
-        $("#bairro_0").val(response.bairro);
-        $("#localidade_0").val(response.localidade);
-        $("#uf_0").val(response.uf);
-        $("#complemento_0").val(response.complemento);
-      },
-      error: (error) => {
-        $("#cep_0").removeClass("loading"); // Remove loading class
-        console.error("Erro ao buscar endereço:", error);
-        let errorMessage =
-          "Erro ao buscar endereço. Por favor, tente novamente mais tarde.";
-        if (error.status === 404) {
-          errorMessage = "CEP não encontrado.";
-        } else if (error.status === 500) {
-          errorMessage =
-            "Erro no servidor. Por favor, tente novamente mais tarde.";
-        }
-        alert(errorMessage);
-      },
-    });
-  });
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   const quickviewButtons = document.querySelectorAll(".quickview-button");

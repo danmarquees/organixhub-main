@@ -79,12 +79,17 @@
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-orders-1.html">
+                        <a
+                            class="menu-link"
+                            href="{% url 'useradmin:orders' %}"
+                        >
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Pedidos</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-orders-1.html">Lista de Pedidos 1</a>
+                            <a href="{% url 'useradmin:orders' %}"
+                                >Lista de Pedidos 1</a
+                            >
                             <a href="page-orders-2.html">Lista de Pedidos 2</a>
                             <a href="page-orders-detail.html"
                                 >Detalhes do Pedido</a

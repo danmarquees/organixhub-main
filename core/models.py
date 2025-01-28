@@ -213,6 +213,7 @@ class PedidoCarrinho(models.Model):
     endereco = models.CharField(max_length=200, null=True, blank=True) # Endereço do cliente, permite valores nulos e em branco.
     cidade = models.CharField(max_length=200, null=True, blank=True) # Cidade do cliente, permite valores nulos e em branco.
     estado = models.CharField(max_length=200, null=True, blank=True) # Estado do cliente, permite valores nulos e em branco.
+    cep = models.CharField(max_length=9, null=True)
 
     status_pagamento = models.BooleanField(default=False) # Campo booleano indicando se o pagamento foi feito, padrão False.
     sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="sku", alphabet="1234567890") # Campo ShortUUID para SKU, não único.
@@ -341,13 +342,13 @@ class PedidoCarrinho(models.Model):
 
 class ItensPedidoCarrinho(models.Model):
     pedido = models.ForeignKey(PedidoCarrinho, on_delete=models.CASCADE)
-    num_fatura = models.CharField(max_length=200)
+    num_fatura = models.CharField(max_length=255, blank=True, null=True)
     status_produto = models.CharField(max_length=200)
-    item = models.CharField(max_length=200)
-    imagem = models.CharField(max_length=200)
-    qtd = models.IntegerField(default=0)
-    preco = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
-    total = models.DecimalField(max_digits=999999999, decimal_places=2, default=1.99)
+    item = models.ForeignKey(Produto, on_delete=models.CASCADE, null=True, related_name="itens_pedido")
+    imagem = models.CharField(max_length=200, blank=True, null=True) # Added blank=True, null=True
+    qtd = models.IntegerField(default=1)
+    preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99) # Reduced max_digits
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=1.99) # Reduced max_digits
 
     class Meta:
          verbose_name_plural = "Itens de Pedidos"
