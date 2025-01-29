@@ -1,0 +1,247 @@
+{% extends 'partials/base.html' %} {% load static %} {% load humanizelib%}
+{{form.media }} {% block content %}
+<main class="main">
+    <div class="container mb-30">
+        <section class="content-main">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Informações Pessoais e Empresariais</h4>
+                            </div>
+                            <div class="card-body">
+                                {% if form.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{form.errors}}</strong>
+                                </div>
+                                {% endif %}
+                                <form
+                                    method="POST"
+                                    enctype="multipart/form-data"
+                                >
+                                    {% csrf_token %}
+                                    <div class="mb-4">
+                                        <label
+                                            for="id_nome_completo"
+                                            class="form-label"
+                                            >Nome completo</label
+                                        >
+                                        {{form.nome_completo}}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label"
+                                                    >RG</label
+                                                >
+                                                {{form.rg}}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label"
+                                                    >CPF/CNPJ</label
+                                                >
+                                                {{form.cpf_cnpj}}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label"
+                                                    >Data de Nascimento</label
+                                                >
+                                                {{form.data_nascimento}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label"
+                                                    >Email</label
+                                                >
+                                                {{form.email}}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label"
+                                                    >Telefone Celular</label
+                                                >
+                                                {{form.telefone_celular}}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label"
+                                                    >Telefone Comercial</label
+                                                >
+                                                {{form.telefone_comercial}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label"
+                                            >Endereço Completo</label
+                                        >
+                                        {{form.endereco}}
+                                    </div>
+                                    <div class="card mb-4">
+                                        <div class="card-header">
+                                            <h4>Informações da Loja</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_nome_loja"
+                                                    class="form-label"
+                                                    >Nome da Loja</label
+                                                >
+                                                {{form.nome_loja}}
+                                            </div>
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_categoria_produtos"
+                                                    class="form-label"
+                                                    >Categoria de
+                                                    Produtos</label
+                                                >
+                                                {{form.categoria_produtos}}
+                                            </div>
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_descricao_loja"
+                                                    class="form-label"
+                                                    >Descrição da Loja</label
+                                                >
+                                                {{form.descricao_loja}}
+                                            </div>
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_logotipo"
+                                                    class="form-label"
+                                                    >Logotipo ou Foto
+                                                    Representativa</label
+                                                >
+                                                {{form.logotipo}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-4">
+                                        <div class="card-header">
+                                            <h4>Informações Bancárias</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_nome_banco"
+                                                    class="form-label"
+                                                    >Nome do Banco</label
+                                                >
+                                                {{form.nome_banco}}
+                                            </div>
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_numero_conta"
+                                                    class="form-label"
+                                                    >Número da Conta</label
+                                                >
+                                                {{form.numero_conta}}
+                                            </div>
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_agencia"
+                                                    class="form-label"
+                                                    >Agência</label
+                                                >
+                                                {{form.agencia}}
+                                            </div>
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_tipo_conta"
+                                                    class="form-label"
+                                                    >Tipo de Conta</label
+                                                >
+                                                {{form.tipo_conta}}
+                                            </div>
+                                            <div class="mb-4">
+                                                <label
+                                                    for="id_titular_conta"
+                                                    class="form-label"
+                                                    >Nome do Titular da
+                                                    Conta</label
+                                                >
+                                                {{form.titular_conta}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        {{form.aceite_termos}}
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        class="btn btn-md rounded font-sm hover-up"
+                                    >
+                                        Salvar Alterações
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Mídia</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-upload">
+                                    <img src="{{product.imagem.url}}" alt="" />
+                                    {{form.imagem}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Organização</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row gx-2">
+                                    <div class="col-sm-6 mb-3">
+                                        <label class="form-label"
+                                            >Categoria</label
+                                        >
+                                        {{form.categoria}}
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <label class="form-label"
+                                            >Subcategoria</label
+                                        >
+                                        <select class="form-select">
+                                            <option>Nissan</option>
+                                            <option>Honda</option>
+                                            <option>Mercedes</option>
+                                            <option>Chevrolet</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label
+                                            for="product_name"
+                                            class="form-label"
+                                            >Tags</label
+                                        >
+                                        {{form.tags}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+
+{% endblock content %}

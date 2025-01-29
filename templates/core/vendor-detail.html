@@ -148,9 +148,9 @@
                                 <h2><a href="{% url 'core:product-detail' p.pid %}">{{ p.titulo|truncatechars:50 }}</a></h2>
                                 <div class="product-rate-cover">
                                     <div class="product-rate d-inline-block">
-                                        <div class="product-rating" style="width: 90%"></div>
+                                        <div class="product-rating" style="width: {{ p.media_avaliacoes }}%"></div>
                                     </div>
-                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                    <span class="font-small ml-5 text-muted"> {{p.media_avaliacoes|truncatechars:1}}</span>
                                 </div>
                                 <div>
                                     <span class="font-small text-muted">Por <a href="#">{{p.vendedor}}</a></span>

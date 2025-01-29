@@ -26,6 +26,7 @@ import stripe
 from paypal.standard.forms import PayPalPaymentsForm
 from core import models
 from django.db.models import Q
+from django.shortcuts import render
 
 
 def index(request):

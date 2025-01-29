@@ -1,7 +1,7 @@
 from collections import UserList
 from collections import UserDict
 from django.shortcuts import redirect, render
-from userauths.forms import UserRegisterForm, ProfileForm
+from userauths.forms import UserRegisterForm, ProfileForm, VendedorForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
@@ -89,3 +89,14 @@ def profile_update(request):
         "profile": profile,
     }
     return render(request, "userauths/profile-edit.html", context)
+
+
+def cadastro_vendedor(request):
+    if request.method == 'POST':
+        form = VendedorForm(request.POST, request.FILES)
+        if form.is_valid():
+            vendedor = form.save()
+            return redirect('core:vendedor_detalhes', vid=vendedor.vid)
+    else:
+        form = VendedorForm()
+    return render(request, 'userauths/cadastro-vendedor.html', {'form': form})

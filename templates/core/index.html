@@ -153,8 +153,7 @@
                             <div class="row product-grid-4">
                                 {% for p in produtos %}
                                 <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                    <div class="product-cart-wrap mb-30 wow animate__anima        p.badges = p.badge_list.split(',') if p.badge_list else []
-ted animate__fadeIn"
+                                    <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
                                         data-wow-delay=".1s">
                                         <div class="product-img-action-wrap">
                                             <div class="product-img product-img-zoom">
@@ -253,6 +252,9 @@ ted animate__fadeIn"
                                                     <span>R$</span><span class="current-product-price-{{ p.id }}">{{ p.preco }}</span>
                                                     <br>
                                                     <span class="old-price">R$ {{ p.preco_antigo }}</span>
+                                                </div>
+                                                <div class="progress">
+                                                <span class="progress-bar" role="progressbar" style="width: {{ p.quantidade_vendida }}%;" aria-valuenow="{{ p.quantidade_vendida }}" aria-valuemin="0" aria-valuemax="100">{{ p.quantidade_vendida }}% vendido</span>
                                                 </div>
                                                 <div class="add-cart">
                                                     <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.id }}">
@@ -638,7 +640,6 @@ ted animate__fadeIn"
             </div>
         </div>
     </section>
-
     <!--End category slider-->
     <section class="section-padding mb-30">
         <div class="container">
