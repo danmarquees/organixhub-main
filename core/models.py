@@ -139,7 +139,10 @@ class Produto(models.Model):
     #especificacoes = models.TextField(null=True, blank=True)
     especificacoes = CKEditor5Field(null=True, blank=True)
     tipo = models.CharField(max_length=100, default="Orgânico", null=True, blank=True)
+
     qtd_estoque = models.IntegerField(default=10, null=True, blank=True) # Changed to IntegerField
+    qtd_vendida = models.IntegerField(default=0, null=True, blank=True)  # Contador de vendas
+
     validade = models.CharField(max_length=100, default="100 dias", null=True, blank=True)
     data_fab = models.DateTimeField(auto_now_add=False, null=True, blank=True)
 
@@ -147,6 +150,8 @@ class Produto(models.Model):
     meta_descricao = models.TextField(null=True, blank=True)
     palavras_chave = models.CharField(max_length=255, null=True, blank=True)
 
+    inicio_promocao = models.DateTimeField(null=True, blank=True)  # Início da oferta
+    fim_promocao = models.DateTimeField(null=True, blank=True)  # Fim da oferta
 
     tags = TaggableManager(blank=True)
 
@@ -166,7 +171,7 @@ class Produto(models.Model):
     atualizado = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name_plural = "Produtos"
+        verbose_name_plural = "Lista de Produtos"
 
     def imagem_produto(self):
             return mark_safe('<img src= "%s" width="50" height="50" />' % (self.imagem.url))
@@ -174,11 +179,24 @@ class Produto(models.Model):
     def __str__(self):
         return self.titulo
 
+    def em_promocao(self):
+            """Verifica se o produto está em promoção no momento."""
+            if self.inicio_promocao and self.fim_promocao:
+                agora = timezone.now()
+                return self.inicio_promocao <= agora <= self.fim_promocao
+            return False
+
+    def tempo_restante_promocao(self):
+        """Retorna o tempo restante para o fim da promoção."""
+        if self.em_promocao():
+            return self.fim_promocao - timezone.now()
+        return None
+
     def obter_porcentagem(self):
-                if self.preco_antigo and self.preco_antigo > 0:
-                    novo_preco = "-" + str(round(((self.preco_antigo - self.preco) / self.preco_antigo) * 100)) + "%"
-                    return novo_preco
-                return "0%"
+                    if self.preco_antigo and self.preco_antigo > 0:
+                        novo_preco = str(round(((self.preco_antigo - self.preco) / self.preco_antigo) * 100)) + "%"
+                        return novo_preco
+                    return "0%"
 
     def get_badges(self): #Renamed to avoid conflict
         return self.badges if self.badges else []
@@ -358,6 +376,13 @@ class ItensPedidoCarrinho(models.Model):
 
     def imagem_pedido(self):
             return mark_safe('<img src= "/media/%s" width="50" height="50" />' % (self.imagem))
+
+    def save(self, *args, **kwargs):
+            """Atualiza o contador de vendas ao salvar um item no pedido."""
+            super().save(*args, **kwargs)
+            if self.item:
+                self.item.qtd_vendida += self.qtd
+                self.item.save()
 
 
 ######################################Avaliação do Produto, Lista de Desejos, Endereço##################################
