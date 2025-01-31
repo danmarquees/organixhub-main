@@ -296,7 +296,7 @@
                                                     <span class="old-price">R$ {{ p.preco_antigo }}</span>
                                                 </div>
                                                 <div class="progress">
-                                                <span class="progress-bar" role="progressbar" style="width: {{ p.quantidade_vendida }}%;" aria-valuenow="{{ p.quantidade_vendida }}" aria-valuemin="0" aria-valuemax="100">{{ p.quantidade_vendida }}% vendido</span>
+                                                <span class="progress-bar" role="progressbar" style="width: {{ p.qtd_estoque }}%;" aria-valuenow="{{ p.qtd_vendida }}" aria-valuemin="0" aria-valuemax="100">{{ p.qtd_vendida }}% vendido</span>
                                                 </div>
                                                 <div class="add-cart">
                                                     <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.id }}">
@@ -305,7 +305,7 @@
                                                     <input type="hidden" class="product-id-{{ p.id }}" value="{{ p.id }}">
                                                     <input type="hidden" class="product-title-{{ p.id }}" value="{{ p.titulo }}">
 
-                                                    <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>Adicionar</button>
+                                                    <button class="add add-to-cart-btn btn w-100 hover-up" data-index="{{ p.id }}" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>Adicionar</button>
                                                     <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>
                                                 </div>
                                             </div>
@@ -420,7 +420,7 @@
                                                             </a>
                                                         </div>
                                                         <div class="product-action-1">
-                                                            <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal{{p.pid}}"> <i class="fi-rs-eye"></i></a>
+                                                            <a aria-label="Vsualização Rápida" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal{{p.pid}}" href="{% url 'core:product-detail' p.pid %}"> <i class="fi-rs-eye"></i></a>
                                                             <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                                         </div>
                                                         <div class="product-badges product-badges-position product-badges-mrg">
@@ -429,7 +429,7 @@
                                                     </div>
                                                     <div class="product-content-wrap">
                                                         <div class="product-category">
-                                                            <a href="shop-grid-right.html">{{p.vendedor}}</a>
+                                                            <a href="{% url 'core:vendor-detail' p.vendedor.vid %}">{{p.vendedor}}</a>
                                                         </div>
                                                         <h2><a href="shop-product-right.html">{{p.titulo|truncatechars:20}}</a></h2>
                                                         <div class="product-rate d-inline-block">
@@ -441,11 +441,19 @@
                                                         </div>
                                                         <div class="sold mt-15 mb-15">
                                                             <div class="progress mb-5">
-                                                                <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                <div class="progress-bar" role="progressbar" style=" width:{{p.quantidade_vendida}};" aria-valuenow="{{ p.quantidade_vendida }}" aria-valuemin="0" aria-valuemax="100"></div>
                                                             </div>
                                                             <span class="font-xs text-heading"> Vendidos: {{p.qtd_vendida}}/{{p.qtd_estoque}}</span>
                                                         </div>
-                                                        <a href="shop-cart.html" class="btn w-100 hover-up"><i class="fi-rs-shopping-cart mr-5"></i>Adicionar</a>
+                                                        <div class="add-cart">
+                                                            <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.id }}">
+                                                            <input type="hidden" class="product-pid-{{ p.id }}" value="{{ p.pid }}">
+                                                            <input type="hidden" class="product-image-{{ p.id }}" value="{{p.imagem.url}}">
+                                                            <input type="hidden" class="product-id-{{ p.id }}" value="{{ p.id }}">
+                                                            <input type="hidden" class="product-title-{{ p.id }}" value="{{ p.titulo }}">
+
+                                                             <button class="add add-to-cart-btn btn w-100 hover-up" data-index="{{p.id}}" style="border:#3bb77e;" id="add-to-cart-btn" ><i class="fi-rs-shopping-cart mr-5"></i>Adicionar</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 {%endfor%}
