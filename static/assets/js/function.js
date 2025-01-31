@@ -419,8 +419,6 @@ function getCookie(name) {
   return cookieValue;
 }
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const quickviewButtons = document.querySelectorAll(".quickview-button");
 

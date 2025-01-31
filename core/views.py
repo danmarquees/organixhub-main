@@ -35,6 +35,10 @@ def index(request):
     categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
 
     for p in produtos:
+
+        p.fim_promocao_timestamp = int(p.fim_promocao.timestamp()) if p.fim_promocao else None
+
+
         media_aval = AvaliacaoProduto.objects.filter(produto=p).aggregate(average_classification=Avg('classificacao'))
         if media_aval['average_classification'] is not None:
             p.media_avaliacoes = media_aval['average_classification']

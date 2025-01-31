@@ -34,6 +34,48 @@
     }
     </style>
 </head>
+
+<div class="modal fade custom-modal" id="onloadModal" tabindex="-1" aria-labelledby="onloadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+                    <div class="deal" style="background-image: url('{% static 'assets/imgs/banner/popup-1.png' %}')">
+                    <div class="deal-top">
+                        <h6 class="mb-10 text-brand-2">Oferta do dia</h6>
+                    </div>
+                    <div class="deal-content detail-info">
+                        <h4 class="product-title"><a href="shop-product-right.html" class="text-heading">Todas as Frutas com Desconto na Loja </a></h4>
+                        <div class="clearfix product-price-cover">
+                            <div class="product-price primary-color float-left">
+                                <span class="current-price text-brand">R$38</span>
+                                <span>
+                                    <span class="save-price font-md color3 ml-15">26% Off</span>
+                                    <span class="old-price font-md ml-15">R$52</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-bottom">
+                        <p class="mb-20">Aproveite! A Oferta Termina Em:</p>
+                        <div class="deals-countdown pl-5" data-countdown="2025/03/25 00:00:00">
+                            <span class="countdown-section"><span class="countdown-amount hover-up">03</span><span class="countdown-period"> dias </span></span><span class="countdown-section"><span class="countdown-amount hover-up">02</span><span class="countdown-period"> horas </span></span><span class="countdown-section"><span class="countdown-amount hover-up">43</span><span class="countdown-period"> mins </span></span><span class="countdown-section"><span class="countdown-amount hover-up">29</span><span class="countdown-period"> seg </span></span>
+                        </div>
+                        <div class="product-detail-rating">
+                            <div class="product-rate-cover text-end">
+                                <div class="product-rate d-inline-block">
+                                    <div class="product-rating" style="width: 90%"></div>
+                                </div>
+                                <span class="font-small ml-5 text-muted"> (32 reviews)</span>
+                            </div>
+                        </div>
+                        <a href="shop-grid-right.html" class="btn hover-up">Compre Agora <i class="fi-rs-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <main class="main">
     <div class="container mb-30">
         <div class="row flex-row-reverse">
@@ -431,18 +473,22 @@
                         {% for p in produtos|slice:":3" %}
                         <div class="col-xl-4 col-lg-4 col-md-6">
                             <div class="product-cart-wrap style-2">
-
                                 <div class="product-img-action-wrap">
                                     <div class="product-img">
-                                        <a href="shop-product-right.html">
-                                            <img src="{% static 'assets/imgs/banner/banner-5.png' %}" alt="" />
+                                        <a href="{% url 'core:product-detail' p.pid %}">
+                                             <img src="{{p.imagem.url}}" alt="" style="aspect-ratio: 4/3; object-fit: cover;" />
                                         </a>
                                     </div>
                                 </div>
-                                <div class="product-content-wrap">
-                                    <div class="deals-countdown-wrap">
-                                        <div class="deals-countdown" data-countdown="{{p.fim_promocao}}"></div>
-                                    </div>
+                                    <div class="product-content-wrap">
+                                        {% if p.fim_promocao %}
+                                        <div class="deals-countdown" id="contador-{{ p.id }}" data-fim="{{ p.fim_promocao_timestamp }}">
+                                            <span class="countdown-section"><span class="countdown-amount">00</span><span class="countdown-period"> dias </span></span>
+                                            <span class="countdown-section"><span class="countdown-amount">00</span><span class="countdown-period"> horas </span></span>
+                                            <span class="countdown-section"><span class="countdown-amount">00</span><span class="countdown-period"> min </span></span>
+                                            <span class="countdown-section"><span class="countdown-amount">00</span><span class="countdown-period"> seg </span></span>
+                                        </div>
+                                        {% endif %}
                                     <div class="deals-content">
                                         <h2><a href="shop-product-right.html">{{p.titulo}}</a>
                                         </h2>
@@ -876,4 +922,43 @@
     </section>
     <!--End 4 columns-->
 </main>
+
+<script>
+function iniciarContadores() {
+  document.querySelectorAll(".deals-countdown").forEach(function (elemento) {
+    var fimPromocao = parseInt(elemento.getAttribute("data-fim")) * 1000;
+
+    function atualizarContador() {
+      var agora = new Date().getTime();
+      var tempoRestante = fimPromocao - agora;
+
+      if (tempoRestante <= 0) {
+        elemento.innerHTML =
+          "<span class='countdown-ended'>Promoção encerrada!</span>";
+        clearInterval(intervalo);
+        return;
+      }
+
+      var dias = Math.floor(tempoRestante / (1000 * 60 * 60 * 24));
+      var horas = Math.floor(
+        (tempoRestante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      );
+      var minutos = Math.floor(
+        (tempoRestante % (1000 * 60 * 60)) / (1000 * 60),
+      );
+      var segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+
+      elemento.innerHTML = `
+                <span class="countdown-section"><span class="countdown-amount">${dias}</span><span class="countdown-period"> dias </span></span>
+                <span class="countdown-section"><span class="countdown-amount">${horas}</span><span class="countdown-period"> horas </span></span>
+                <span class="countdown-section"><span class="countdown-amount">${minutos}</span><span class="countdown-period"> min </span></span>
+                <span class="countdown-section"><span class="countdown-amount">${segundos}</span><span class="countdown-period"> seg </span></span>
+            `;
+    }
+    atualizarContador();
+    var intervalo = setInterval(atualizarContador, 1000);
+  });
+}
+document.addEventListener("DOMContentLoaded", iniciarContadores);
+</script>
 {% endblock content %}
