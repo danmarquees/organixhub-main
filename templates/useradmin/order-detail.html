@@ -74,13 +74,16 @@
                             <h6 class="mb-1">Info do Pedido</h6>
                             <p class="mb-1">
                                 Entrega: {{order.metodo_entrega}} <br />
-                                ID de Rastreamento: {{order.id_rastreamento}}
+                                ID de Rastreamento: 
+                                {{order.id_rastreamento}}
                                 <br />
                                 Status do Pgto.: 
                                 {% if order.satus_pagamento == True %} 
                                 Não Pago<br />
                                 {% else%} Pago<br />
-                                {% endif%} Status: {{order.status_produto}}
+                                {% endif%} 
+                                Status: 
+                                {{order.status_produto}}
                             </p>
                             <a href="#">Baixar info</a>
                         </div>
@@ -144,21 +147,24 @@
                                     <td class="text-end">${{item.total}}</td>
                                 </tr>
                                 {% endfor %}
+
                                 <tr>
                                     <td colspan="4">
                                         <article class="float-end">
                                             <dl class="dlist">
                                                 <dt>Subtotal:</dt>
-                                                <dd>R$973.35</dd>
+                                                <dd>R$ {{order.subtotal}}</dd>
                                             </dl>
                                             <dl class="dlist">
                                                 <dt>Frete:</dt>
-                                                <dd>$10.00</dd>
+                                                <dd>R$ {{order.frete}}</dd>
                                             </dl>
                                             <dl class="dlist">
                                                 <dt>Total Final:</dt>
                                                 <dd>
-                                                    <b class="h5">R$983.00</b>
+                                                    <b class="h5"
+                                                        >R${{order.total}}</b
+                                                    >
                                                 </dd>
                                             </dl>
                                             <dl class="dlist">
@@ -168,8 +174,8 @@
                                                 <dd>
                                                     <span
                                                         class="badge rounded-pill alert-success text-success"
-                                                        >Pago</span
-                                                    >
+                                                        >Pago
+                                                    </span>
                                                 </dd>
                                             </dl>
                                         </article>
