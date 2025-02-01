@@ -24,11 +24,11 @@
                     <select
                         class="form-select d-inline-block mb-lg-0 mr-5 mw-200"
                     >
-                        <option>Change status</option>
-                        <option>Awaiting payment</option>
-                        <option>Confirmed</option>
-                        <option>Shipped</option>
-                        <option>Delivered</option>
+                        <option>Alterar status</option>
+                        <option>Aguardando pagamento</option>
+                        <option>Confirmado</option>
+                        <option>Enviado</option>
+                        <option>Entregue</option>
                     </select>
                     <a class="btn btn-primary" href="#">Save</a>
                     <a class="btn btn-secondary print ms-2" href="#"
@@ -76,7 +76,8 @@
                                 Entrega: {{order.metodo_entrega}} <br />
                                 ID de Rastreamento: {{order.id_rastreamento}}
                                 <br />
-                                Status do Pgto.: {% if order.satus_pagamento == True %} 
+                                Status do Pgto.: 
+                                {% if order.satus_pagamento == True %} 
                                 Não Pago<br />
                                 {% else%} Pago<br />
                                 {% endif%} Status: {{order.status_produto}}
@@ -121,27 +122,59 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for o in orders %}
+                                {% for item in order_items %}
                                 <tr>
                                     <td>
                                         <a class="itemside" href="#">
                                             <div class="left">
                                                 <img
-                                                    src="{{o.imagem}}"
+                                                    src="{{item.imagem.url}}"
                                                     width="40"
                                                     height="40"
                                                     class="img-xs"
-                                                    alt="Item"
                                                 />
                                             </div>
-                                            <div class="info">{{o.titulo}}</div>
+                                            <div class="info">
+                                                {{item.item}}
+                                            </div>
                                         </a>
                                     </td>
-                                    <td>${{o.preco}}</td>
-                                    <td>{{o.qtd}}</td>
-                                    <td class="text-end">${{o.total}}</td>
+                                    <td>R${{item.preco}}</td>
+                                    <td>{{item.qtd}}</td>
+                                    <td class="text-end">${{item.total}}</td>
                                 </tr>
                                 {% endfor %}
+                                <tr>
+                                    <td colspan="4">
+                                        <article class="float-end">
+                                            <dl class="dlist">
+                                                <dt>Subtotal:</dt>
+                                                <dd>R$973.35</dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt>Frete:</dt>
+                                                <dd>$10.00</dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt>Total Final:</dt>
+                                                <dd>
+                                                    <b class="h5">R$983.00</b>
+                                                </dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt class="text-muted">
+                                                    Status:
+                                                </dt>
+                                                <dd>
+                                                    <span
+                                                        class="badge rounded-pill alert-success text-success"
+                                                        >Pago</span
+                                                    >
+                                                </dd>
+                                            </dl>
+                                        </article>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -151,7 +184,7 @@
                 <div class="col-lg-1"></div>
                 <div class="col-lg-4">
                     <div class="box shadow-sm bg-light">
-                        <h6 class="mb-15">Payment info</h6>
+                        <h6 class="mb-15">Inform. Pgto.</h6>
                         <p>
                             <img
                                 src="assets/imgs/card-brands/2.png"
