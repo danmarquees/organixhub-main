@@ -186,7 +186,11 @@
                                         <a aria-label="Visualização Rápida" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
                                     </div>
                                     <div class="product-badges product-badges-position product-badges-mrg">
-                                        <span class="hot">{{ p.obter_porcentagem }}</span>
+                                        {% with p.obter_porcentagem as desconto %}
+                                        {% if desconto and desconto != "0%" %}
+                                        <span class="hot">{{ p.obter_porcentagem }} de Desconto</span>
+                                        {% endif %}
+                                        {% endwith %}
                                     </div>
                                 </div>
                                 <div class="product-content-wrap">
@@ -207,7 +211,9 @@
                                         <div class="product-price">
                                             <span>R$</span><span class="current-product-price-{{ p.id }}">{{ p.preco }}</span>
                                             <br>
+                                            {% if p.preco_antigo %}
                                             <span class="old-price">R$ {{ p.preco_antigo }}</span>
+                                            {% endif %}
                                         </div>
                                         <div class="add-cart">
                                             <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.id }}">

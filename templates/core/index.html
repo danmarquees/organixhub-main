@@ -292,8 +292,10 @@
                                             <div class="product-card-bottom">
                                                 <div class="product-price">
                                                     <span>R$</span><span class="current-product-price-{{ p.id }}">{{ p.preco }}</span>
+                                                    {% if p.preco_antigo %}
                                                     <br>
                                                     <span class="old-price">R$ {{ p.preco_antigo }}</span>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="progress">
                                                 <span class="progress-bar" role="progressbar" style="width: {{ p.qtd_estoque }}%;" aria-valuenow="{{ p.qtd_vendida }}" aria-valuemin="0" aria-valuemax="100">{{ p.qtd_vendida }}% vendido</span>
@@ -423,9 +425,13 @@
                                                             <a aria-label="Vsualização Rápida" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal{{p.pid}}" href="{% url 'core:product-detail' p.pid %}"> <i class="fi-rs-eye"></i></a>
                                                             <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                                         </div>
+                                                        {% with p.obter_porcentagem as desconto %}
+                                                        {% if desconto and desconto != "0%" %}
                                                         <div class="product-badges product-badges-position product-badges-mrg">
                                                             <span class="hot">Economize {{p.obter_porcentagem}}</span>
                                                         </div>
+                                                        {% endif %}
+                                                        {% endwith %}
                                                     </div>
                                                     <div class="product-content-wrap">
                                                         <div class="product-category">
@@ -437,7 +443,9 @@
                                                         </div>
                                                         <div class="product-price mt-10">
                                                             <span>R${{p.preco}} </span>
+                                                            {% if p.preco_antigo %}
                                                             <span class="old-price">R${{p.preco_antigo}}</span>
+                                                            {% endif %}
                                                         </div>
                                                         <div class="sold mt-15 mb-15">
                                                             <div class="progress mb-5">
@@ -513,7 +521,9 @@
                                         <div class="product-card-bottom">
                                             <div class="product-price">
                                                 <span>R${{p.preco}}</span>
+                                                {% if p.preco_antigo %}
                                                 <span class="old-price">R${{p.preco_antigo}}</span>
+                                                {% endif %}
                                             </div>
                                             <div class="add-cart">
                                                 <a class="add" href="shop-cart.html"><i
