@@ -119,8 +119,7 @@ def order_detail(request, id):
 def change_order_status(request, id):
     from django.shortcuts import get_object_or_404, redirect
     from django.http import Http404
-    from django.contrib import messages
-
+    from django.db import models
     try:
         order = get_object_or_404(PedidoCarrinho, orderid=id)
     except Http404:
@@ -129,7 +128,8 @@ def change_order_status(request, id):
 
     if request.method == 'POST':
         status = request.POST.get("status")
-        if status and status in dict(PedidoCarrinho.STATUS_CHOICES):
+
+        if status in dict(PedidoCarrinho._meta.get_field('status_produto').choices):
             order.status_produto = status
             order.save()
             messages.success(request, f"Status do Pedido Alterado para {order.get_status_produto_display()}")
@@ -137,4 +137,4 @@ def change_order_status(request, id):
             messages.error(request, "Status inválido. Por favor, selecione um status da lista.")
             return redirect('useradmin:order_detail', id)
 
-    return redirect('useradmin:order_detail', id)
+    return redirect('useradmin:order-detail', id)

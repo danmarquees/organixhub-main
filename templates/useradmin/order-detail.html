@@ -23,7 +23,7 @@
 
                 <form
                     method="POST"
-                    action="{% url 'useradmin:change_order_status' order.id %}"
+                    action="{% url 'useradmin:change_order_status' order.orderid %}"
                     class="col-lg-6 col-md-6 ms-auto text-md-end"
                 >
                     {% csrf_token %}
@@ -82,7 +82,8 @@
                                 ID de Rastreamento: {{order.id_rastreamento}}
                                 <br />
                                 Status do Pgto.: 
-                                {% if order.satus_pagamento == True %} Não Pago<br />
+                                {% if order.satus_pagamento == True %} 
+                                Não Pago<br />
                                 {% else%} Pago<br />
                                 {% endif%} Status: {{order.status_produto}}
                             </p>
