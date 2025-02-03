@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from core.models import Produto, Categoria, PedidoCarrinho
 from django.db.models import Sum
 from userauths.models import User
 import datetime
 from useradmin.forms import AddProductForm
-from django.shortcuts import redirect
 from core.models import ItensPedidoCarrinho
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -101,6 +102,7 @@ def orders(request):
     return render(request, "useradmin/orders.html", context)
 
 
+@csrf_exempt
 def order_detail(request, id):
     order = PedidoCarrinho.objects.get(orderid=id)
     order_items = ItensPedidoCarrinho.objects.filter(pedido=order)
@@ -111,3 +113,28 @@ def order_detail(request, id):
     }
 
     return render(request, "useradmin/order-detail.html", context)
+
+
+@csrf_exempt
+def change_order_status(request, id):
+    from django.shortcuts import get_object_or_404, redirect
+    from django.http import Http404
+    from django.contrib import messages
+
+    try:
+        order = get_object_or_404(PedidoCarrinho, orderid=id)
+    except Http404:
+        messages.error(request, "Pedido não encontrado.")
+        return redirect('useradmin:orders')
+
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        if status and status in dict(PedidoCarrinho.STATUS_CHOICES):
+            order.status_produto = status
+            order.save()
+            messages.success(request, f"Status do Pedido Alterado para {order.get_status_produto_display()}")
+        else:
+            messages.error(request, "Status inválido. Por favor, selecione um status da lista.")
+            return redirect('useradmin:order_detail', id)
+
+    return redirect('useradmin:order_detail', id)

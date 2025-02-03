@@ -235,7 +235,7 @@ class PedidoCarrinho(models.Model):
     cep = models.CharField(max_length=9, null=True)
 
     status_pagamento = models.BooleanField(default=False) # Campo booleano indicando se o pagamento foi feito, padrão False.
-    sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="sku", alphabet="1234567890") # Campo ShortUUID para SKU, não único.
+    sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="SKU", alphabet="1234567890") # Campo ShortUUID para SKU, não único.
     orderid = ShortUUIDField(unique=False, length=4, max_length=10, alphabet="1234567890") # Campo ShortUUID para ID do pedido, não único.
 
     preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99) # Preço total do pedido, padrão 1.99.
@@ -361,6 +361,7 @@ class PedidoCarrinho(models.Model):
 
 class ItensPedidoCarrinho(models.Model):
     pedido = models.ForeignKey(PedidoCarrinho, on_delete=models.CASCADE)
+    orderid = ShortUUIDField(unique=False, length=4, max_length=10, alphabet="1234567890")
     num_fatura = models.CharField(max_length=255, blank=True, null=True)
     status_produto = models.CharField(max_length=200)
     item = models.ForeignKey(Produto, on_delete=models.CASCADE, null=True, related_name="itens_pedido")
