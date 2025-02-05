@@ -97,19 +97,16 @@
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-sellers-cards.html">
+                        <a
+                            class="menu-link"
+                            href="{% url 'useradmin:shop_page' %}"
+                        >
                             <i class="icon material-icons md-store"></i>
-                            <span class="text">Vendedores</span>
+                            <span class="text">Loja</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-sellers-cards.html"
-                                >Cartões de Vendedores</a
-                            >
-                            <a href="page-sellers-list.html"
-                                >Lista de Vendedores</a
-                            >
-                            <a href="page-seller-detail.html"
-                                >Perfil do Vendedor</a
+                            <a href="{% url 'useradmin:shop_page' %}"
+                                >Página Principal</a
                             >
                         </div>
                     </li>
@@ -161,7 +158,10 @@
                         </div>
                     </li>
                     <li class="menu-item">
-                        <a class="menu-link" href="page-reviews.html">
+                        <a
+                            class="menu-link"
+                            href="{% url 'useradmin:reviews' %}"
+                        >
                             <i class="icon material-icons md-comment"></i>
                             <span class="text">Avaliações</span>
                         </a>

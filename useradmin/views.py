@@ -4,7 +4,7 @@ from django.db.models import Sum
 from userauths.models import User
 import datetime
 from useradmin.forms import AddProductForm
-from core.models import ItensPedidoCarrinho
+from core.models import ItensPedidoCarrinho, AvaliacaoProduto
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 
@@ -138,3 +138,28 @@ def change_order_status(request, id):
             return redirect('useradmin:order_detail', id)
 
     return redirect('useradmin:order-detail', id)
+
+
+def shop_page(request):
+    products = Produto.objects.all()
+    revenue = PedidoCarrinho.objects.aggregate(price=Sum("preco"))
+    total_sales = ItensPedidoCarrinho.objects.filter(pedido__status_produto=True).aggregate(qtd=Sum("qtd"))
+
+    context = {
+        "products": products,
+        "revenue": revenue,
+        "total_sales": total_sales,
+    }
+
+    return render(request, "useradmin/shop-page.html", context)
+
+
+
+def reviews(request):
+    reviews = AvaliacaoProduto.objects.all()
+
+    context = {
+        "reviews": reviews,
+    }
+
+    return render(request, "useradmin/reviews.html", context)

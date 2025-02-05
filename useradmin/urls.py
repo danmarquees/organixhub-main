@@ -12,4 +12,6 @@ urlpatterns = [
     path("pedidos/", views.orders, name="orders"),
     path("detalhes-pedido/<id>/", views.order_detail, name="order-detail"),
     path("change_order_status/<id>/", views.change_order_status, name="change_order_status"),
+    path("shop-page/", views.shop_page, name="shop_page"),
+    path("reviews/", views.reviews, name="reviews"),
 ]
