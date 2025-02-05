@@ -648,7 +648,7 @@ logger = logging.getLogger(__name__)
 @login_required
 def save_delivery_details(request):
     """
-    Saves the delivery details AND cart items to the PedidoCarrinho object using AJAX.
+    Saves the delivery details to the PedidoCarrinho object using AJAX.
     """
     if request.method == 'POST':
         try:
@@ -664,6 +664,8 @@ def save_delivery_details(request):
             cep = request.POST.get('cep')
             numero = request.POST.get('numero')
             celular = request.POST.get('celular')
+            informacoes_adicionais = request.POST.get('informacoes_adicionais', '')
+
 
             # Get the cart data from the session
             cart_data = request.session.get('cart_data_obj', {})
@@ -696,6 +698,7 @@ def save_delivery_details(request):
                     'estado': uf,
                     'cep': cep,
                     'preco': cart_total_amount,  # Save cart total amount to the order
+                    'informacoes_adicionais': informacoes_adicionais,
                 }
             )
 
@@ -708,34 +711,9 @@ def save_delivery_details(request):
                 order.cidade = localidade
                 order.estado = uf
                 order.cep = cep
+                order.informacoes_adicionais = informacoes_adicionais
                 order.preco = cart_total_amount # Update price
                 order.save()
-
-            # Clear existing items before re-adding them
-            ItensPedidoCarrinho.objects.filter(pedido=order).delete()
-
-            # Add the items to the order
-            for product_id, item in cart_data.items():
-                try:
-                    produto = Produto.objects.get(pk=product_id)
-                    ItensPedidoCarrinho.objects.create(
-                        pedido=order,
-                        num_fatura=order.num_fatura,
-                        status_produto=order.status_produto,
-                        item=produto,
-                        imagem=item['image'],
-                        qtd=item['qty'],
-                        preco=item['price'],
-                        total=item['price'] * item['qty'],
-                    )
-                except Produto.DoesNotExist:
-                    logger.error(f"Product with ID {product_id} not found during order creation.")
-                    return JsonResponse({'success': False, 'message': f'Produto com ID {product_id} não encontrado.'},
-                                        status=500)
-                except Exception as e:
-                    logger.exception(f"Error creating order item for product {product_id}: {e}")
-                    return JsonResponse({'success': False, 'message': f'Erro ao criar item para produto {product_id}: {e}'},
-                                        status=500)
 
             # Create or update the Endereco model
             try:
@@ -777,8 +755,6 @@ def save_delivery_details(request):
                                 status=500)
     else:
         return JsonResponse({'success': False, 'message': 'Método de requisição inválido'}, status=400)
-
-
 
 @login_required
 def pagamento_efetuado(request):
@@ -847,7 +823,6 @@ def pagamento_efetuado(request):
 
     return render(request, 'core/payment-completed.html')
 
-
 @login_required
 def create_checkout_session(request, oid):
     if request.method != 'POST':
@@ -894,78 +869,6 @@ def create_checkout_session(request, oid):
         logger.exception(e)
         return JsonResponse({'error': f'Erro inesperado: {e}'}, status=500)
 
-@login_required
-def save_checkout_info(request):
-    if request.method == 'POST':
-        nome = request.POST.get('nome')
-        email = request.POST.get('email')
-        telefone = request.POST.get('telefone')
-        cep = request.POST.get('cep')
-        logradouro = request.POST.get('logradouro')
-        complemento = request.POST.get('complemento')
-        bairro = request.POST.get('bairro')
-        localidade = request.POST.get('localidade')
-        uf = request.POST.get('uf')
-        numero = request.POST.get('numero')
-        celular = request.POST.get('celular')
-
-        try:
-            # Attempt to get or create the PedidoCarrinho instance
-            order, created = PedidoCarrinho.objects.get_or_create(
-                user=request.user,
-                status_pagamento=False,
-                defaults={
-                    'nome': nome,
-                    'email': email,
-                    'telefone': telefone,
-                    'endereco': logradouro,
-                    'cidade': localidade,
-                    'estado': uf,
-                    'cep': cep,
-                    'preco': Decimal('0.00'),  # Initialize price to zero
-                    'data_pedido': timezone.now(),
-                }
-            )
-
-            # If the order already existed, update its fields
-            if not created:
-                order.nome = nome
-                order.email = email
-                order.telefone = telefone
-                order.endereco = logradouro
-                order.cidade = localidade
-                order.estado = uf
-                order.cep = cep
-                order.save()
-
-            # Create or update address
-            address_data = {
-                'cep': cep,
-                'logradouro': logradouro,
-                'complemento': complemento,
-                'bairro': bairro,
-                'localidade': localidade,
-                'uf': uf,
-                'numero': numero,
-                'celular': celular,
-                'user': request.user,
-                'status': False,
-            }
-            try:
-                address, created = Endereco.objects.get_or_create(user=request.user, status=False, defaults=address_data)
-                if not created:
-                    for key, value in address_data.items():
-                        setattr(address, key, value)
-                    address.save()
-            except Exception as e:
-                return JsonResponse({'success': False, 'message': f'Erro ao criar/atualizar o endereço: {str(e)}'}, status=500)
-
-            return JsonResponse({'success': True, 'message': 'Informações de checkout salvas com sucesso!'})
-        except Exception as e:
-            logger.exception("Error saving checkout information")
-            return JsonResponse({'success': False, 'message': f'Erro ao salvar informações de checkout: {str(e)}'}, status=500)
-    else:
-        return JsonResponse({'success': False, 'message': 'Método de requisição inválido'}, status=405)
 
 
 @login_required

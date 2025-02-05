@@ -252,6 +252,8 @@ class PedidoCarrinho(models.Model):
     impostos = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) # Valor dos impostos, padrão 0.00.
     taxas = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) # Valor das taxas, padrão 0.00.
 
+    informacoes_adicionais = models.TextField(blank=True, null=True)  # New field for additional information
+
 
     class Meta:
         verbose_name_plural = "Pedidos"
