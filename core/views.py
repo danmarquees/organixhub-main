@@ -532,6 +532,7 @@ def checkout(request):
     errors = []
     cart_data = request.session.get('cart_data_obj', {})  # Obtém o carrinho da sessão
     cart_data_formatted = {}
+    order = None
 
     # Processa os itens no carrinho para cálculo do total
     for p_id, item in cart_data.items():
@@ -577,8 +578,8 @@ def checkout(request):
             # Adiciona os itens do carrinho ao pedido
             for product_id, item in cart_data.items():
                 try:
-                    produto = models.Produto.objects.get(pk=product_id)
-                    models.ItensPedidoCarrinho.objects.create(
+                    produto = Produto.objects.get(pk=product_id)
+                    ItensPedidoCarrinho.objects.create(
                         pedido=order,
                         num_fatura=order.num_fatura,
                         status_produto=order.status_produto,
@@ -588,7 +589,7 @@ def checkout(request):
                         preco=item['price'],
                         total=item['price'] * item['qty'],
                     )
-                except models.Produto.DoesNotExist:
+                except Produto.DoesNotExist:
                     logger.error(f"Product with ID {product_id} not found during order creation.")  # Log the error
                     errors.append(f"Produto com ID {product_id} não encontrado.")
                 except Exception as e:
@@ -605,11 +606,11 @@ def checkout(request):
             messages.warning(request, "Por favor, insira um código de cupom.")
             return redirect("core:checkout")
         try:
-            coupon = models.Coupon.objects.get(codigo=codigo, ativo=True)
+            coupon = Coupon.objects.get(codigo=codigo, ativo=True)
             if order: #check if order exists before applying coupon
                 order.apply_coupon(coupon)  # Aplica o cupom ao pedido
             messages.success(request, f"Cupom '{codigo}' aplicado com sucesso!")
-        except models.Coupon.DoesNotExist:
+        except Coupon.DoesNotExist:
             messages.warning(request, "Cupom inválido ou inativo.")
         except ValueError as ve:
             messages.warning(request, str(ve))
@@ -620,6 +621,11 @@ def checkout(request):
     # Configurações do PayPal
     final_amount = cart_total_amount #added this line to solve undefined variable error
 
+    if order:
+            oid = order.pk
+    else:
+        oid = ''
+
 
     # Contexto para o template
     context = {
@@ -628,73 +634,219 @@ def checkout(request):
         "cart_total_amount": "{:.2f}".format(cart_total_amount),
         "final_amount": "{:.2f}".format(final_amount),
         "order": order,
+        "oid": oid,
         "errors": errors,
         "stripe_publishable_key": settings.STRIPE_PUBLIC_KEY,
     }
 
     return render(request, "core/checkout.html", context)
 
+
 import uuid
 import logging
 logger = logging.getLogger(__name__)
 @login_required
-def pagamento_efetuado(request):
-    if 'cart_data_obj' in request.session:
-        cart_data = request.session['cart_data_obj']
+def save_delivery_details(request):
+    """
+    Saves the delivery details AND cart items to the PedidoCarrinho object using AJAX.
+    """
+    if request.method == 'POST':
+        try:
+            # Retrieve delivery details from the POST request
+            nome = request.POST.get('nome')
+            email = request.POST.get('email')
+            telefone = request.POST.get('telefone')
+            logradouro = request.POST.get('logradouro')
+            complemento = request.POST.get('complemento')
+            bairro = request.POST.get('bairro')
+            localidade = request.POST.get('localidade')
+            uf = request.POST.get('uf')
+            cep = request.POST.get('cep')
+            numero = request.POST.get('numero')
+            celular = request.POST.get('celular')
 
-        # Calcula o preço total ANTES de criar o PedidoCarrinho
-        cart_total_amount = Decimal('0.00')
-        for product_id, item in cart_data.items():
+            # Get the cart data from the session
+            cart_data = request.session.get('cart_data_obj', {})
+
+            # Calculate the total price based on the cart data
+            cart_total_amount = Decimal('0.00')
+            for product_id, item in cart_data.items():
+                try:
+                    qty = int(item['qty'])
+                    price = Decimal(str(item['price']))
+                    if qty <= 0 or price <= 0:
+                        logger.warning(f"Invalid item in cart: {item}")
+                        continue
+                    cart_total_amount += qty * price
+                except (ValueError, TypeError, KeyError) as e:
+                    logger.error(f"Error processing cart item {item}: {e}")
+                    return JsonResponse({'success': False, 'message': 'Erro ao processar os itens do carrinho.'},
+                                        status=500)
+
+            # Get or create the PedidoCarrinho object
+            order, created = PedidoCarrinho.objects.get_or_create(
+                user=request.user,
+                status_pagamento=False,
+                defaults={
+                    'nome': nome,
+                    'email': email,
+                    'telefone': telefone,
+                    'endereco': f"{logradouro}, {numero or ''}, {complemento or ''}, {bairro}, {localidade} - {uf}, CEP: {cep}",
+                    'cidade': localidade,
+                    'estado': uf,
+                    'cep': cep,
+                    'preco': cart_total_amount,  # Save cart total amount to the order
+                }
+            )
+
+            if not created:
+                # If the order already existed, update its attributes
+                order.nome = nome
+                order.email = email
+                order.telefone = telefone
+                order.endereco = f"{logradouro}, {numero or ''}, {complemento or ''}, {bairro}, {localidade} - {uf}, CEP: {cep}"
+                order.cidade = localidade
+                order.estado = uf
+                order.cep = cep
+                order.preco = cart_total_amount # Update price
+                order.save()
+
+            # Clear existing items before re-adding them
+            ItensPedidoCarrinho.objects.filter(pedido=order).delete()
+
+            # Add the items to the order
+            for product_id, item in cart_data.items():
+                try:
+                    produto = Produto.objects.get(pk=product_id)
+                    ItensPedidoCarrinho.objects.create(
+                        pedido=order,
+                        num_fatura=order.num_fatura,
+                        status_produto=order.status_produto,
+                        item=produto,
+                        imagem=item['image'],
+                        qtd=item['qty'],
+                        preco=item['price'],
+                        total=item['price'] * item['qty'],
+                    )
+                except Produto.DoesNotExist:
+                    logger.error(f"Product with ID {product_id} not found during order creation.")
+                    return JsonResponse({'success': False, 'message': f'Produto com ID {product_id} não encontrado.'},
+                                        status=500)
+                except Exception as e:
+                    logger.exception(f"Error creating order item for product {product_id}: {e}")
+                    return JsonResponse({'success': False, 'message': f'Erro ao criar item para produto {product_id}: {e}'},
+                                        status=500)
+
+            # Create or update the Endereco model
             try:
-                qty = int(item['qty'])
-                price = Decimal(str(item['price']))
-                if qty <= 0 or price <= 0:
-                    logger.warning(f"Invalid item in cart: {item}")
-                    continue
-                cart_total_amount += qty * price
-            except (ValueError, TypeError, KeyError) as e:
-                logger.error(f"Error processing cart item {item}: {e}")
-
-        order = PedidoCarrinho.objects.create(
-            user=request.user,
-            nome=request.POST.get('nome'),
-            email=request.POST.get('email'),
-            telefone=request.POST.get('telefone'),
-            endereco=request.POST.get('endereco'),
-            cidade=request.POST.get('cidade'),
-            estado=request.POST.get('estado'),
-            preco=cart_total_amount,  # Preço total calculado corretamente
-            status_pagamento=True,
-            data_pedido=timezone.now(),
-            payment_date=timezone.now(),
-            metodo_entrega=request.POST.get('metodo_entrega', 'delivery'),
-            impostos=Decimal(request.POST.get('impostos', '0.00')),
-            taxas=Decimal(request.POST.get('taxas', '0.00'))
-        )
-
-        # Adiciona os itens do carrinho ao pedido APÓS criar o PedidoCarrinho
-        for product_id, item in cart_data.items():
-            try:
-                produto = models.Produto.objects.get(pk=product_id) # Obtem o objeto Produto
-                models.ItensPedidoCarrinho.objects.create(
-                    pedido=order,
-                    num_fatura=order.num_fatura,
-                    status_produto=order.status_produto,
-                    item=produto, # Usa o objeto Produto, e não só o título
-                    imagem=item['image'],
-                    qtd=item['qty'],
-                    preco=item['price'],
-                    total=item['price'] * item['qty'],
+                address, created = Endereco.objects.get_or_create(
+                    user=request.user,
+                    status=False,
+                    defaults={
+                        'cep': cep,
+                        'logradouro': logradouro,
+                        'complemento': complemento,
+                        'bairro': bairro,
+                        'localidade': localidade,
+                        'uf': uf,
+                        'numero': numero,
+                        'celular': celular,
+                    }
                 )
-            except models.Produto.DoesNotExist:
-                logger.error(f"Product with ID {product_id} not found during order creation.")
-            except Exception as e:
-                logger.exception(f"Error creating order item for product {product_id}: {e}")
 
-        del request.session['cart_data_obj']
-        request.session.modified = True
+                if not created:
+                    address.cep = cep
+                    address.logradouro = logradouro
+                    address.complemento = complemento
+                    address.bairro = bairro
+                    address.localidade = localidade
+                    address.uf = uf
+                    address.numero = numero
+                    address.celular = celular
+                    address.save()
+            except Exception as e:
+                logger.error(f"Error creating or updating Endereco: {e}")
+                return JsonResponse({'success': False, 'message': f'Erro ao criar/atualizar o endereço: {str(e)}'},
+                                    status=500)
+
+            return JsonResponse({'success': True, 'message': 'Detalhes da entrega e informações do pedido salvos com sucesso!'})
+
+        except Exception as e:
+            logger.exception("Erro ao salvar os detalhes da entrega e informações do pedido:")
+            return JsonResponse({'success': False, 'message': f'Erro ao salvar os detalhes da entrega e informações do pedido: {str(e)}'},
+                                status=500)
+    else:
+        return JsonResponse({'success': False, 'message': 'Método de requisição inválido'}, status=400)
+
+
+
+@login_required
+def pagamento_efetuado(request):
+    """
+    Handles the successful payment scenario, finalizes the order, and clears the cart.
+
+    This view *only* handles payment confirmation and order finalization.  It assumes delivery
+    details have *already* been saved to the PedidoCarrinho object.
+    """
+    if 'cart_data_obj' not in request.session:
+        logger.warning("Cart data not found in session. Redirecting to index.")
+        return redirect("core:index")
+
+    cart_data = request.session['cart_data_obj']
+
+    # Get the existing PedidoCarrinho instance
+    try:
+        order = PedidoCarrinho.objects.get(user=request.user, status_pagamento=False)
+    except PedidoCarrinho.DoesNotExist:
+        logger.error("PedidoCarrinho not found for user.")
+        return render(request, 'core/payment-failed.html', {'error': 'Pedido não encontrado.  Tente novamente.'})
+
+    # Calculate total price based on the existing cart data
+    cart_total_amount = Decimal('0.00')
+    for product_id, item in cart_data.items():
+        try:
+            qty = int(item['qty'])
+            price = Decimal(str(item['price']))
+            if qty <= 0 or price <= 0:
+                logger.warning(f"Invalid item in cart: {item}")
+                continue
+            cart_total_amount += qty * price
+        except (ValueError, TypeError, KeyError) as e:
+            logger.error(f"Error processing cart item {item}: {e}")
+            return render(request, 'core/payment-failed.html',
+                          {'error': 'Erro ao processar os itens do carrinho.'})  # Return early on error
+
+    # Update the order with the cart total amount and mark as paid
+    order.preco = cart_total_amount
+    order.status_pagamento = True
+    order.payment_date = timezone.now()
+    order.save()
+
+    # Add the items to the order
+    for product_id, item in cart_data.items():
+        try:
+            produto = Produto.objects.get(pk=product_id)
+            ItensPedidoCarrinho.objects.create(
+                pedido=order,
+                num_fatura=order.num_fatura,
+                status_produto=order.status_produto,
+                item=produto,
+                imagem=item['image'],
+                qtd=item['qty'],
+                preco=item['price'],
+                total=item['price'] * item['qty'],
+            )
+        except Produto.DoesNotExist:
+            logger.error(f"Product with ID {product_id} not found during order creation.")
+            # Handle the error; maybe remove the item from the cart or display an error message.
+            # The order should not be completely deleted here.
+
+    # Clear the cart data from the session
+    del request.session['cart_data_obj']
+    request.session.modified = True
 
     return render(request, 'core/payment-completed.html')
+
 
 @login_required
 def create_checkout_session(request, oid):
@@ -757,23 +909,33 @@ def save_checkout_info(request):
         numero = request.POST.get('numero')
         celular = request.POST.get('celular')
 
-
         try:
-            order = PedidoCarrinho.objects.filter(user=request.user, status_pagamento=False).order_by('-data_pedido').first()
-            if not order:
-                order = PedidoCarrinho.objects.create(
-                    user=request.user,
-                    nome=nome,
-                    email=email,
-                    telefone=telefone,
-                    preco=Decimal('0.00'), # Initialize price to zero
-                    status_pagamento=False,
-                    data_pedido=timezone.now(),
-                )
-            else:
+            # Attempt to get or create the PedidoCarrinho instance
+            order, created = PedidoCarrinho.objects.get_or_create(
+                user=request.user,
+                status_pagamento=False,
+                defaults={
+                    'nome': nome,
+                    'email': email,
+                    'telefone': telefone,
+                    'endereco': logradouro,
+                    'cidade': localidade,
+                    'estado': uf,
+                    'cep': cep,
+                    'preco': Decimal('0.00'),  # Initialize price to zero
+                    'data_pedido': timezone.now(),
+                }
+            )
+
+            # If the order already existed, update its fields
+            if not created:
                 order.nome = nome
                 order.email = email
                 order.telefone = telefone
+                order.endereco = logradouro
+                order.cidade = localidade
+                order.estado = uf
+                order.cep = cep
                 order.save()
 
             # Create or update address
@@ -790,23 +952,25 @@ def save_checkout_info(request):
                 'status': False,
             }
             try:
-                address = Endereco.objects.get(user=request.user, status=False)
-                for key, value in address_data.items():
-                    setattr(address, key, value)
-                address.save()
-            except Endereco.DoesNotExist:
-                address = Endereco.objects.create(**address_data)
+                address, created = Endereco.objects.get_or_create(user=request.user, status=False, defaults=address_data)
+                if not created:
+                    for key, value in address_data.items():
+                        setattr(address, key, value)
+                    address.save()
+            except Exception as e:
+                return JsonResponse({'success': False, 'message': f'Erro ao criar/atualizar o endereço: {str(e)}'}, status=500)
 
             return JsonResponse({'success': True, 'message': 'Informações de checkout salvas com sucesso!'})
         except Exception as e:
+            logger.exception("Error saving checkout information")
             return JsonResponse({'success': False, 'message': f'Erro ao salvar informações de checkout: {str(e)}'}, status=500)
     else:
         return JsonResponse({'success': False, 'message': 'Método de requisição inválido'}, status=405)
 
+
 @login_required
 def pagamento_falha(request):
     return render(request, 'core/payment-failed.html')
-
 
 import logging
 logger = logging.getLogger(__name__)
@@ -892,6 +1056,7 @@ def customer_dashboard(request):
         "total_orders": total_orders,
     }
     return render(request, 'core/dashboard.html', context)
+
 
 def order_detail(request, id):
     try:

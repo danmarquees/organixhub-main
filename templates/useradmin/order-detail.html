@@ -85,7 +85,8 @@
                                 {% if order.satus_pagamento == True %} 
                                 Não Pago<br />
                                 {% else%} Pago<br />
-                                {% endif%} Status: {{order.status_produto}}
+                                {% endif%} Status:
+                                {{order.get_status_produto_display}}
                             </p>
                             <a href="#">Baixar info</a>
                         </div>

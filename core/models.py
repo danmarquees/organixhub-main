@@ -228,11 +228,11 @@ class PedidoCarrinho(models.Model):
 
     nome = models.CharField(max_length=200, null=True, blank=True) # Nome do cliente, permite valores nulos e em branco.
     email = models.EmailField(max_length=200, null=True, blank=True) # Email do cliente, permite valores nulos e em branco.
+    endereco = models.CharField(max_length=200, null=True, blank=True)
     telefone = models.CharField(max_length=20, null=True, blank=True) # Número de telefone do cliente, permite valores nulos e em branco.
-    endereco = models.CharField(max_length=200, null=True, blank=True) # Endereço do cliente, permite valores nulos e em branco.
     cidade = models.CharField(max_length=200, null=True, blank=True) # Cidade do cliente, permite valores nulos e em branco.
     estado = models.CharField(max_length=200, null=True, blank=True) # Estado do cliente, permite valores nulos e em branco.
-    cep = models.CharField(max_length=9, null=True)
+    cep = models.CharField(max_length=9, null=True, blank=True)
 
     status_pagamento = models.BooleanField(default=False) # Campo booleano indicando se o pagamento foi feito, padrão False.
     sku = ShortUUIDField(unique=False, length=4, max_length=10, prefix="SKU", alphabet="1234567890") # Campo ShortUUID para SKU, não único.
@@ -243,7 +243,7 @@ class PedidoCarrinho(models.Model):
     data_pedido = models.DateTimeField(auto_now_add=True) # Registra automaticamente a data e hora do pedido.
 
     status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing") # Status do pedido, as opções são definidas em STATUS_CHOICES.
-    coupons = models.ManyToManyField('Coupon', blank=True) # Relacionamento muitos-para-muitos com o modelo Coupon, permitindo múltiplos cupons por pedido.
+    coupons = models.ManyToManyField('Coupon', blank=True, related_name="pedidos") # Relacionamento muitos-para-muitos com o modelo Coupon, permitindo múltiplos cupons por pedido.
     num_fatura = models.CharField(max_length=255, blank=True, null=True) # Número da fatura, permite valores nulos e em branco.
 
     payment_date = models.DateTimeField(null=True, blank=True) # Data e hora do pagamento, permite valores nulos e em branco.
@@ -272,12 +272,12 @@ class PedidoCarrinho(models.Model):
         """
         from decimal import Decimal
         # Se não houver cupons aplicados, retorna 0.00
-        if not self.coupons.all():
+        if not self.coupons.exists():
             return Decimal('0.00')
         # Obtém o preço original do pedido antes dos descontos
         preco_original = self.get_original_price()
         # Calcula e retorna o valor total do desconto
-        return Decimal(str(preco_original)) - Decimal(str(self.preco))
+        return preco_original - self.preco
 
 
     def get_original_price(self):
@@ -288,7 +288,7 @@ class PedidoCarrinho(models.Model):
         # Obtém os cupons ativos aplicados ao pedido
         active_coupons = self.coupons.filter(ativo=True)
         # Se não houver cupons ativos, retorna o preço atual
-        if not active_coupons:
+        if not active_coupons.exists():
             return self.preco
 
         # Converte o preço atual para Decimal
@@ -315,11 +315,9 @@ class PedidoCarrinho(models.Model):
         """
         Calcula o preço final do pedido após aplicar os descontos.
         """
+        from decimal import Decimal
         final_price = self.preco
-        # Itera sobre os cupons aplicados
-        for coupon in self.coupons.all():
-            # Subtrai o valor do desconto de cada cupom do preço final
-            final_price -= coupon.get_discount_amount(self.preco)
+
         return final_price
 
     def apply_coupon(self, coupon):
@@ -336,8 +334,13 @@ class PedidoCarrinho(models.Model):
         if not coupon.is_valid():
             raise ValueError("Cupom inválido ou expirado")
 
+        if self.preco is None:
+            raise ValueError("O preço do pedido não pode ser None.")
+
         # Calcula o valor do desconto
-        desconto = (Decimal(str(coupon.desconto)) / Decimal('100.0')) * Decimal(str(self.preco))
+        desconto_decimal = Decimal(str(coupon.desconto)) / Decimal('100.0')
+        desconto = desconto_decimal * self.preco
+
         # Calcula o novo preço após aplicar o desconto
         novo_preco = self.preco - desconto
 
