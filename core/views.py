@@ -28,11 +28,16 @@ from core import models
 from django.db.models import Q
 from django.shortcuts import render
 
-
 def index(request):
     produtos = Produto.objects.filter(status_produto="published") # Removed destaque=True
     vendedores = Vendedor.objects.all()
     categorias = Categoria.objects.all().annotate(produto_count=Count('categoria'))
+
+    cart_total_amount = 0
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['qty']) * float(item['price'])
+
 
     for p in produtos:
 
@@ -45,14 +50,6 @@ def index(request):
         else:
             p.media_avaliacoes = 0
 
-        p.cart_item_count = 0
-        if request.user.is_authenticated:
-            cart_items = PedidoCarrinho.objects.filter(user=request.user, status_pagamento=False)
-            p.cart_item_count = cart_items.count() if cart_items else 0
-            p.cart_total_amount = 0
-            if cart_items:
-                for item in cart_items:
-                    p.cart_total_amount += item.preco
 
         p.badges = list(p.badges) if p.badges is not None else []
 
@@ -60,9 +57,11 @@ def index(request):
         "produtos": produtos,
         "vendedores": vendedores,
         "categorias": categorias,
+        "cart_total_amount": cart_total_amount,
     }
 
     return render(request, 'core/index.html', context)
+
 
 def lista_produtos(request):
     # Pega o slug da tag da requisição GET
@@ -868,8 +867,6 @@ def create_checkout_session(request, oid):
     except Exception as e:
         logger.exception(e)
         return JsonResponse({'error': f'Erro inesperado: {e}'}, status=500)
-
-
 
 @login_required
 def pagamento_falha(request):
