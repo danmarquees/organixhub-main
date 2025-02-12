@@ -952,13 +952,9 @@
                 <div class="footer-link-widget col wow animate__animated animate__fadeInUp" data-wow-delay=".4s">
                     <h4 class="widget-title">Popular</h4>
                     <ul class="footer-list mb-sm-5 mb-md-0">
-                        <li><a href="#">Leite e Leites Saborizados</a></li>
-                        <li><a href="#">Manteiga e Margarina</a></li>
-                        <li><a href="#">Substitutos de Ovos</a></li>
-                        <li><a href="#">Geleias</a></li>
-                        <li><a href="#">Creme de Leite e Molhos</a></li>
-                        <li><a href="#">Chá e Kombucha</a></li>
-                        <li><a href="#">Queijos</a></li>
+                        {% for c in categorias|slice:":7" %}
+                        <li><a href="{% url 'core:category-product-list' c.cid %}">{{ c.titulo }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="footer-link-widget widget-install-app col wow animate__animated animate__fadeInUp"

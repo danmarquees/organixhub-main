@@ -239,7 +239,7 @@ class PedidoCarrinho(models.Model):
     orderid = ShortUUIDField(unique=False, length=4, max_length=10, alphabet="1234567890") # Campo ShortUUID para ID do pedido, não único.
 
     preco = models.DecimalField(max_digits=10, decimal_places=2, default=1.99) # Preço total do pedido, padrão 1.99.
-    desconto = models.DecimalField(max_digits=10, decimal_places=2, default=1.99) # Desconto aplicado ao pedido, padrão 1.99.
+    desconto = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Changed default to 0.00
     data_pedido = models.DateTimeField(auto_now_add=True) # Registra automaticamente a data e hora do pedido.
 
     status_produto = models.CharField(choices=STATUS_CHOICES, max_length=30, default="processing") # Status do pedido, as opções são definidas em STATUS_CHOICES.
@@ -273,52 +273,52 @@ class PedidoCarrinho(models.Model):
         Calcula o valor total do desconto aplicado aos cupons.
         """
         from decimal import Decimal
-        # Se não houver cupons aplicados, retorna 0.00
-        if not self.coupons.exists():
-            return Decimal('0.00')
-        # Obtém o preço original do pedido antes dos descontos
-        preco_original = self.get_original_price()
-        # Calcula e retorna o valor total do desconto
-        return preco_original - self.preco
+
+        total_desconto = Decimal('0.00')
+
+        # Obtém os cupons ativos aplicados ao pedido
+        active_coupons = self.coupons.filter(ativo=True)
+
+        # Itera sobre os cupons ativos
+        for coupon in active_coupons:
+            # Calculate the discount amount for each coupon
+            discount_amount = (coupon.desconto / Decimal('100.0')) * self.get_original_price_without_coupon()  # Use the price before any coupon
+
+            total_desconto += discount_amount
+
+        return total_desconto
+
+
+
+    def get_original_price_without_coupon(self):
+        """
+        Calcula o preço original do pedido, sem nenhum cupom aplicado
+        """
+
+        from decimal import Decimal
+
+        total = Decimal('0.00')
+        for item in self.itenspedidocarrinho_set.all():  # Iterate over the order items
+            total += Decimal(str(item.preco)) * item.qtd  # Add the price of each item
+
+        return total
 
 
     def get_original_price(self):
         """
         Calcula o preço original do pedido antes dos descontos.
         """
-        from decimal import Decimal
-        # Obtém os cupons ativos aplicados ao pedido
-        active_coupons = self.coupons.filter(ativo=True)
-        # Se não houver cupons ativos, retorna o preço atual
-        if not active_coupons.exists():
-            return self.preco
+        # This function is unnecessary as we can achieve same with `get_original_price_without_coupon`
 
-        # Converte o preço atual para Decimal
-        preco_atual = Decimal(str(self.preco))
-        # Inicializa o fator de desconto acumulado com 1.0
-        cumulative_discount_factor = Decimal('1.0')
+        return self.get_original_price_without_coupon()
 
-        # Itera sobre os cupons ativos
-        for coupon in active_coupons:
-            # Calcula o desconto percentual de cada cupom
-            discount = Decimal(str(coupon.desconto)) / Decimal('100.0')
-            # Atualiza o fator de desconto acumulado
-            cumulative_discount_factor *= (Decimal('1.0') - discount)
-
-        # Se o fator de desconto acumulado for menor ou igual a 0, retorna 0.0
-        if cumulative_discount_factor <= 0:
-            return Decimal('0.0')
-
-        # Calcula e retorna o preço original
-        original_price = preco_atual / cumulative_discount_factor
-        return original_price
 
     def get_final_price(self):
         """
         Calcula o preço final do pedido após aplicar os descontos.
         """
         from decimal import Decimal
-        final_price = self.preco
+        final_price = self.get_original_price_without_coupon() - self.get_discount_amount() # use `get_original_price_without_coupon`
 
         return final_price
 
@@ -336,20 +336,20 @@ class PedidoCarrinho(models.Model):
         if not coupon.is_valid():
             raise ValueError("Cupom inválido ou expirado")
 
-        if self.preco is None:
+        if self.get_original_price_without_coupon() is None:
             raise ValueError("O preço do pedido não pode ser None.")
 
-        # Calcula o valor do desconto
-        desconto_decimal = Decimal(str(coupon.desconto)) / Decimal('100.0')
-        desconto = desconto_decimal * self.preco
+        # Apply minimum value condition
+        if coupon.valor_minimo is not None and self.get_original_price_without_coupon() < coupon.valor_minimo:
+            raise ValueError(f"O valor mínimo para este cupom é R$ {coupon.valor_minimo}")
 
-        # Calcula o novo preço após aplicar o desconto
-        novo_preco = self.preco - desconto
 
         # Adiciona o cupom ao pedido
         self.coupons.add(coupon)
         # Atualiza o preço do pedido
-        self.preco = max(Decimal('0.00'), novo_preco)
+        self.preco = self.get_final_price()
+        self.desconto = self.get_discount_amount()
+
         # Salva as alterações no pedido
         self.save()
 
@@ -358,8 +358,7 @@ class PedidoCarrinho(models.Model):
         coupon.save()
 
         # Retorna o valor do desconto
-        return desconto
-
+        return self.desconto
 
 
 
