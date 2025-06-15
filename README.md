@@ -132,7 +132,7 @@ Este projeto está licenciado sob a **MIT License**.
 ## 🙋‍♂️ Contato
 
 Desenvolvido por **Danilo Marques**
-LinkedIn: [https://www.linkedin.com/in/danmarquesdev/](https://www.linkedin.com/in/danmarquesdev/)
+LinkedIn: [https://www.linkedin.com/in/danilomarquesdev/](https://www.linkedin.com/in/danilomarquesdev/)
 
 ---
 
