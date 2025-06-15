@@ -1,45 +1,139 @@
-# organixhub-main
-# OrganyxHub Marketplace
+# 🌱 OrganyxHub Marketplace
 
-Bem-vindo ao repositório do OrganyxHub Marketplace, um protótipo de aplicação mobile desenvolvido com o framework Django. O projeto busca conectar consumidores conscientes com pequenos produtores e empreendedores que oferecem produtos sustentáveis.
-
-## Funcionalidades
-
-- Interface administrativa personalizada com Jazzmin e Admin Interface.
-- Editor de texto avançado para conteúdo dinâmico utilizando CKEditor5.
-- Sistema de tags flexível com Taggit.
-- Suporte a cores personalizadas na interface administrativa com Colorfield.
+Projeto de desenvolvimento de um **Marketplace de produtos sustentáveis e de impacto social**, com o objetivo de conectar **consumidores conscientes** a **pequenos produtores**, **empreendedores sociais** e **organizações de impacto positivo**.
 
 ---
 
-## Tecnologias Utilizadas
+## 🚀 Visão Geral
 
-### Back-end
-- **Django**: Framework de alto nível para desenvolvimento web.
+O **OrganyxHub** é uma plataforma web desenvolvida em **Django**, com foco em:
 
-### Front-end
-- **HTML5**
-- **CSS3**
-- **JavaScript**
-
-### Bibliotecas e Apps de Terceiros
-- **Jazzmin**: Para personalização do painel administrativo.
-- **CKEditor5**: Editor de texto enriquecido.
-- **Taggit**: Sistema para criação e gestão de tags.
-- **Admin Interface**: Para aprimoramento da experiência no painel de administração.
-- **Colorfield**: Para adição de campos de cores personalizadas.
+* Comércio de produtos sustentáveis
+* Rastreabilidade de produtos
+* Cadastro de usuários e produtores
+* Gestão de pedidos e entregas
+* Integração futura com meios de pagamento online (ex.: PayPal)
 
 ---
 
-## Instalação e Configuração
+## 🧱 Estrutura do Projeto
 
-### Pré-requisitos
-- Python 3.8+
-- Pipenv ou virtualenv
-- Node.js (para gerenciamento de dependências front-end, caso necessário)
-- Banco de dados configurado (SQLite, PostgreSQL, MySQL, etc.)
+**Principais Apps Django:**
 
-### Passos para Configuração
-1. Clone este repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/organyxhub-marketplace.git
+| App      | Função Principal                           |
+| -------- | ------------------------------------------ |
+| cadastro | Cadastro de usuários, produtores, clientes |
+| produtos | Listagem e gestão de produtos              |
+| rastreio | Rastreabilidade dos pedidos                |
+| users    | Gestão de autenticação de usuários         |
+
+---
+
+## ⚙️ Tecnologias Utilizadas
+
+* **Backend:** Django 4.x
+* **Banco de Dados:** PostgreSQL (pode ser alterado para outros durante desenvolvimento)
+* **Front-end:** Templates Django + HTML/CSS + JS (Plano de migração futura para React ou similar)
+* **Gerenciamento de Pacotes:** Pip + Virtualenv
+* **Outros:** Django Admin, ORM nativo, Migrations Django
+
+---
+
+## 💻 Como Rodar Localmente
+
+### Pré-requisitos:
+
+* Python 3.10+
+* PostgreSQL (ou SQLite para testes rápidos)
+* Git
+
+### Passo a passo:
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/danmarquees/organixhub-main.git
+cd organixhub-main
+
+# 2. Crie o ambiente virtual
+python -m venv venv
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+
+# 3. Instale as dependências
+pip install -r requirements.txt
+
+# 4. Configure as variáveis de ambiente (Exemplo no arquivo .env.example)
+
+# 5. Rode as migrações do banco de dados
+python manage.py migrate
+
+# 6. Crie um superusuário (admin)
+python manage.py createsuperuser
+
+# 7. Rode o servidor de desenvolvimento
+python manage.py runserver
+```
+
+---
+
+## 📂 Estrutura de Pastas (Exemplo)
+
+```
+organixhub-main/
+├── cadastro/
+├── produtos/
+├── rastreio/
+├── users/
+├── organixhub_main/
+├── static/
+├── templates/
+├── manage.py
+├── requirements.txt
+└── .env.example
+```
+
+---
+
+## 🧪 Testes Automatizados
+
+*(Funcionalidade a ser implementada em breve)*
+
+Futuramente, os testes serão organizados por app dentro de pastas `tests/`. Exemplo de como rodar:
+
+```bash
+python manage.py test
+```
+
+---
+
+## 🐳 Docker (Em breve)
+
+Planejamos criar um ambiente de desenvolvimento containerizado para facilitar o deploy.
+
+---
+
+## ✅ Roadmap Futuro
+
+* [x] Estrutura inicial de apps
+* [x] Cadastro de produtos e usuários
+* [ ] Implementação de testes automatizados
+* [ ] Configuração de Docker
+* [ ] Integração com serviços de pagamento
+* [ ] CI/CD via GitHub Actions
+* [ ] Front-end com Tailwind ou React
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a **MIT License**.
+
+---
+
+## 🙋‍♂️ Contato
+
+Desenvolvido por **Danilo Marques**
+LinkedIn: [https://www.linkedin.com/in/danmarquesdev/](https://www.linkedin.com/in/danmarquesdev/)
+
+---
+
+## ⭐ Se achar útil, dê uma estrela no repositório!
