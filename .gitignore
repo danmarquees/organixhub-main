@@ -59,6 +59,7 @@ cover/
 # Django stuff
 *.log
 db.sqlite3
+db.sqlite
 /media/
 /staticfiles/
 
