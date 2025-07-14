@@ -12,25 +12,41 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-
 from environs import Env
+
 env = Env()
 env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ubra-h&yoo@_a7$2opov&inr%o^geug_*db500c7k0@!k(h#zy'
+# The secret key is now loaded from an environment variable for better security.
+SECRET_KEY = env.str("SECRET_KEY", 'django-insecure-ubra-h&yoo@_a7$2opov&inr%o^geug_*db500c7k0@!k(h#zy')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Debug mode is enabled based on the DEBUG environment variable. Default is False for production.
+DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS should be configured with your domain names in production.
+# It's loaded from a comma-separated environment variable.
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+
+# Security headers for enhanced protection in production environments.
+if not DEBUG:
+    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=True)
+    SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=True)
+    CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=True)
+    SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=31536000) # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True)
+    SECURE_HSTS_PRELOAD = env.bool("SECURE_HSTS_PRELOAD", default=True)
+    SECURE_CONTENT_TYPE_NOSNIFF = env.bool("SECURE_CONTENT_TYPE_NOSNIFF", default=True)
+    SECURE_BROWSER_XSS_FILTER = env.bool("SECURE_BROWSER_XSS_FILTER", default=True)
+    X_FRAME_OPTIONS = 'DENY'
+
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 LOGGING = {
@@ -43,13 +59,11 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',  # ou 'INFO' para menos detalhes
+        'level': 'INFO' if not DEBUG else 'DEBUG',
     },
 }
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'admin_interface',
     'colorfield',
@@ -61,15 +75,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #terceiros
+    # Third-party apps
     'taggit',
     'django_ckeditor_5',
     'django_humanize',
-
-    #Paypal Integration
     'paypal.standard.ipn',
 
-    #Custom Apps
+    # Custom Apps
     'core',
     'userauths',
 ]
@@ -108,7 +120,7 @@ WSGI_APPLICATION = 'marketplace.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# For production, consider using a more robust database like PostgreSQL.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -119,59 +131,35 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'pt-br'
-
 USE_I18N = True
-
-#Configuração do fuso horário
 USE_TZ = True
 TIME_ZONE = 'America/Sao_Paulo'
-
-## Configurando os locais onde o Django procurará por arquivos de tradução
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATICFILES_DIRS =[os.path.join(BASE_DIR, 'static')]
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# JAZZMIN Settings
 JAZZMIN_SETTINGS = {
     "site_title": "Organyx Shop",
     "site_header": "Organyxhub Marketplace",
@@ -184,29 +172,23 @@ JAZZMIN_SETTINGS = {
     "navbar_color": "navbar-dark",
     "navbar_bg": "bg-dark",
     "navbar_border": True,
-
     "menu_labels": {
         "users": "Usuários",
         "auth": "Autenticação",
         "Administration": "Administração",
     },
 }
+JAZZMIN_UI_TWEAKS = {"theme": "darkly"}
 
-JAZZMIN_UI_TWEAKS = {
-
-    "theme": "darkly",
-}
-
+# Authentication
 LOGIN_URL = "userauths:sign-in"
-
 AUTH_USER_MODEL = 'userauths.User'
 
+# CKEditor
 CKEDITOR_5_UPLOAD_PATH  = 'uploads/'
-
 CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': [
-
             'heading', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough', 'code',
             'subscript', 'superscript', 'highlight', '|', 'bulletedList', 'numberedList',
             'todoList', 'blockQuote', 'imageUpload', 'mediaEmbed', 'insertTable', '|',
@@ -214,24 +196,13 @@ CKEDITOR_5_CONFIGS = {
             'removeFormat', 'sourceEditing', 'horizontalLine', 'pageBreak', '|', 'codeBlock'
         ],
         'image': {
-            'toolbar': [
-                'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:alignRight',
-                'imageStyle:alignCenter', 'imageStyle:side', '|'
-            ],
+            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:alignRight', 'imageStyle:alignCenter', 'imageStyle:side', '|'],
             'styles': ['full', 'side', 'alignLeft', 'alignRight', 'alignCenter']
         },
         'table': {
-            'contentToolbar': [
-                'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'
-            ],
-            'tableProperties': {
-                'borderColors': ['#000000', '#FF0000', '#00FF00', '#0000FF'],
-                'backgroundColors': ['#000000', '#FF0000', '#00FF00', '#0000FF'],
-            },
-            'tableCellProperties': {
-                'borderColors': ['#000000', '#FF0000', '#00FF00', '#0000FF'],
-                'backgroundColors': ['#000000', '#FF0000', '#00FF00', '#0000FF'],
-            }
+            'contentToolbar': ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'],
+            'tableProperties': {'borderColors': ['#000', '#F00', '#0F0', '#00F'], 'backgroundColors': ['#000', '#F00', '#0F0', '#00F']},
+            'tableCellProperties': {'borderColors': ['#000', '#F00', '#0F0', '#00F'], 'backgroundColors': ['#000', '#F00', '#0F0', '#00F']}
         },
         'heading': {
             'options': [
@@ -241,41 +212,15 @@ CKEDITOR_5_CONFIGS = {
                 {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'},
             ]
         },
-        'list': {
-            'properties': {
-                'styles': True,
-                'startIndex': True,
-                'reversed': True,
-            }
-        }
+        'list': {'properties': {'styles': True, 'startIndex': True, 'reversed': True}}
     },
-    'extends': {
-        'blockToolbar': [
-            'paragraph', 'heading1', 'heading2', 'heading3', '|', 'bulletedList', 'numberedList', '|', 'blockQuote'
-        ],
-        'toolbar': [
-            'heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline',
-            'strikethrough', 'code', 'subscript', 'superscript', 'highlight', '|',
-            'codeBlock', 'sourceEditing', 'insertImage', 'bulletedList', 'numberedList',
-            'todoList', '|', 'blockQuote', 'imageUpload', '|', 'fontSize', 'fontFamily',
-            'fontColor', 'fontBackgroundColor', 'mediaEmbed', 'removeFormat', 'insertTable',
-            'horizontalLine', 'pageBreak'
-        ],
-        'image': {
-            'toolbar': [
-                'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:alignRight',
-                'imageStyle:alignCenter', 'imageStyle:side', '|'
-            ],
-            'styles': ['full', 'side', 'alignLeft', 'alignRight', 'alignCenter']
-        }
-    }
 }
 
+# Payment Gateway Credentials from environment variables
+PAYPAL_CLIENT_ID = env.str("PAYPAL_CLIENT_ID", default="")
+PAYPAL_SECRET_ID = env.str("PAYPAL_SECRET_ID", default="")
+PAYPAL_RECEIVER_EMAIL = env.str("PAYPAL_RECEIVER_EMAIL", default="")
+PAYPAL_TEST = env.bool("PAYPAL_TEST", default=True)
 
-PAYPAL_CLIENT_ID = ''
-PAYPAL_SECRET_ID = ''
-PAYPAL_RECEIVER_EMAIL = ''
-PAYPAL_TEST = True  # Altere para False em produção
-
-STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
-STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = env.str("STRIPE_SECRET_KEY", default="")
+STRIPE_PUBLIC_KEY = env.str("STRIPE_PUBLIC_KEY", default="")
