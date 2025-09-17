@@ -8,16 +8,42 @@
     <title>Organyxhub Marketplace - As Melhores Ofertas</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta property="og:title" content="" />
-    <meta property="og:type" content="" />
-    <meta property="og:url" content="" />
-    <meta property="og:image" content="" />
-    <!-- Favicon -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#3bb77e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="OrganyxHub" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-TileColor" content="#3bb77e" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    
+    <!-- SEO and Social Meta Tags -->
+    <meta name="description" content="Marketplace de produtos sustentáveis e de impacto social. Conectando consumidores conscientes a pequenos produtores." />
+    <meta name="keywords" content="sustentável, orgânico, marketplace, produtos naturais, impacto social" />
+    <meta property="og:title" content="OrganyxHub - Marketplace Sustentável" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:image" content="{% static 'assets/imgs/theme/logo.png' %}" />
+    <meta property="og:description" content="Marketplace de produtos sustentáveis e de impacto social" />
+    <meta property="og:site_name" content="OrganyxHub" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="OrganyxHub - Marketplace Sustentável" />
+    <meta name="twitter:description" content="Marketplace de produtos sustentáveis e de impacto social" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{% static 'manifest.json' %}" />
+    
+    <!-- Favicon and Icons -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/imgs/theme/favicon.ico' %}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'pwa/icon-192x192.png' %}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/imgs/theme/favicon.ico' %}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/imgs/theme/favicon.ico' %}" />
     <!-- Template CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/plugins/animate.min.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/pwa-enhancements.css' %}" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -1032,17 +1058,179 @@
     <script src="{% static 'assets/js/plugins/perfect-scrollbar.js' %}"></script>
     <script src="{% static 'assets/js/plugins/magnific-popup.js' %}"></script>
     <script src="{% static 'assets/js/plugins/select2.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugins/waypoints.js' %}"></script>
-    <script src="{% static 'assets/js/plugins/counterup.js' %}"></script>
-    <script src="{% static 'assets/js/plugins/jquery.countdown.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugins/images-loaded.js' %}"></script>
-    <script src="{% static 'assets/js/plugins/isotope.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/fillter.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/jquery.elevateZoom-3.0.8.min.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/shop.js' %}"></script>
+    <script src="{% static 'assets/js/pwa-enhancements.js' %}"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/static/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Show update notification
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            const installButton = document.createElement('button');
+            installButton.innerHTML = '<i class="fas fa-download"></i> Instalar App';
+            installButton.className = 'btn btn-success install-btn';
+            installButton.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                border-radius: 25px;
+                padding: 10px 20px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: pulse 2s infinite;
+            `;
+            
+            installButton.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    deferredPrompt = null;
+                    installButton.remove();
+                }
+            });
+            
+            document.body.appendChild(installButton);
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                if (installButton.parentNode) {
+                    installButton.remove();
+                }
+            }, 10000);
+        }
+
+        function showUpdateNotification() {
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="background: #3bb77e; color: white; padding: 15px; position: fixed; top: 0; left: 0; right: 0; z-index: 10000; text-align: center;">
+                    <span>Nova versão disponível!</span>
+                    <button onclick="window.location.reload()" style="background: white; color: #3bb77e; border: none; padding: 5px 15px; margin-left: 10px; border-radius: 15px; cursor: pointer;">
+                        Atualizar
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: transparent; color: white; border: 1px solid white; padding: 5px 15px; margin-left: 10px; border-radius: 15px; cursor: pointer;">
+                        Depois
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(notification);
+        }
+
+        // Network status indicator
+        function updateNetworkStatus() {
+            const statusIndicator = document.getElementById('network-status') || createNetworkIndicator();
+            if (navigator.onLine) {
+                statusIndicator.style.display = 'none';
+            } else {
+                statusIndicator.style.display = 'block';
+                statusIndicator.innerHTML = '<i class="fas fa-wifi"></i> Você está offline';
+            }
+        }
+
+        function createNetworkIndicator() {
+            const indicator = document.createElement('div');
+            indicator.id = 'network-status';
+            indicator.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #ff6b6b;
+                color: white;
+                text-align: center;
+                padding: 10px;
+                z-index: 9999;
+                display: none;
+            `;
+            document.body.appendChild(indicator);
+            return indicator;
+        }
+
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        window.addEventListener('load', updateNetworkStatus);
+    </script>
+    
+    <!-- Enhanced CSS for PWA features -->
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .install-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;
+        }
+        
+        /* iOS Safari specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            .header-area {
+                padding-top: env(safe-area-inset-top);
+            }
+            
+            body {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+        
+        /* Enhanced mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .product-cart-wrap {
+                margin-bottom: 20px;
+            }
+            
+            .header-action-right {
+                gap: 10px;
+            }
+        }
+    </style>
     <script src="{% static 'assets/js/plugins/scrollup.js' %}"></script>
     <script src="{% static 'assets/js/plugins/jquery.vticker-min.js' %}"></script>
     <script src="{% static 'assets/js/plugins/jquery.theia.sticky.js' %}"></script>
     <script src="{% static 'assets/js/plugins/jquery.elevatezoom.js' %}"></script>
     <script src="{% static 'assets/js/wNumb.min.js' %}"></script>
-
+    <!-- ... -->
     <!-- Template JS -->
     <script src="{% static 'assets/js/main.js' %}"></script>
     <script src="{% static 'assets/js/shop.js' %}"></script>

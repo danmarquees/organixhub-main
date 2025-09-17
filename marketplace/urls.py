@@ -16,21 +16,45 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
+from django.http import HttpResponse
+import os
 
+def serve_manifest(request):
+    """Serve the PWA manifest with correct content type"""
+    manifest_path = os.path.join(settings.STATIC_ROOT or settings.STATICFILES_DIRS[0], 'manifest.json')
+    try:
+        with open(manifest_path, 'r') as f:
+            content = f.read()
+        return HttpResponse(content, content_type='application/manifest+json')
+    except FileNotFoundError:
+        return HttpResponse('{}', content_type='application/manifest+json', status=404)
+
+def serve_sw(request):
+    """Serve the service worker with correct content type"""
+    sw_path = os.path.join(settings.STATIC_ROOT or settings.STATICFILES_DIRS[0], 'sw.js')
+    try:
+        with open(sw_path, 'r') as f:
+            content = f.read()
+        return HttpResponse(content, content_type='application/javascript')
+    except FileNotFoundError:
+        return HttpResponse('// Service worker not found', content_type='application/javascript', status=404)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("core.urls")),
     path("user/", include("userauths.urls")),
     path("useradmin/", include("useradmin.urls")),
-
-    path("ckeditor5/", include('django_ckeditor_5.urls')),]
-
-
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
+    
+    # PWA files
+    path('manifest.json', serve_manifest, name='manifest'),
+    path('sw.js', serve_sw, name='sw'),
+    path('offline.html', TemplateView.as_view(template_name='core/offline.html'), name='offline-static'),
+]
 
 if settings.DEBUG:
-  urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-  urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

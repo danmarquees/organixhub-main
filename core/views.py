@@ -28,6 +28,10 @@ from core import models
 from django.db.models import Q
 from django.shortcuts import render
 
+def offline_page(request):
+    """Serve the offline page for PWA"""
+    return render(request, 'core/offline.html')
+
 def index(request):
     produtos = Produto.objects.filter(status_produto="published") # Removed destaque=True
     vendedores = Vendedor.objects.all()
