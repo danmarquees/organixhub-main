@@ -341,13 +341,15 @@ def service_terms(request):
 def add_to_cart(request):
     try:
         product_id = request.GET['id']
-        product_title = request.GET['title']
         product_qty = int(request.GET['qty'])
-        product_price_str = request.GET['price'] # Recebe o preço como string
-        product_price = float(product_price_str.replace(',', '.')) # Converte para float APÓS substituir a vírgula
-
-        product_image = request.GET['image']
-        pid = request.GET['pid']
+        
+        # Fetch product from database to ensure valid price and existence
+        product = get_object_or_404(Produto, id=product_id)
+        
+        product_title = product.titulo
+        product_price = float(product.preco) # Use price from DB
+        product_image = product.imagem.url
+        pid = product.pid
 
         if product_qty <= 0:
             return JsonResponse({'error': 'Quantidade deve ser maior que zero'}, status=400)
@@ -355,7 +357,9 @@ def add_to_cart(request):
     except KeyError as e:
         return JsonResponse({'error': f'Missing parameter: {e}'}, status=400)
     except ValueError as e:
-        return JsonResponse({'error': f'Preço inválido: {e}'}, status=400) # Mensagem de erro mais informativa
+        return JsonResponse({'error': f'Valor inválido: {e}'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
     cart_item = {
