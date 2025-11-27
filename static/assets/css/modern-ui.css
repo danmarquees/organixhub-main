@@ -1,0 +1,185 @@
+/* Modern UI Improvements */
+
+/* Buttons */
+.btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    border-radius: 50px;
+    /* Pill shape */
+    padding: 12px 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(59, 183, 126, 0.2);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(59, 183, 126, 0.3);
+}
+
+/* Product Cards */
+.product-cart-wrap {
+    border: 1px solid #f0f0f0;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    background: #fff;
+    overflow: hidden;
+}
+
+.product-cart-wrap:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    border-color: transparent;
+}
+
+.product-img-action-wrap {
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.product-img-action-wrap .product-img {
+    border-radius: 15px 15px 0 0;
+}
+
+/* Inputs */
+input.form-control,
+select.form-select,
+.search-style-2 input {
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    padding: 12px 20px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+input.form-control:focus,
+select.form-select:focus,
+.search-style-2 input:focus {
+    background-color: #fff;
+    border-color: #3BB77E;
+    box-shadow: 0 0 0 3px rgba(59, 183, 126, 0.1);
+}
+
+/* Header */
+.header-style-1.header-height-2 {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.header-bottom-bg-color {
+    background-color: #fff;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.main-menu>nav>ul>li>a {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    color: #253D4E;
+    font-size: 16px;
+}
+
+.main-menu>nav>ul>li>a:hover {
+    color: #3BB77E;
+}
+
+/* Badges */
+.product-badges span {
+    border-radius: 20px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 5px 12px;
+}
+
+/* Section Titles */
+.section-title h3 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: #253D4E;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: #3BB77E;
+    border-radius: 2px;
+}
+
+/* Footer */
+.footer {
+    background-color: #f4f5f9;
+    padding-top: 50px;
+}
+
+/* Layout & Spacing */
+.container {
+    max-width: 1440px;
+    /* Wider container for modern screens */
+}
+
+.section-padding {
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.mb-30 {
+    margin-bottom: 40px !important;
+    /* Increase spacing */
+}
+
+.mt-30 {
+    margin-top: 40px !important;
+}
+
+/* Dark Mode Elements (Header) */
+.header-style-1.header-height-2 .header-middle {
+    background-color: #253D4E;
+}
+
+.header-style-1.header-height-2 .header-middle .logo a img {
+    filter: brightness(0) invert(1);
+    /* Make logo white if it's an image */
+}
+
+.header-style-1.header-height-2 .search-style-2 form {
+    background-color: #fff;
+    border-radius: 50px;
+    border: none;
+    padding: 5px;
+}
+
+.header-style-1.header-height-2 .search-style-2 form input {
+    border: none;
+    background: transparent;
+}
+
+.header-style-1.header-height-2 .search-style-2 form select {
+    border: none;
+    background: transparent;
+    border-right: 1px solid #ececec;
+}
+
+.header-action-icon-2>a span.lable {
+    color: #fff;
+}
+
+.header-action-icon-2>a i {
+    color: #fff;
+}
+
+/* Fix for icons in dark header */
+.header-action-icon-2>a img {
+    filter: brightness(0) invert(1);
+}
+
+/* Mobile Menu Fixes */
+.mobile-header-wrapper-style .mobile-header-wrapper-inner .mobile-header-content-area .mobile-menu-wrap nav .mobile-menu li a {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+}
