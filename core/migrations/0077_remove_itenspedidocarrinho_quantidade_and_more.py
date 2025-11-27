@@ -49,11 +49,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='itenspedidocarrinho',
             name='preco',
-            field=models.DecimalField(decimal_places=2, default=1.99, max_digits=999999999),
+            field=models.DecimalField(decimal_places=2, default=1.99, max_digits=12),
         ),
         migrations.AlterField(
             model_name='itenspedidocarrinho',
             name='total',
-            field=models.DecimalField(decimal_places=2, default=1.99, max_digits=999999999),
+            field=models.DecimalField(decimal_places=2, default=1.99, max_digits=12),
         ),
     ]
