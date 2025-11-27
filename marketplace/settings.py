@@ -79,7 +79,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'taggit',
     'django_ckeditor_5',
-    'django_humanize',
+    'django.contrib.humanize',
     'paypal.standard.ipn',
 
     # Custom Apps
