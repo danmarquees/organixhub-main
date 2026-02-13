@@ -25,7 +25,7 @@ humanize==4.14.0
 idna==3.10
 marshmallow==4.0.0
 multidict==6.7.0
-pillow==11.3.0
+pillow==12.1.1
 playwright==1.55.0
 propcache==0.4.1
 pydantic==2.12.3
