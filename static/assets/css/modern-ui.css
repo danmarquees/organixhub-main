@@ -137,45 +137,56 @@ select.form-select:focus,
     margin-top: 40px !important;
 }
 
-/* Dark Mode Elements (Header) */
+/* Premium Clean Header and Search Bar Improvements */
 .header-style-1.header-height-2 .header-middle {
-    background-color: #253D4E;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ececec;
 }
 
 .header-style-1.header-height-2 .header-middle .logo a img {
-    filter: brightness(0) invert(1);
-    /* Make logo white if it's an image */
+    /* No filter needed for white background */
 }
 
 .header-style-1.header-height-2 .search-style-2 form {
-    background-color: #fff;
+    background-color: #f8f9fa;
     border-radius: 50px;
-    border: none;
-    padding: 5px;
+    border: 1px solid #e0e0e0;
+    padding: 2px 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+}
+
+.header-style-1.header-height-2 .search-style-2 form:focus-within {
+    background-color: #ffffff;
+    border-color: #3BB77E;
+    box-shadow: 0 4px 15px rgba(59, 183, 126, 0.15);
 }
 
 .header-style-1.header-height-2 .search-style-2 form input {
     border: none;
     background: transparent;
+    color: #253D4E;
 }
 
 .header-style-1.header-height-2 .search-style-2 form select {
     border: none;
     background: transparent;
     border-right: 1px solid #ececec;
+    color: #4f5d77;
+    font-weight: 500;
 }
 
 .header-action-icon-2>a span.lable {
-    color: #fff;
+    color: #4f5d77;
+    font-weight: 600;
 }
 
 .header-action-icon-2>a i {
-    color: #fff;
+    color: #253D4E;
 }
 
-/* Fix for icons in dark header */
 .header-action-icon-2>a img {
-    filter: brightness(0) invert(1);
+    /* Original icons on white background */
 }
 
 /* Mobile Menu Fixes */
