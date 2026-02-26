@@ -15,6 +15,8 @@ export default defineConfig({
         contact: 'src/contact.jsx',
         index: 'src/index.jsx',
         cart: 'src/cart.jsx',
+        product_list: 'src/product_list.jsx',
+        product_detail: 'src/product_detail.jsx',
       },
     },
   },
