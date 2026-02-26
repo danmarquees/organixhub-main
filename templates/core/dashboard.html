@@ -1,418 +1,57 @@
 {% extends 'partials/base.html' %}
-{% load static %}
+{% load static django_vite core_template_tags %}
 {% block content %}
 
-<main class="main pages">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                <span></span> Páginas <span></span> Minha Conta
-            </div>
-        </div>
-    </div>
-    <div class="page-content pt-150 pb-150">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 m-auto">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="dashboard-menu">
-                                <ul class="nav flex-column" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="profile-tab" data-bs-toggle="tab"
-                                            href="#profile" role="tab" aria-controls="profile"
-                                            aria-selected="false"><i
-                                                class="fi-rs-user mr-10"></i>Perfil</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="dashboard-tab" data-bs-toggle="tab"
-                                            href="#dashboard" role="tab" aria-controls="dashboard"
-                                            aria-selected="false"><i
-                                                class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders"
-                                            role="tab" aria-controls="orders" aria-selected="false"><i
-                                                class="fi-rs-shopping-bag mr-10"></i>Pedidos</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab"
-                                            href="#track-orders" role="tab" aria-controls="track-orders"
-                                            aria-selected="false"><i
-                                                class="fi-rs-shopping-cart-check mr-10"></i>Rastreie seu pedido</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address"
-                                            role="tab" aria-controls="address" aria-selected="true"><i
-                                                class="fi-rs-marker mr-10"></i>Meu endereço</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="page-login.html"><i
-                                                class="fi-rs-sign-out mr-10"></i>Sair</a>
-                                    </li>
-                                </ul>
-                            </div>Nome de Usuário
-                        </div>
-                        <div class="col-md-9">
-                            <div class="tab-content account dashboard-content pl-50">
-                                <div class="tab-pane fade active show" id="profile" role="tabpanel"
-                                    aria-labelledby="profile-tab">
-                                    <div class="card">
-                                        <div class="card-header border-bottom">
-                                            <h3 class="mb-0">Meu Perfil</h3>
-                                        </div>
-                                        <div class="card-body mb-2" style="display: flex; align-items: center; gap: 10px;">
-                                            <div>
-                                                {% if profile.imagem %}
-                                                <img src="{{ profile.imagem.url }}" style="width: 150px; object-fit:cover; height:150px; border-radius: 50%;">
-                                                {% else %}
-                                                <img src="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg" style="width: 150px; object-fit:cover; height:150px; border-radius: 50%;">
-                                                {% endif %}
-                                            </div>
-
-                                            <div>
-                                                <span><input class="mb-2" type="text" value="Nome: {{profile.nome}}"></span>
-                                                <span><input class="mb-2" type="text" value="Bio: {{profile.bio}}"></span>
-                                                <span><input class="mb-2" type="text" value="Telefone: {{profile.telefone}}"></span>
-                                                {% if profile.verificado == True %}
-                                                <div class="p-4 border rounded">
-                                                    <span>Verificado</span><span><i class="fas fa-check-circle"></i></span>
-                                                </div>
-                                                {% else %}
-                                                <div class="p-4 border rounded">
-                                                    <span>Não Verificado</span><span><i class="fas fa-x"></i></span>
-                                                </div>
-                                                {% endif %}
-                                                <div class="p-4">
-                                                    <a class="btn btn-success" href="{% url 'userauths:profile-update' %}" >Editar Perfil</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="dashboard" role="tabpanel"
-                                    aria-labelledby="dashboard-tab">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="mb-0">Olá {{request.user|title}}!</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <p>
-                                                Do seu painel de conta, você pode facilmente verificar e visualizar seus
-                                                <a href="#">pedidos recentes</a>,<br />
-                                                gerenciar seus <a href="#">endereços de envio e cobrança</a> e <a
-                                                    href="#">editar sua senha e detalhes da conta.</a>
-                                            </p>
-                                        </div>
-                                <!-- --  <div class="mt-4">
-                                    <p>{{month}}</p>
-                                    <p>{{total_orders}}</p>
-                                    </div> -->
-                                    <div>
-                                      <canvas style="height: 100px;" id="myChart"></canvas>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="mb-0">Seus Pedidos</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Pedido</th>
-                                                            <th>Data</th>
-                                                            <th>Status</th>
-                                                            <th>Status de Pgto.</th>
-                                                            <th>Total</th>
-                                                            <th>Ações</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for o in orders_list %}
-                                                        <tr>
-                                                            <td>PEDIDO_Nº{{o.id}}</td>
-                                                            <td>{{o.data_pedido}}</td>
-                                                            <td>{{o.status_produto|title}}</td>
-                                                            {% if o.status_pagamento == True%}
-                                                            <td><i class="fas fa-check-circle text-success"></i></i>
-                                                            </td>
-                                                            {% else %}
-                                                            <td class="fas fa-times text-danger"></td>
-                                                            {% endif %}
-                                                            <td>R${{o.preco}}</td>
-                                                            <td><a href="{% url 'core:order-detail' o.id %}"
-                                                                    class="btn-small d-block">Ver</a></td>
-                                                        </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="track-orders" role="tabpanel"
-                                    aria-labelledby="track-orders-tab">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="mb-0">Rastreio de pedidos</h3>
-                                        </div>
-                                        <div class="card-body contact-from-area">
-                                            <p>Para rastrear seu pedido, insira seu ID de pedido na caixa abaixo e
-                                                pressione o botão "Rastrear". Isso foi fornecido a você em seu recibo e
-                                                no e-mail de confirmação que você deve ter recebido.</p>
-                                            <div class="row">
-                                                <div class="col-lg-8">
-                                                    <form class="contact-form-style mt-30 mb-50" action="#"
-                                                        method="post">
-                                                        <div class="input-style mb-20">
-                                                            <label>ID do pedido</label>
-                                                            <input name="order-id"
-                                                                placeholder="Encontrado no seu e-mail de confirmação de pedido"
-                                                                type="text" />
-                                                        </div>
-                                                        <div class="input-style mb-20">
-                                                            <label>E-mail de cobrança</label>
-                                                            <input name="billing-email"
-                                                                placeholder="E-mail usado durante o checkout"
-                                                                type="email" />
-                                                        </div>
-                                                        <button class="submit submit-auto-width"
-                                                            type="submit">Rastrear</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#collapseAddAddress" aria-expanded="false"
-                                                            aria-controls="collapseAddAddress">
-                                                            Adicionar endereço
-                                                        </button>
-                                                    </h5>
-                                                </div>
-                                                <div class="collapse" id="collapseAddAddress">
-                                                    <div class="card-body">
-                                                        <form method="POST">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" name="num_addresses" value="1">
-                                                            <div class="row">
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="logradouro_0">Logradouro</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="logradouro_0" id="logradouro_0"
-                                                                        placeholder="Logradouro" required>
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="numero_0">Número</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="numero_0" id="numero_0"
-                                                                        placeholder="Número">
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="complemento_0">Complemento</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="complemento_0" id="complemento_0"
-                                                                        placeholder="Complemento">
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="bairro_0">Bairro</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="bairro_0" id="bairro_0"
-                                                                        placeholder="Bairro" required>
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="localidade_0">Localidade</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="localidade_0" id="localidade_0"
-                                                                        placeholder="Localidade" required>
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="uf_0">UF</label>
-                                                                    <input type="text" class="form-control" name="uf_0"
-                                                                        id="uf_0" placeholder="UF" required>
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="cep_0">CEP</label>
-                                                                    <input type="text" class="form-control" name="cep_0"
-                                                                        id="cep_0" placeholder="CEP" required>
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="celular_0">Celular</label>
-                                                                    <input type="tel" class="form-control"
-                                                                        name="celular_0" id="celular_0"
-                                                                        placeholder="Celular">
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <button type="submit"
-                                                                        class="btn btn-fill-out submit font-weight-bold">Salvar
-                                                                        endereço</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            {% for address in addresses %}
-                                            <div class="col-lg-6">
-                                                <div class="card mb-3">
-                                                    <div class="card-header">
-                                                        <h4 class="mb-0">Endereço de Entrega {{forloop.counter}}</h4>
-                                                    </div>
-                                                    <div class="card-body border rounded">
-                                                        <address>
-                                                            <p><strong>Logradouro:</strong> {{ address.logradouro }},
-                                                                <strong>Número:</strong> {{ address.numero }}</p>
-                                                            <p><strong>Bairro:</strong> {{ address.bairro }},
-                                                                <strong>Localidade:</strong> {{ address.localidade }},
-                                                                <strong>UF:</strong> {{ address.uf }}</p>
-                                                            <p><strong>CEP:</strong> {{ address.cep }}</p>
-                                                            <p><strong>Celular:</strong> {{ address.celular }}</p>
-                                                        </address>
-                                                        <br>
-                                                        {% if address.status %}
-                                                        <i data-address-id="{{address.id}}" class="fa fa-check-circle text-success check{{address.id}}"></i>
-                                                        <button data-address-id="{{address.id}}" style="display: none;" class="btn make-default-address button{{address.id}} action_btn">Tornar Padrão</button>
-                                                        <button data-address-id="{{address.id}}" class="btn btn-danger delete-address action_btn">Deletar</button>
-                                                        {% else %}
-                                                        <i data-address-id="{{address.id}}" style="display: none;" class="fa fa-check-circle text-success check{{address.id}}" style="display:none;"></i>
-                                                        <button data-address-id="{{address.id}}" class="btn make-default-address button{{address.id}} action_btn">Tornar Padrão</button>
-                                                        <button data-address-id="{{address.id}}" class="btn btn-danger delete-address action_btn">Deletar</button>
-
-
-
-                                                                                {% endif %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link" type="button"
-                                                            id="addAddressButton">
-                                                            Adicionar endereço
-
-
-
-                                                                                                             </button>
-                                                    </h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <form method="POST" id="addressForm">
-                                                        {% csrf_token %}
-                                                        <div id="addressFields">
-                                                            <div class="address-group" id="address-group-0">
-                                                                <div class="row">
-                                                                    <div class="form-group col-md-6">
-                                                                        <label for="logradouro_0">Logradouro</label>
-                                                                        <input type="text" id="logradouro_0"
-                                                                            name="logradouro_0" placeholder="Logradouro"
-                                                                            required>
-                                                                    </div>
-                                                                    <div class="form-group col-md-6">
-                                                                        <label for="numero_0">Número</label>
-                                                                        <input type="text" id="numero_0" name="numero_0"
-                                                                            placeholder="Número">
-                                                                    </div>
-                                                                    <div class="form-group col-md-6">
-                                                                        <label for="complemento_0">Complemento</label>
-                                                                        <input type="text" id="complemento_0"
-                                                                            name="complemento_0"
-                                                                            placeholder="Complemento">
-                                                                    </div>
-                                                                    <div class="form-group col-md-6">
-                                                                        <label for="bairro_0">Bairro</label>
-                                                                        <input type="text" id="bairro_0" name="bairro_0"
-                                                                            placeholder="Bairro" required>
-                                                                    </div>
-                                                                    <div class="form-group col-md-6">
-                                                                        <label for="localidade_0">Localidade</label>
-                                                                        <input type="text" id="localidade_0"
-                                                                            name="localidade_0" placeholder="Localidade"
-                                                                            required>
-                                                                    </div>
-                                                                    <div class="form-group col-md-6">
-                                                                        <label for="uf_0">UF</label>
-                                                                        <input type="text" id="uf_0" name="uf_0"
-                                                                            placeholder="UF" required>
-                                                                    </div>
-                                                                    <div class="form-group col-md-6">
-                                                                        <label for="cep_0">CEP</label>
-                                                                        <input type="text" id="cep_0" name="cep_0"
-                                                                            placeholder="CEP" required>
-                                                                    </div>
-                                                                    <div class="form-group col-md-6">
-                                                                        <label for="celular_0">Celular</label>
-                                                                        <input type="tel" id="celular_0"
-                                                                            name="celular_0" placeholder="Celular">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <input type="hidden" name="num_addresses" value="1"
-                                                            id="numAddresses">
-                                                        <button type="submit"
-                                                            class="btn btn-fill-out submit font-weight-bold">Salvar
-                                                            endereços</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-
-
-<script>
-  const ctx = document.getElementById('myChart');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: {{month|safe}},
-      datasets: [{
-        label: 'Histórico de Pedidos',
-        data: {{total_orders|safe}},
-        backgroundColor: 'rgb(59, 183, 126)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-</script>
+    {% comment %}
+        Create a secure JSON dump of the required dashboard data variables.
+        We're using a custom tag `json_script` (if available) or `|safe` formatting to pass context smoothly to React.
+    {% endcomment %}
+    
+    <div 
+        id="react-dashboard-page" 
+        data-csrf="{{ csrf_token }}"
+        data-profile='{
+            "nome": "{{ profile.nome|escapejs }}",
+            "bio": "{{ profile.bio|escapejs }}",
+            "telefone": "{{ profile.telefone|escapejs }}",
+            "imagem": "{% if profile.imagem %}{{ profile.imagem.url }}{% endif %}",
+            "verificado": {% if profile.verificado %}true{% else %}false{% endif %},
+            "username": "{{ request.user.username|escapejs }}"
+        }'
+        
+        data-orders='[
+            {% for o in orders_list %}
+            {
+                "id": "{{ o.id }}",
+                "data_pedido": "{{ o.data_pedido|date:'d/m/Y' }}",
+                "status_produto": "{{ o.status_produto|escapejs }}",
+                "status_pagamento": {% if o.status_pagamento %}true{% else %}false{% endif %},
+                "preco": "{{ o.preco }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]'
+        
+        data-addresses='[
+            {% for a in addresses %}
+            {
+                "id": "{{ a.id }}",
+                "logradouro": "{{ a.logradouro|escapejs }}",
+                "numero": "{{ a.numero|escapejs }}",
+                "bairro": "{{ a.bairro|escapejs }}",
+                "localidade": "{{ a.localidade|escapejs }}",
+                "uf": "{{ a.uf|escapejs }}",
+                "cep": "{{ a.cep|escapejs }}",
+                "celular": "{{ a.celular|escapejs }}",
+                "status": {% if a.status %}true{% else %}false{% endif %}
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]'
+        
+        data-months='{{ month|safe|default:"[]" }}'
+        data-totals='{{ total_orders|safe|default:"[]" }}'
+    ></div>
+    
+    {% vite_hmr_client %}
+    {% vite_asset 'src/dashboard.jsx' %}
 
 {% endblock content %}
