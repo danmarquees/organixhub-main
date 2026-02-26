@@ -119,7 +119,7 @@ const IndexPage = () => {
                                                         </div>
                                                         <div className="product-card-bottom">
                                                             <div className="product-price">
-                                                                <span>R$</span><span className={`current-product-price-${p.id}`}>{p.preco}</span>
+                                                                <span>R$</span><span>{p.preco}</span>
                                                                 {p.preco_antigo && (
                                                                     <>
                                                                         <br />
@@ -127,13 +127,17 @@ const IndexPage = () => {
                                                                     </>
                                                                 )}
                                                             </div>
-                                                            <div className="progress">
-                                                                {/* Example logic assuming calculation inside Django is rendered outside. In React: */}
-                                                                <span className="progress-bar" role="progressbar" style={{ width: `${p.qtd_vendida}%` }} aria-valuenow={p.qtd_vendida} aria-valuemin="0" aria-valuemax="100">{p.qtd_vendida}% vendido</span>
-                                                            </div>
                                                             <div className="add-cart">
-                                                                <input type="hidden" defaultValue="1" id="product-quantity" className={`product-quantity-${p.id}`} />
-                                                                <button className="add add-to-cart-btn btn w-100 hover-up" data-index={p.id} id="add-to-cart-btn">
+                                                                <button
+                                                                    className="add btn w-100 hover-up"
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        fetch(`/add-to-cart/?id=${p.id}&qty=1`)
+                                                                            .then(res => res.json())
+                                                                            .then(data => alert('Adicionado ao carrinho com sucesso!'))
+                                                                            .catch(err => console.error("Error adding to cart: ", err));
+                                                                    }}
+                                                                >
                                                                     <i className="fi-rs-shopping-cart mr-5"></i>Adicionar
                                                                 </button>
                                                             </div>

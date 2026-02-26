@@ -25,6 +25,7 @@ class ProdutoRecenteListAPIView(generics.ListAPIView):
         # Baseado em produtos recentes (ordenados por ID/data decrescente)
         return Produto.objects.filter(status_produto="published").order_by('-id')
 
+
 class ProdutoListAPIView(generics.ListAPIView):
     serializer_class = ProdutoSerializer
     permission_classes = [AllowAny]
@@ -32,3 +33,30 @@ class ProdutoListAPIView(generics.ListAPIView):
     def get_queryset(self):
         # Permite retornar todos os produtos publicados
         return Produto.objects.filter(status_produto="published")
+
+from django.http import JsonResponse
+
+def get_cart_data(request):
+    cart_total_amount = 0
+    cart_data_formatted = {}
+
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            qty = int(item['qty'])
+            price = float(item['price'])
+            subtotal = qty * price
+            cart_total_amount += subtotal
+            cart_data_formatted[p_id] = {
+                'title': item['title'],
+                'qty': qty,
+                'price': price,
+                'image': item['image'],
+                'pid': item['pid'],
+                'subtotal': subtotal
+            }
+
+    return JsonResponse({
+        "cart_data": cart_data_formatted,
+        "totalcartitems": len(request.session.get('cart_data_obj', {})),
+        "cart_total_amount": cart_total_amount
+    })

@@ -1,16 +1,98 @@
 import React, { useState, useEffect } from 'react';
 
 const CartPage = () => {
-    // Note: To fully migrate the cart data dynamically, we would need a Cart API endpoint in Django.
-    // For this progressive migration step, we are just mapping the layout and keeping static placeholders
-    // until a Cart API is implemented, similar to how the initial 'contact' and 'about' pages were migrated.
+    const [cartItems, setCartItems] = useState([]);
+    const [cartTotal, setCartTotal] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // We will simulate cart state to allow UI interactions (like removing items locally before integrating backend).
-    const [cartItems, setCartItems] = useState([
-        // Mock data matching the Django template structure for visual testing
-        { pid: '1', title: 'Produto Exemplo 1', price: 10.00, qty: 1, image: '/static/assets/imgs/shop/product-1-1.jpg' }
-    ]);
-    const [cartTotal, setCartTotal] = useState(10.00);
+    const loadCart = () => {
+        setIsLoading(true);
+        fetch('/api/cart/')
+            .then(res => res.json())
+            .then(data => {
+                // Convert object to array for mapping
+                const itemsArray = Object.keys(data.cart_data).map(key => ({
+                    ...data.cart_data[key],
+                    product_id: key
+                }));
+                setCartItems(itemsArray);
+                setCartTotal(data.cart_total_amount);
+            })
+            .catch(err => console.error("Error loading cart:", err))
+            .finally(() => setIsLoading(false));
+    };
+
+    useEffect(() => {
+        loadCart();
+    }, []);
+
+    const updateQuantity = (productId, newQty) => {
+        if (newQty < 1) return; // Prevent 0 or negative quantities
+
+        let formData = new FormData();
+        formData.append('id', productId);
+        formData.append('quantity', newQty);
+
+        // Django expects CSRF tokens by default on POSTs.  Since we might not want to 
+        // fetch it via cookies manually yet, we can try using the GET version of add-to-cart
+        // for updates (which works similarly to append) - or use the csrf cookie.
+        // Assuming CSRF is disabled on the API endpoints for now or using fetch defaults.
+        fetch(`/update-cart/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                // If CSRF is strictly enforced by Django for POST:
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    loadCart();
+                }
+            });
+    };
+
+    const deleteItem = (productId) => {
+        fetch(`/delete-item-from-cart/?id=${productId}`)
+            .then(res => res.json())
+            .then(data => {
+                loadCart();
+            });
+    };
+
+    // Helper to get CSRF token if needed for POSTs
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+    if (isLoading) {
+        return <div className="text-center mt-50">Carregando carrinho...</div>;
+    }
+
+    if (cartItems.length === 0) {
+        return (
+            <div className="text-center mt-50 mb-50">
+                <h2>Seu carrinho está vazio.</h2>
+                <a className="btn mt-20" href="/produtos/"><i className="fi-rs-arrow-left mr-10"></i>Ir para Loja</a>
+            </div>
+        );
+    }
 
 
     return (
@@ -49,13 +131,12 @@ const CartPage = () => {
                                         <th scope="col">Preço Unitário</th>
                                         <th scope="col" className="text-center">Quantidade</th>
                                         <th scope="col">Subtotal</th>
-                                        <th scope="col">Refresh</th>
                                         <th scope="col" className="end">Remover</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {cartItems.map((item, index) => (
-                                        <tr className="pt-30" key={item.pid}>
+                                        <tr className="pt-30" key={item.product_id}>
                                             <td className="custome-checkbox pl-30">
                                                 <input className="form-check-input" type="checkbox" name="checkbox" id={`exampleCheckbox${index + 1}`} value="" />
                                                 <label className="form-check-label" htmlFor={`exampleCheckbox${index + 1}`}></label>
@@ -65,27 +146,22 @@ const CartPage = () => {
                                                 <h6 className="mb-5"><a className="product-name mb-10 text-heading" href={`/produto/${item.pid}`}>{item.title}</a></h6>
                                             </td>
                                             <td className="price" data-title="Price">
-                                                <h4 className="text-body">R${item.price.toFixed(2)}</h4>
+                                                <h4 className="text-body">R${parseFloat(item.price).toFixed(2)}</h4>
                                             </td>
                                             <td className="text-center detail-info" data-title="Stock">
                                                 <div className="detail-extralink mr-15">
                                                     <div className="detail-qty border radius">
-                                                        <a href="#" className="qty-down"><i className="fi-rs-angle-small-down"></i></a>
-                                                        <input type="number" className="qty-val" defaultValue={item.qty} min="1" />
-                                                        <a href="#" className="qty-up"><i className="fi-rs-angle-small-up"></i></a>
+                                                        <a href="#" className="qty-down" onClick={(e) => { e.preventDefault(); updateQuantity(item.product_id, item.qty - 1); }}><i className="fi-rs-angle-small-down"></i></a>
+                                                        <input type="number" className="qty-val" value={item.qty} readOnly />
+                                                        <a href="#" className="qty-up" onClick={(e) => { e.preventDefault(); updateQuantity(item.product_id, item.qty + 1); }}><i className="fi-rs-angle-small-up"></i></a>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="price" data-title="Price">
-                                                <h4 className="text-brand">R${(item.price * item.qty).toFixed(2)}</h4>
-                                            </td>
-                                            <td className="action text-center" data-title="Refresh">
-                                                <button style={{ border: 'none', background: 'none' }} className="text-body update-product">
-                                                    <i className="fi-rs-refresh"></i>
-                                                </button>
+                                                <h4 className="text-brand">R${parseFloat(item.subtotal).toFixed(2)}</h4>
                                             </td>
                                             <td className="action text-center" data-title="Remove">
-                                                <button style={{ border: 'none', background: 'none' }} className="text-body delete-product">
+                                                <button style={{ border: 'none', background: 'none' }} className="text-body delete-product" onClick={() => deleteItem(item.product_id)}>
                                                     <i className="fi-rs-trash"></i>
                                                 </button>
                                             </td>
@@ -97,7 +173,7 @@ const CartPage = () => {
                         <div className="divider-2 mb-30"></div>
                         <div className="cart-action d-flex justify-content-between">
                             <a className="btn " href="/produtos/"><i className="fi-rs-arrow-left mr-10"></i>Continuar Comprando</a>
-                            <a className="btn  mr-10 mb-sm-15"><i className="fi-rs-refresh mr-10"></i>Atualizar Carrinho</a>
+                            <a className="btn  mr-10 mb-sm-15" onClick={(e) => { e.preventDefault(); loadCart(); }}><i className="fi-rs-refresh mr-10"></i>Atualizar Carrinho</a>
                         </div>
                     </div>
 
@@ -111,7 +187,7 @@ const CartPage = () => {
                                                 <h6 className="text-muted">Subtotal</h6>
                                             </td>
                                             <td className="cart_total_amount">
-                                                <h4 className="text-brand text-end">R${cartTotal.toFixed(2)}</h4>
+                                                <h4 className="text-brand text-end">R${parseFloat(cartTotal).toFixed(2)}</h4>
                                             </td>
                                         </tr>
                                         <tr>
@@ -137,7 +213,7 @@ const CartPage = () => {
                                                 <h6 className="text-muted">Total</h6>
                                             </td>
                                             <td className="cart_total_amount">
-                                                <h4 className="text-brand text-end">R${cartTotal.toFixed(2)}</h4>
+                                                <h4 className="text-brand text-end">R${parseFloat(cartTotal).toFixed(2)}</h4>
                                             </td>
                                         </tr>
                                     </tbody>
