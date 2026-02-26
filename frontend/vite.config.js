@@ -17,6 +17,8 @@ export default defineConfig({
         cart: 'src/cart.jsx',
         product_list: 'src/product_list.jsx',
         product_detail: 'src/product_detail.jsx',
+        sign_in: 'src/sign_in.jsx',
+        sign_up: 'src/sign_up.jsx',
       },
     },
   },
