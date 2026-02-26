@@ -1,41 +1,26 @@
-{% extends 'partials/base.html' %} {% load static %} {% block content %}
-<main class="main page-404">
-    <div class="page-content pt-150 pb-150">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-8 col-lg-10 col-md-12 m-auto text-center">
-                    <p class="mb-20">
-                        <img
-                            src="{% static 'assets/imgs/page/success.png' %}"
-                            alt=""
-                            class="hover-up"
-                        />
-                    </p>
-                    <h1 class="display-2 mb-30">
-                        Pagamento efetuado com sucesso!
-                    </h1>
-                    {%for p in pedidocarrinho%}
-                    <h3 class="font-lg text-grey-700 mb-30">
-                        Seu pagamento foi aprovado com sucesso. O número do seu
-                        pedido é #{{p.orderid}}.
-                    </h3>
-                    {%endfor%}
-                    <a
-                        class="btn btn-default submit-auto-width font-xs hover-up mt-30"
-                        href="{% url 'core:index' %}"
-                        ><i class="fi-rs-home mr-5"></i> Voltar para a Home
-                        Page</a
-                    >
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-<br />
-{% endblock content %} {% block extrajs %}
+{% extends 'partials/base.html' %} 
+{% load static django_vite %} 
+{% block content %}
+
+    <div 
+        id="react-payment-completed-page"
+        data-pedidos='[
+            {% for p in pedidocarrinho %}
+            {
+                "orderid": "{{ p.orderid }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]'
+    ></div>
+
+    {% vite_hmr_client %}
+    {% vite_asset 'src/payment_completed.jsx' %}
+
+{% endblock content %} 
+
+{% block extrajs %}
 <script src="{% static 'assets/js/invoice/jspdf.min.js' %}"></script>
 <script src="{% static 'assets/js/invoice/invoice.js' %}"></script>
 <script src="{% static 'assets/js/vendor/modernizr-3.6.0.min.js' %}"></script>
 <script src="{% static 'assets/js/vendor/jquery-3.6.0.min.js' %}"></script>
-
 {% endblock %}

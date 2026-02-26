@@ -1,371 +1,58 @@
 {% extends 'partials/base.html' %}
-{% load static %}
+{% load static django_vite core_template_tags %}
 {% block content %}
 
-<main class="main">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                <span></span> Loja
-                <span></span> Checkout
-            </div>
-        </div>
-    </div>
-    <div class="container mb-80 mt-50">
-        <div class="row">
-            <div class="col-lg-8 mb-40">
-                <h1 class="heading-2 mb-10">Checkout</h1>
-                <div class="d-flex justify-content-between">
-                    <h6 class="text-body">Você possui <span class="text-brand">{{ totalcartitems }}</span> produtos em seu carrinho</h6>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-7">
-                <div class="border p-40 cart-totals ml-30 mb-50">
-                    <h4 class="mb-30">Seu Pedido</h4>
-                    <table class="table no-border table-wishlist">
-                        <thead>
-                            <tr class="main-heading">
-                                <th class="text-brand"><h6>Item</h6></th>
-                                <th  class="text-brand"><h6>Nome</h6></th>
-                                <th  class="text-brand"><h6>Quantidade</h6></th>
-                                <th  class="text-brand"><h6>Valor Unitário</h6></th>
-                                <th  class="text-brand"><h6>Valor Total</h6></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for product_id, item in cart_data.items %}
-                                <tr>
-                                    <td class="image product-thumbnail"><img style="aspect-ratio: 1/1; object-fit: cover;" src="{{ item.image }}" alt="#"></td>
-                                    <td>
-                                        <h6 class="w-160 mb-5"><a href="{% url 'core:product-detail' item.pid %}" class="text-heading">{{ item.title }}</a></h6></span>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-muted pl-20 pr-20">X{{item.qty}}</h6>
-                                    </td>
-                                    <td>
-                                        <h5 class="text-muted">R${{item.price}}</h5>
-                                    </td>
-                                    <td>
-                                        <h5 class="text-brand">R${{item.subtotal|floatformat:2}}</h5>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="border p-40 cart-totals ml-30 mb-50">
-                    <h4 class="mb-30">Detalhes para a Entrega</h4>
-                    <form id="checkout-form" method="POST">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <input type="text" required="" name="nome" placeholder="Nome *" value="{{ order.nome|default:'' }}">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input type="text" required="" name="email" placeholder="E-mail *" value="{{ order.email|default:'' }}">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <input type="text" name="logradouro" required="" placeholder="Endereço *" value="{{ order.endereco|default:'' }}">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input type="text" name="complemento" placeholder="Complemento" value="{{ endereco.complemento|default:'' }}">
-                            </div>
-                        </div>
-                        <div class="row shipping_calculator">
-                            <div class="form-group col-lg-6">
-                                <div class="custom_select">
-                                    <select class="form-control select-active" name="uf">
-                                        <option value="">Selecione um estado...</option>
-                                        <option value="AC" {% if order.estado == 'AC' %}selected{% endif %}>Acre</option>
-                                        <option value="AL" {% if order.estado == 'AL' %}selected{% endif %}>Alagoas</option>
-                                        <option value="AP" {% if order.estado == 'AP' %}selected{% endif %}>Amapá</option>
-                                        <option value="AM" {% if order.estado == 'AM' %}selected{% endif %}>Amazonas</option>
-                                        <option value="BA" {% if order.estado == 'BA' %}selected{% endif %}>Bahia</option>
-                                        <option value="CE" {% if order.estado == 'CE' %}selected{% endif %}>Ceará</option>
-                                        <option value="DF" {% if order.estado == 'DF' %}selected{% endif %}>Distrito Federal</option>
-                                        <option value="ES" {% if order.estado == 'ES' %}selected{% endif %}>Espírito Santo</option>
-                                        <option value="GO" {% if order.estado == 'GO' %}selected{% endif %}>Goiás</option>
-                                        <option value="MA" {% if order.estado == 'MA' %}selected{% endif %}>Maranhão</option>
-                                        <option value="MT" {% if order.estado == 'MT' %}selected{% endif %}>Mato Grosso</option>
-                                        <option value="MS" {% if order.estado == 'MS' %}selected{% endif %}>Mato Grosso do Sul</option>
-                                        <option value="MG" {% if order.estado == 'MG' %}selected{% endif %}>Minas Gerais</option>
-                                        <option value="PA" {% if order.estado == 'PA' %}selected{% endif %}>Pará</option>
-                                        <option value="PB" {% if order.estado == 'PB' %}selected{% endif %}>Paraíba</option>
-                                        <option value="PR" {% if order.estado == 'PR' %}selected{% endif %}>Paraná</option>
-                                        <option value="PE" {% if order.estado == 'PE' %}selected{% endif %}>Pernambuco</option>
-                                        <option value="PI" {% if order.estado == 'PI' %}selected{% endif %}>Piauí</option>
-                                        <option value="RJ" {% if order.estado == 'RJ' %}selected{% endif %}>Rio de Janeiro</option>
-                                        <option value="RN" {% if order.estado == 'RN' %}selected{% endif %}>Rio Grande do Norte</option>
-                                        <option value="RS" {% if order.estado == 'RS' %}selected{% endif %}>Rio Grande do Sul</option>
-                                        <option value="RO" {% if order.estado == 'RO' %}selected{% endif %}>Rondônia</option>
-                                        <option value="RR" {% if order.estado == 'RR' %}selected{% endif %}>Roraima</option>
-                                        <option value="SC" {% if order.estado == 'SC' %}selected{% endif %}>Santa Catarina</option>
-                                        <option value="SP" {% if order.estado == 'SP' %}selected{% endif %}>São Paulo</option>
-                                        <option value="SE" {% if order.estado == 'SE' %}selected{% endif %}>Sergipe</option>
-                                        <option value="TO" {% if order.estado == 'TO' %}selected{% endif %}>Tocantins</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input required="" type="text" name="localidade" placeholder="Cidade *" value="{{ order.cidade|default:'' }}">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <input required="" type="text" name="cep" placeholder="CEP *" value="{{ order.cep|default:'' }}">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input required="" type="text" name="telefone" placeholder="Telefone *" value="{{ order.telefone|default:'' }}">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <input type="text" name="bairro" placeholder="Bairro" value="{{ endereco.bairro|default:'' }}">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <input type="text" name="numero" placeholder="Número" value="{{ endereco.numero|default:'' }}">
-                            </div>
-                        </div>
-                        <div class="form-group mb-30">
-                            <textarea rows="5" name="informacoes_adicionais" placeholder="Informações Adicionais">{{ order.informacoes_adicionais|default:'' }}</textarea>
-                        </div>
+    <div 
+        id="react-checkout-page" 
+        data-csrf="{{ csrf_token }}"
+        data-totalcartitems="{{ totalcartitems }}"
+        data-carttotalamount="{{ cart_total_amount|floatformat:2|safe|default:'0' }}"
+        data-shippingcost="{{ shipping_cost|floatformat:2|safe|default:'0' }}"
+        data-taxamount="{{ tax_amount|floatformat:2|safe|default:'0' }}"
+        data-finalamount="{{ final_amount|floatformat:2|safe|default:'0' }}"
+        data-stripe-key="{{ stripe_publishable_key }}"
+        data-oid="{{ oid }}"
 
-                        <button type="button" class="btn btn-fill-out btn-block" id="save-delivery-button">
-                            <span id="save-delivery-button-text">Salvar Detalhes da Entrega</span>
-                            <span id="save-delivery-spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <div class="border p-40 cart-totals ml-30 mb-50">
-                    <div class="d-flex align-items-end justify-content-between mb-30">
-                        <h4>Sumário do Pedido</h4>
-                        <h6 class="text-muted">Subtotal: <span class="text-brand">R${{cart_total_amount|floatformat:2}}</span></h6>
-                    </div>
-                    <div>
-                        <form method="POST" class="apply-coupon">
-                            {% csrf_token %}
-                            <input type="text" name="codigo" placeholder="Entre com o código promocional...">
-                            <button class="btn btn-md" type="submit">Resgatar</button>
-                        </form>
-                    </div>
-                    <a href="{% url 'core:cart' %}" class="btn btn-fill-out btn-block mt-30 mb-40">Voltar ao Carrinho</a>
-                    <div class="order_table checkout">
-                        <table class="table no-border no-line" style="border-collapse: collapse;">
-                            <tbody>
-                                <tr>
-                                    <td class="cart_total_label"><h6>Subtotal</h6></td>
-                                    <td class="cart_total_amount text-success"><h6>R${{cart_total_amount}}</h6></td>
-                                </tr>
-                                    <tr>
-                                        <td class="cart_total_label"><h6>Taxa de Entrega</h6></td>
-                                        <td class="cart_total_amount text-success"><h6>R${{shipping_cost|floatformat:2}}</h6></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cart_total_label"><h6>Impostos</h6></td>
-                                        <td class="cart_total_amount text-success"><h6>R${{tax_amount|floatformat:2}}</h6></td>
-                                    </tr>
-                                    {% if order and order.coupons.all %}
-                                        {% for coupon in order.coupons.all %}
-                                        <tr>
-                                            <td class="cart_total_label"><h6>Cupom ({{ coupon.codigo }})</h6></td>
-                                            <td class="cart_total_amount text-danger"><h6>-{{coupon.desconto}}%</h6></td>
-                                        </tr>
-                                        {% endfor %}
-                                        <tr>
-                                            <td class="cart_total_label text-brand"><h6>Desconto Total</h6></td>
-                                            <td class="cart_total_amount text-danger">
-                                                <h6>-R${{order.get_discount_amount|floatformat:2}}</h6>
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                    <tr>
-                                        <td class="text-brand"><strong><h6>Total Final</h6></strong></td>
-                                        <td class="cart_total_amount">
-                                            <strong class="text-brand">
-                                                {% if order and order.coupons.all %}
-                                                    <span class="text-decoration-line-through text-muted me-3">
-                                                        <h6>R${{cart_total_amount|floatformat:2}}</h6>
-                                                    </span>
-                                                    <span class="text-success">
-                                                        <h6>R${{order.preco|floatformat:2}}</h6>
-                                                    </span>
-                                                {% else %}
-                                                    <h6 class="text-success">R${{final_amount|floatformat:2}}</h6>
-                                                {% endif %}
-                                            </strong>
-                                        </td>
-                                    </tr>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="border p-40 cart-totals ml-30 mb-50">
-                    <div class="payment ml-30">
-                        <h4 class="mb-30">Formas de Pagamento</h4>
-                        <div class="payment_option">
-                            <button type="button" class="btn w-100" id="checkout-button"
-                                    style="background-color: blueviolet;">Pagar com o Stripe (Cartão de Crédito)
-                            </button>
-                            <button type="button" class="btn w-100"
-                                    style="background-color: rgb(50, 188, 173); color: white;">Pagar com Pix
-                            </button>
-                            <div id="paypal-button-container">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="payment-logo d-flex">
-                            <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-paypal.svg' %}" alt="">
-                            <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-visa.svg' %}" alt="">
-                            <img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-master.svg' %}" alt="">
-                                <!--<img class="mr-15" src="{% static 'assets/imgs/theme/icons/payment-pix.svg' %}" alt=""> -->
-                            <img src="{% static 'assets/imgs/theme/icons/payment-zapper.svg' %}" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
+        data-order='{
+            "nome": "{{ order.nome|escapejs }}",
+            "email": "{{ order.email|escapejs }}",
+            "endereco": "{{ order.endereco|escapejs }}",
+            "estado": "{{ order.estado|escapejs }}",
+            "cidade": "{{ order.cidade|escapejs }}",
+            "cep": "{{ order.cep|escapejs }}",
+            "telefone": "{{ order.telefone|escapejs }}",
+            "informacoes_adicionais": "{{ order.informacoes_adicionais|escapejs }}"
+        }'
+        
+        data-endereco='{
+            "complemento": "{{ endereco.complemento|escapejs }}",
+            "bairro": "{{ endereco.bairro|escapejs }}",
+            "numero": "{{ endereco.numero|escapejs }}"
+        }'
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=AUeZJX-aqir88NyR8g3c3u17mbsnji-NaUaR4iUTnoc5w9PBypCTm4lx7ngDoeYKNJM0xc3QvUkBShbK&currency=BRL"></script>
-<script src="https://js.stripe.com/v3/"></script>
-
-<script>
-$(document).ready(function () {
-    // AJAX call to save delivery details
-    $('#save-delivery-button').click(function () {
-        var formData = $('#checkout-form').serialize();
-        // Disable the button and show the spinner
-        $('#save-delivery-button').prop('disabled', true);
-        $('#save-delivery-button-text').text('Salvando...'); // Change the button text
-        $('#save-delivery-spinner').show(); // Show the spinner
-
-        $.ajax({
-            type: "POST",
-            url: "{% url 'core:save_delivery_details' %}",
-            data: formData,
-            dataType: 'json',
-            success: function (response) {
-                if (response.success) {
-                    alert(response.message);
-                    // Now enable the payment buttons
-                    $("#checkout-button, #paypal-button-container button").prop("disabled", false);
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                alert("Ocorreu um erro ao salvar os detalhes da entrega. Tente novamente.");
-            },
-            complete: function() {
-                // Re-enable the button and hide the spinner, whether success or error
-                $('#save-delivery-button').prop('disabled', false);
-                $('#save-delivery-button-text').text('Salvar Detalhes da Entrega'); // Restore original text
-                $('#save-delivery-spinner').hide(); // Hide the spinner
-            }
-        });
-    });
-
-    // Logic to disable payment buttons initially
-    $("#checkout-button, #paypal-button-container button").prop("disabled", true);
-
-  paypal.Buttons({
-        style: {
-            shape: 'rect',
-            color: 'gold',
-            layout: 'vertical',
-            label: 'paypal',
-        },
-
-        // Criação do pedido
-        createOrder: function (data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        currency_code: "BRL",
-                        value: '{{ final_amount }}', // Substituído dinamicamente pelo Django template
-                    }
-                }]
-            });
-        },
-
-        // Pagamento aprovado
-        onApprove: function (data, actions) {
-            return actions.order.capture().then(function (orderData) {
-                console.log('Pagamento aprovado:', orderData);
-                console.log('Redirecting with Order ID:', orderData.id);
-                console.log('Payment Status:', orderData.status);
-                // Capture the payment status and order ID and redirect to payment-completed
-                window.location.href = "{% url 'core:payment-completed' %}" +
-                    "?status=" + orderData.status +
-                    "&orderId=" + orderData.id;
-            }).catch(function (err) {
-                console.error('Erro ao capturar o pagamento:', err);
-                alert('Não foi possível concluir o pagamento. Por favor, tente novamente ou entre em contato com o suporte.');
-            });
-        },
-
-        // Erros no processo
-        onError: function (err) {
-            console.error('Erro no PayPal:', err);
-            alert('Ocorreu um erro ao processar o pagamento. Por favor, tente novamente.');
-        },
-
-        // Pagamento cancelado pelo usuário
-        onCancel: function (data) {
-            console.log('Pagamento cancelado pelo usuário:', data);
-            alert('O pagamento foi cancelado.');
-        }
-    }).render('#paypal-button-container');
-});
-
-var stripe = Stripe("{{stripe_publishable_key}}");
-var checkoutButton = document.getElementById("checkout-button");
-
-checkoutButton.addEventListener("click", function() {
-    checkoutButton.disabled = true; // Disable button to prevent multiple clicks
-    checkoutButton.textContent = "Processando...";
-
-    fetch(`/api/create_checkout_session/{{oid}}/`, { // Use order.pk here, and correct the URL
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({email: "{{order.email}}"}) // Send the email
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(session => {
-        return stripe.redirectToCheckout({ sessionId: session.id });
-    })
-    .then(result => {
-        if (result.error) {
-            checkoutButton.disabled = false; // Re-enable button on error
-            checkoutButton.textContent = "Pagar com Stripe";
-            alert(result.error.message);
-        }
-    })
-    .catch(error => {
-        checkoutButton.disabled = false; // Re-enable button on error
-        checkoutButton.textContent = "Pagar com Stripe";
-        console.error("Error:", error);
-        alert("Ocorreu um erro ao processar o pagamento. Por favor, tente novamente.");
-    });
-});
-
-</script>
+        {% comment %} Ditch items obj loop into a proper json string {% endcomment %}
+        data-cart='{
+            {% for product_id, item in cart_data.items %}
+            "{{ product_id }}": {
+                "pid": "{{ item.pid }}",
+                "title": "{{ item.title|escapejs }}",
+                "image": "{{ item.image|escapejs }}",
+                "qty": "{{ item.qty }}",
+                "price": "{{ item.price }}",
+                "subtotal": "{{ item.subtotal }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        }'
+    ></div>
+    
+    {% vite_hmr_client %}
+    {% vite_asset 'src/checkout.jsx' %}
 
 {% endblock content %}
+
+{% block extrajs %}
+    <!-- Keep the global SDKs so React can initialize them -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AUeZJX-aqir88NyR8g3c3u17mbsnji-NaUaR4iUTnoc5w9PBypCTm4lx7ngDoeYKNJM0xc3QvUkBShbK&currency=BRL"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
