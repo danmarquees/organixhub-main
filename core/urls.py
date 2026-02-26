@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django import views
+from core.api_views import CategoriaListAPIView, ProdutoDestaqueListAPIView, ProdutoRecenteListAPIView, ProdutoListAPIView
 from core.views import categoria_produtos, index, lista_produtos, lista_categorias, lista_vendedores, descricao_vendedores, detalhes_produto, tag_list, ajax_add_review,search, filter_product, about, privacy_policy, service_terms, add_to_cart, cart_view, delete_item_from_cart, update_from_cart, checkout, pagamento_efetuado,  pagamento_falha, customer_dashboard, order_detail, make_address_default, delete_address,  buscar_endereco, product_quickview,  add_to_wishlist, wishlist, delete_wishlist_item, contact, ajax_contato, purchase_guide, create_checkout_session, save_delivery_details, offline_page
-
 app_name = "core"
 
 urlpatterns = [
@@ -42,4 +42,10 @@ urlpatterns = [
     path("guia-de-compra/", purchase_guide, name="purchase_guide"),
     path("api/create_checkout_session/<int:oid>", create_checkout_session, name="create-checkout-session"),
     path("offline/", offline_page, name="offline"),
+
+    # API Endpoints
+    path("api/categorias/", CategoriaListAPIView.as_view(), name="api_categoria_list"),
+    path("api/produtos/", ProdutoListAPIView.as_view(), name="api_produto_list"),
+    path("api/produtos/destaques/", ProdutoDestaqueListAPIView.as_view(), name="api_produto_destaques"),
+    path("api/produtos/recentes/", ProdutoRecenteListAPIView.as_view(), name="api_produto_recentes"),
 ]

@@ -86,6 +86,8 @@ INSTALLED_APPS = [
     'core',
     'userauths',
     'useradmin',
+    'django_vite',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -158,7 +160,17 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'frontend', 'dist'),
+]
+
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": DEBUG,
+    }
+}
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
