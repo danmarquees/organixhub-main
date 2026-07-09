@@ -1,4 +1,5 @@
 {% extends 'useradmin/base.html' %} {% load static %} {% block content %}
+
 <section class="content-main">
     <div class="content-header">
         <div>
@@ -19,6 +20,7 @@
                         >Order ID: #{{order.orderid}}</small
                     >
                 </div>
+
                 <form
                     method="POST"
                     action="{% url 'useradmin:change_order_status' order.orderid %}"
@@ -148,6 +150,7 @@
                                     <td class="text-end">${{item.total}}</td>
                                 </tr>
                                 {% endfor %}
+
                                 <tr>
                                     <td colspan="4">
                                         <article class="float-end">

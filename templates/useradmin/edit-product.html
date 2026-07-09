@@ -1,5 +1,6 @@
 {% extends 'useradmin/base.html' %} {% load static %} {% load humanizelib%}
 {{form.media }} {% block content %}
+
 <section class="content-main">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token%}
@@ -91,6 +92,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="mb-4">
                                 <label class="form-label"
                                     >Alíquota de imposto</label
@@ -228,4 +230,5 @@
         </div>
     </form>
 </section>
+
 {% endblock content %}
