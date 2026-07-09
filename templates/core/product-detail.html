@@ -1,7 +1,5 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
 <div id="react-product-detail-page" data-product-id="{{ p.pid }}"></div>
-{% vite_hmr_client %}
-{% vite_asset 'src/product_detail.jsx' %}
 {% endblock content %}

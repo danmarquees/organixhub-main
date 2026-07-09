@@ -1,14 +1,7 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-{% load django_vite %}
-
 {% block content %}
-
-{% vite_hmr_client %}
-{% vite_asset 'src/index.jsx' %}
-
 <div id="react-index-page">
     {% csrf_token %} <!-- Required if doing POST via React later -->
 </div>
-
 {% endblock content %}

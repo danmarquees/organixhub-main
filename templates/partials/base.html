@@ -1,15 +1,12 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html class="o-js" lang="pt-BR">
-
 <head>
     <meta charset="utf-8" />
     <title>Organyxhub Marketplace - As Melhores Ofertas</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#3bb77e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -18,7 +15,6 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="msapplication-TileColor" content="#3bb77e" />
     <meta name="msapplication-tap-highlight" content="no" />
-    
     <!-- SEO and Social Meta Tags -->
     <meta name="description" content="Marketplace de produtos sustentáveis e de impacto social. Conectando consumidores conscientes a pequenos produtores." />
     <meta name="keywords" content="sustentável, orgânico, marketplace, produtos naturais, impacto social" />
@@ -31,10 +27,8 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="OrganyxHub - Marketplace Sustentável" />
     <meta name="twitter:description" content="Marketplace de produtos sustentáveis e de impacto social" />
-    
     <!-- PWA Manifest -->
     <link rel="manifest" href="{% static 'manifest.json' %}" />
-    
     <!-- Favicon and Icons -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/imgs/theme/favicon.ico' %}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'pwa/icon-192x192.png' %}" />
@@ -45,22 +39,16 @@
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/modern-ui.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/pwa-enhancements.css' %}" />
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
-
 <body>
-
     <!-- Quick view -->
     {% for p in produtos %}
         <div class="modal fade custom-modal" id="quickViewModal{{p.pid}}" tabindex="-1" aria-labelledby="quickViewModalLabel{{p.pid}}" aria-hidden="true">
@@ -269,7 +257,6 @@
                                         <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                     </a>
                                     <a href="{% url 'core:cart' %}"><span class="lable">Carrinho</span></a>
-
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2" style="max-height: 300px; overflow-y: auto;">
                                         <ul>
                                             {% for product_id, item in request.session.cart_data_obj.items %}
@@ -416,7 +403,6 @@
                                             <li><a href="{% url 'core:category-list' %}">Todas as Categorias</a></li>
                                         </ul>
                                     </li>
-
                                     <li>
                                         <a href="{% url 'core:product-list' %}">Loja</a>
                                     </li>
@@ -428,7 +414,6 @@
                                             {% endfor %}
                                             <hr>
                                             <li><a href="{% url 'core:vendor-list' %}">Lista de Vendedores</a></li>
-
                                         </ul>
                                     </li>
                                     <li class="position-static">
@@ -612,7 +597,6 @@
                 <div class="alert alert-{{message.tags}}">
                     <strong>{{ message }}</strong>
                 </div>
-
                 {% endfor %}
                 {% endif %}
                 <script>
@@ -812,9 +796,7 @@
     </div>
     <!--End header-->
     {% block content %}
-
     {%endblock content %}
-
     <section class="newsletter mb-15 wow animate__animated animate__fadeIn">
         <div class="container">
             <div class="row">
@@ -1035,7 +1017,6 @@
         </div>
     </div>
     </footer>
-
     <!-- Preloader Start -->
     <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
@@ -1048,7 +1029,6 @@
     </div>
     <!-- Vendor JS-->
     <script src="{% static 'assets/js/vendor/modernizr-3.6.0.min.js' %}"></script>
-    <script src="{% static 'assets/js/vendor/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'assets/js/vendor/jquery-migrate-3.3.0.min.js' %}"></script>
     <script src="{% static 'assets/js/vendor/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'assets/js/plugins/slick.js' %}"></script>
@@ -1065,7 +1045,6 @@
     <script src="{% static 'assets/js/main.js' %}"></script>
     <script src="{% static 'assets/js/shop.js' %}"></script>
     <script src="{% static 'assets/js/pwa-enhancements.js' %}"></script>
-    
     <!-- PWA Service Worker Registration -->
     <script>
         // Service Worker Registration
@@ -1074,7 +1053,6 @@
                 navigator.serviceWorker.register('/static/sw.js')
                     .then(function(registration) {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                        
                         // Check for updates
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
@@ -1091,7 +1069,6 @@
                     });
             });
         }
-
         // PWA Install Prompt
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1099,7 +1076,6 @@
             deferredPrompt = e;
             showInstallButton();
         });
-
         function showInstallButton() {
             const installButton = document.createElement('button');
             installButton.innerHTML = '<i class="fas fa-download"></i> Instalar App';
@@ -1114,7 +1090,6 @@
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                 animation: pulse 2s infinite;
             `;
-            
             installButton.addEventListener('click', async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
@@ -1124,9 +1099,7 @@
                     installButton.remove();
                 }
             });
-            
             document.body.appendChild(installButton);
-            
             // Auto-hide after 10 seconds
             setTimeout(() => {
                 if (installButton.parentNode) {
@@ -1134,7 +1107,6 @@
                 }
             }, 10000);
         }
-
         function showUpdateNotification() {
             const notification = document.createElement('div');
             notification.innerHTML = `
@@ -1150,7 +1122,6 @@
             `;
             document.body.appendChild(notification);
         }
-
         // Network status indicator
         function updateNetworkStatus() {
             const statusIndicator = document.getElementById('network-status') || createNetworkIndicator();
@@ -1161,7 +1132,6 @@
                 statusIndicator.innerHTML = '<i class="fas fa-wifi"></i> Você está offline';
             }
         }
-
         function createNetworkIndicator() {
             const indicator = document.createElement('div');
             indicator.id = 'network-status';
@@ -1180,12 +1150,10 @@
             document.body.appendChild(indicator);
             return indicator;
         }
-
         window.addEventListener('online', updateNetworkStatus);
         window.addEventListener('offline', updateNetworkStatus);
         window.addEventListener('load', updateNetworkStatus);
     </script>
-    
     <!-- Enhanced CSS for PWA features -->
     <style>
         @keyframes pulse {
@@ -1193,34 +1161,28 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-        
         .install-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;
         }
-        
         /* iOS Safari specific fixes */
         @supports (-webkit-touch-callout: none) {
             .header-area {
                 padding-top: env(safe-area-inset-top);
             }
-            
             body {
                 padding-bottom: env(safe-area-inset-bottom);
             }
         }
-        
         /* Enhanced mobile responsiveness */
         @media (max-width: 768px) {
             .container {
                 padding-left: 15px;
                 padding-right: 15px;
             }
-            
             .product-cart-wrap {
                 margin-bottom: 20px;
             }
-            
             .header-action-right {
                 gap: 10px;
             }
@@ -1237,5 +1199,4 @@
     <script src="{% static 'assets/js/shop.js' %}"></script>
     <script src="{% static 'assets/js/function.js' %}"></script>
 </body>
-
 </html>

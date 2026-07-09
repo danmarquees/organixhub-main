@@ -1,12 +1,10 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite core_template_tags %}
+{% load static core_template_tags %}
 {% block content %}
-
     {% comment %}
         Create a secure JSON dump of the required dashboard data variables.
         We're using a custom tag `json_script` (if available) or `|safe` formatting to pass context smoothly to React.
     {% endcomment %}
-    
     <div 
         id="react-dashboard-page" 
         data-csrf="{{ csrf_token }}"
@@ -18,7 +16,6 @@
             "verificado": {% if profile.verificado %}true{% else %}false{% endif %},
             "username": "{{ request.user.username|escapejs }}"
         }'
-        
         data-orders='[
             {% for o in orders_list %}
             {
@@ -30,7 +27,6 @@
             }{% if not forloop.last %},{% endif %}
             {% endfor %}
         ]'
-        
         data-addresses='[
             {% for a in addresses %}
             {
@@ -46,12 +42,7 @@
             }{% if not forloop.last %},{% endif %}
             {% endfor %}
         ]'
-        
         data-months='{{ month|safe|default:"[]" }}'
         data-totals='{{ total_orders|safe|default:"[]" }}'
     ></div>
-    
-    {% vite_hmr_client %}
-    {% vite_asset 'src/dashboard.jsx' %}
-
 {% endblock content %}

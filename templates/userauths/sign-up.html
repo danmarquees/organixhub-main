@@ -1,11 +1,7 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
 <div id="react-sign-up-page" data-csrf="{{ csrf_token }}"
     data-errors="{% if form.errors %}<strong>{{form.errors}}</strong>{% endif %}"></div>
-
-{% vite_hmr_client %}
-{% vite_asset 'src/sign_up.jsx' %}
 {% endblock content %}
-
 {% endblock content %}

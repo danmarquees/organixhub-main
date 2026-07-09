@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
-
 <div id="react-vendor-detail-page" data-count="{{ produtos.count }}" data-vendedor='{
             "vid": "{{ vendedor.vid|escapejs }}",
             "titulo": "{{ vendedor.titulo|escapejs }}",
@@ -34,8 +33,4 @@
             }{% if not forloop.last %},{% endif %}
             {% endfor %}
         ]'></div>
-
-{% vite_hmr_client %}
-{% vite_asset 'src/vendor_detail.jsx' %}
-
 {% endblock content %}

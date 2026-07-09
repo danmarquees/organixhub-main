@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
-
 <div id="react-search-page" data-query="{{ query }}" data-count="{{ produtos.count }}" data-produtos='[
             {% for p in produtos %}
             {
@@ -17,8 +16,4 @@
             }{% if not forloop.last %},{% endif %}
             {% endfor %}
         ]'></div>
-
-{% vite_hmr_client %}
-{% vite_asset 'src/search.jsx' %}
-
 {% endblock content %}

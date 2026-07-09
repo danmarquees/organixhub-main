@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %} 
-{% load static django_vite %} 
+{% load static %} 
 {% block content %}
-
     <div 
         id="react-payment-completed-page"
         data-pedidos='[
@@ -12,12 +11,7 @@
             {% endfor %}
         ]'
     ></div>
-
-    {% vite_hmr_client %}
-    {% vite_asset 'src/payment_completed.jsx' %}
-
 {% endblock content %} 
-
 {% block extrajs %}
 <script src="{% static 'assets/js/invoice/jspdf.min.js' %}"></script>
 <script src="{% static 'assets/js/invoice/invoice.js' %}"></script>

@@ -85,8 +85,6 @@ INSTALLED_APPS = [
     # Custom Apps
     'core',
     'userauths',
-    'useradmin',
-    'django_vite',
     'rest_framework',
 ]
 
@@ -162,14 +160,8 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'frontend', 'dist'),
 ]
 
-DJANGO_VITE = {
-    "default": {
-        "dev_mode": DEBUG,
-    }
-}
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'

@@ -4,83 +4,85 @@ document.addEventListener("DOMContentLoaded", () => {
   const reviewsContainer = document.querySelector(".comment-container"); // Cache this element
   const averageRating = document.querySelector(".d-flex > h6"); // Cache this element too
 
-  commentForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  if (commentForm) {
+    commentForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-    const formData = new FormData(commentForm);
+      const formData = new FormData(commentForm);
 
-    try {
-      const response = await fetch(commentForm.action, {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const response = await fetch(commentForm.action, {
+          method: "POST",
+          body: formData,
+        });
 
-      if (!response.ok) {
-        if (response.status === 400) {
-          const data = await response.json();
-          const errorMessages = Object.values(data.errors).flat().join("\n"); // Improved error message handling
-          throw new Error(errorMessages);
-        }
-        throw new Error(
-          `HTTP Error ${response.status}: ${response.statusText}`,
-        ); // Include status text
-      }
-
-      const data = await response.json();
-
-      if (data.bool) {
-        reviewRes.textContent = "Review submitted successfully!";
-        reviewRes.classList.add("text-success");
-        reviewRes.classList.remove("text-danger"); // Remove any previous error class
-
-        if (reviewsContainer) {
-          // No need to check this inside the loop every time
-          const newReview = document.createElement("div");
-          const rating = data.context.rating;
-          const starsHTML = generateStars(rating); // Use a helper function
-
-          newReview.className =
-            "single-comment justify-content-between d-flex mb-30";
-          newReview.innerHTML = `
-            <div class="user justify-content-between d-flex">
-              <div class="thumb text-center">
-                <img class="hover-img" src="${data.context.user_image}" alt="${data.context.user}'s profile picture" style="aspect-ratio: 1/1; object-fit: cover;">  </img>
-                <br>
-                <a href="#" class="font-heading text-brand">${data.context.user}</a>
-              </div>
-              <div class="desc">
-                <div class="d-flex justify-content-between mb-10">
-                  <div class="d-flex align-items-center">
-                    <span class="font-xs text-muted">${data.context.data}</span>
-                  </div>
-                  ${starsHTML}
-                </div>
-                <p class="mb-10">${data.context.review}</p>
-              </div>
-            </div>
-          `;
-          reviewsContainer.prepend(newReview);
-
-          if (averageRating) {
-            // No need to check this inside the loop every time
-            averageRating.textContent = `${Number.parseFloat(data.context.average_rating).toFixed(1)} out of 5.0`;
+        if (!response.ok) {
+          if (response.status === 400) {
+            const data = await response.json();
+            const errorMessages = Object.values(data.errors).flat().join("\n"); // Improved error message handling
+            throw new Error(errorMessages);
           }
+          throw new Error(
+            `HTTP Error ${response.status}: ${response.statusText}`,
+          ); // Include status text
         }
 
-        commentForm.reset();
-      } else {
-        reviewRes.textContent = "Error submitting review. Please try again.";
+        const data = await response.json();
+
+        if (data.bool) {
+          reviewRes.textContent = "Review submitted successfully!";
+          reviewRes.classList.add("text-success");
+          reviewRes.classList.remove("text-danger"); // Remove any previous error class
+
+          if (reviewsContainer) {
+            // No need to check this inside the loop every time
+            const newReview = document.createElement("div");
+            const rating = data.context.rating;
+            const starsHTML = generateStars(rating); // Use a helper function
+
+            newReview.className =
+              "single-comment justify-content-between d-flex mb-30";
+            newReview.innerHTML = `
+              <div class="user justify-content-between d-flex">
+                <div class="thumb text-center">
+                  <img class="hover-img" src="${data.context.user_image}" alt="${data.context.user}'s profile picture" style="aspect-ratio: 1/1; object-fit: cover;">  </img>
+                  <br>
+                  <a href="#" class="font-heading text-brand">${data.context.user}</a>
+                </div>
+                <div class="desc">
+                  <div class="d-flex justify-content-between mb-10">
+                    <div class="d-flex align-items-center">
+                      <span class="font-xs text-muted">${data.context.data}</span>
+                    </div>
+                    ${starsHTML}
+                  </div>
+                  <p class="mb-10">${data.context.review}</p>
+                </div>
+              </div>
+            `;
+            reviewsContainer.prepend(newReview);
+
+            if (averageRating) {
+              // No need to check this inside the loop every time
+              averageRating.textContent = `${Number.parseFloat(data.context.average_rating).toFixed(1)} out of 5.0`;
+            }
+          }
+
+          commentForm.reset();
+        } else {
+          reviewRes.textContent = "Error submitting review. Please try again.";
+          reviewRes.classList.add("text-danger");
+          reviewRes.classList.remove("text-success"); // Remove any previous success class
+          console.error("Error:", data.errors);
+        }
+      } catch (error) {
+        reviewRes.textContent = `Error: ${error.message}`;
         reviewRes.classList.add("text-danger");
         reviewRes.classList.remove("text-success"); // Remove any previous success class
-        console.error("Error:", data.errors);
+        console.error("Error:", error);
       }
-    } catch (error) {
-      reviewRes.textContent = `Error: ${error.message}`;
-      reviewRes.classList.add("text-danger");
-      reviewRes.classList.remove("text-success"); // Remove any previous success class
-      console.error("Error:", error);
-    }
-  });
+    });
+  }
 
   // Helper function to generate star HTML
   function generateStars(rating) {

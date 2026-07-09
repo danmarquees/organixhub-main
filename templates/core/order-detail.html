@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-
 <main class="main pages">
     <div class="page-header breadcrumb-wrap">
         <div class="container">
@@ -25,7 +24,6 @@
                                     <li class="nav-item">
                                         <a class="nav-link active" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Pedidos</a>
                                     </li>
-
                                     <li class="nav-item">
                                         <a class="nav-link" href="{% url 'userauths:sign-in' %}"><i class="fi-rs-sign-out mr-10"></i>Sair</a>
                                     </li>
@@ -72,9 +70,7 @@
                                                             <td><p><img src="{{ o.imagem }}" style="width: 60px; height: 60px; object-fit: cover;" alt=""></p></td>
                                                             <td>{{o.item}}</td>
                                                             <td>R${{o.preco}}</td>
-
                                                             <td style="text-align: center;">{{o.qtd}}</td>
-
                                                             <td>R${{o.total}}</td>
                                                         </tr>
                                                         {% endfor %}
@@ -197,5 +193,4 @@
         </div>
     </div>
 </main>
-
 {% endblock content %}

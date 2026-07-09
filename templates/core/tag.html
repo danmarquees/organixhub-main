@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
-
 <div id="react-tag-page" data-tag="{{ tag.name }}" data-count="{{ produtos.count }}" data-produtos='[
             {% for p in produtos %}
             {
@@ -17,8 +16,4 @@
             }{% if not forloop.last %},{% endif %}
             {% endfor %}
         ]'></div>
-
-{% vite_hmr_client %}
-{% vite_asset 'src/tag.jsx' %}
-
 {% endblock content %}

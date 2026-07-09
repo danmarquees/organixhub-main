@@ -10,7 +10,8 @@ class OrganyxPWA {
         this.setupInfiniteScroll();
         this.setupTouchGestures();
         this.setupPerformanceOptimizations();
-        this.setupAccessibility();
+        this.setupFocusManagement();
+        this.setupProgressiveEnhancement();
         this.setupModernInteractions();
     }
 

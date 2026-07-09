@@ -1,10 +1,5 @@
 {% extends 'partials/base.html' %} 
-{% load static django_vite %} 
+{% load static %} 
 {% block content %}
-
     <div id="react-payment-failed-page"></div>
-
-    {% vite_hmr_client %}
-    {% vite_asset 'src/payment_failed.jsx' %}
-
 {% endblock content %}

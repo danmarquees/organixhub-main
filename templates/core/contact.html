@@ -1,15 +1,7 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-{% load django_vite %}
-
 {% block content %}
-<!-- Vite dev server HMR -->
-{% vite_hmr_client %}
-<!-- Vite specific entry script for about page -->
-{% vite_asset 'src/contact.jsx' %}
-
 <div id="react-contact-page">
     {% csrf_token %} <!-- Keeping Django CSRF available to be scraped by React -->
 </div>
-
 {% endblock content %}

@@ -1,5 +1,4 @@
 {% extends 'partials/base.html' %} {% load static %} {% block content %}
-
 <main class="main">
     <div class="page-header breadcrumb-wrap">
         <div class="container">
@@ -149,7 +148,6 @@
                                             class="product-title-{{ w.produto.pid  }}"
                                             value="{{ w.produto.titulo }}"
                                         />
-
                                         <button
                                             class="btn btn-sm add-to-cart-btn"
                                             data-index="{{w.produto.pid}}"
@@ -191,5 +189,4 @@
         </div>
     </div>
 </main>
-
 {% endblock content %}

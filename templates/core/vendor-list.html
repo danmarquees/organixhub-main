@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
-
 <div id="react-vendor-list-page" data-count="{{ vendedores.count }}" data-vendedores='[
             {% for v in vendedores %}
             {
@@ -11,8 +10,4 @@
                 "quantidade_produtos": "{{ v.produto.all.count|escapejs }}",
                 "data_ano": "{{ v.data|date:' Y'|escapejs }}", "endereco" : "{{ v.endereco|escapejs }}" , "contato"
     : "{{ v.contato|escapejs }}" }{% if not forloop.last %},{% endif %} {% endfor %} ]'></div>
-
-{% vite_hmr_client %}
-{% vite_asset 'src/vendor_list.jsx' %}
-
 {% endblock content %}

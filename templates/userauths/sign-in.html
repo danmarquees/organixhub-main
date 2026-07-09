@@ -1,9 +1,6 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
 <div id="react-sign-in-page" data-csrf="{{ csrf_token }}"></div>
-{% vite_hmr_client %}
-{% vite_asset 'src/sign_in.jsx' %}
 {% endblock content %}
-
 {% endblock content %}

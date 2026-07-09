@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
-
     <div 
         id="react-profile-edit-page" 
         data-csrf="{{ csrf_token }}"
@@ -13,8 +12,4 @@
             "imagem": "{% if profile.imagem %}{{ profile.imagem.url }}{% endif %}"
         }'
     ></div>
-    
-    {% vite_hmr_client %}
-    {% vite_asset 'src/profile_edit.jsx' %}
-
 {% endblock content %}

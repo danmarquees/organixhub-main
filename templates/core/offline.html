@@ -10,7 +10,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #3bb77e 0%, #2a9d5f 100%);
@@ -20,32 +19,27 @@
             justify-content: center;
             color: white;
         }
-        
         .offline-container {
             text-align: center;
             padding: 2rem;
             max-width: 500px;
         }
-        
         .offline-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
             opacity: 0.8;
         }
-        
         .offline-title {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
         }
-        
         .offline-message {
             font-size: 1.1rem;
             margin-bottom: 2rem;
             opacity: 0.9;
             line-height: 1.6;
         }
-        
         .retry-btn {
             background: rgba(255, 255, 255, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.3);
@@ -58,42 +52,34 @@
             text-decoration: none;
             display: inline-block;
         }
-        
         .retry-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             border-color: rgba(255, 255, 255, 0.5);
             transform: translateY(-2px);
         }
-        
         .features-list {
             margin-top: 2rem;
             text-align: left;
         }
-        
         .features-list h3 {
             margin-bottom: 1rem;
             font-size: 1.3rem;
         }
-        
         .features-list ul {
             list-style: none;
         }
-        
         .features-list li {
             padding: 0.5rem 0;
             opacity: 0.8;
         }
-        
         .features-list li:before {
             content: "🌱 ";
             margin-right: 0.5rem;
         }
-        
         @media (max-width: 768px) {
             .offline-title {
                 font-size: 2rem;
             }
-            
             .offline-container {
                 padding: 1rem;
             }
@@ -108,11 +94,9 @@
             Parece que você perdeu a conexão com a internet. Não se preocupe, 
             algumas funcionalidades ainda estão disponíveis!
         </p>
-        
         <button class="retry-btn" onclick="window.location.reload()">
             Tentar novamente
         </button>
-        
         <div class="features-list">
             <h3>Disponível offline:</h3>
             <ul>
@@ -123,7 +107,6 @@
             </ul>
         </div>
     </div>
-
     <script>
         // Check for network connectivity
         function checkOnlineStatus() {
@@ -131,13 +114,10 @@
                 window.location.reload();
             }
         }
-
         // Listen for online event
         window.addEventListener('online', checkOnlineStatus);
-
         // Periodic check every 5 seconds
         setInterval(checkOnlineStatus, 5000);
-
         // Service worker registration check
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.ready.then(registration => {

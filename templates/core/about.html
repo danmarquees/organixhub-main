@@ -1,12 +1,5 @@
 {% extends 'partials/base.html' %} 
 {% load static %} 
-{% load django_vite %}
-
 {% block content %}
-<!-- Vite dev server HMR -->
-{% vite_hmr_client %}
-<!-- Vite specific entry script for about page -->
-{% vite_asset 'src/about.jsx' %}
-
 <div id="react-about-page"></div>
 {% endblock content %}

@@ -1,11 +1,6 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
-
 <div id="react-vendor-registration-page" data-csrf="{{ csrf_token }}"
     data-errors='{% if form.errors %}{{ form.errors.as_json|safe }}{% else %}{}{% endif %}'></div>
-
-{% vite_hmr_client %}
-{% vite_asset 'src/vendor_registration.jsx' %}
-
 {% endblock content %}

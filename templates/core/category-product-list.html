@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %}
-{% load static django_vite %}
+{% load static %}
 {% block content %}
-
 <div id="react-category-product-list-page" data-categoria="{{ categoria.titulo }}" data-count="{{ produtos.count }}"
     data-produtos='[
             {% for p in produtos %}
@@ -18,8 +17,4 @@
             }{% if not forloop.last %},{% endif %}
             {% endfor %}
         ]'></div>
-
-{% vite_hmr_client %}
-{% vite_asset 'src/category_product_list.jsx' %}
-
 {% endblock content %}
