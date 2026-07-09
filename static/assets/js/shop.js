@@ -2,24 +2,28 @@
     'use strict';
     /*Product Details*/
     var productDetails = function () {
-        $('.product-image-slider').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            arrows: false,
-            fade: false,
-            asNavFor: '.slider-nav-thumbnails',
-        });
+        if ($('.product-image-slider').length) {
+            $('.product-image-slider').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                fade: false,
+                asNavFor: '.slider-nav-thumbnails',
+            });
+        }
 
-        $('.slider-nav-thumbnails').slick({
-            slidesToShow: 4,
-            slidesToScroll: 1,
-            asNavFor: '.product-image-slider',
-            dots: false,
-            focusOnSelect: true,
-            
-            prevArrow: '<button type="button" class="slick-prev"><i class="fi-rs-arrow-small-left"></i></button>',
-            nextArrow: '<button type="button" class="slick-next"><i class="fi-rs-arrow-small-right"></i></button>'
-        });
+        if ($('.slider-nav-thumbnails').length) {
+            $('.slider-nav-thumbnails').slick({
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                asNavFor: '.product-image-slider',
+                dots: false,
+                focusOnSelect: true,
+                
+                prevArrow: '<button type="button" class="slick-prev"><i class="fi-rs-arrow-small-left"></i></button>',
+                nextArrow: '<button type="button" class="slick-next"><i class="fi-rs-arrow-small-right"></i></button>'
+            });
+        }
 
         // Remove active class from all thumbnail slides
         $('.slider-nav-thumbnails .slick-slide').removeClass('slick-active');
