@@ -194,3 +194,60 @@ select.form-select:focus,
     font-family: 'Outfit', sans-serif;
     font-weight: 600;
 }
+/* Responsiveness Fixes */
+@media (max-width: 1199px) {
+    .container {
+        max-width: 100%;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media (max-width: 991px) {
+    .section-padding {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .product-cart-wrap {
+        margin-bottom: 20px;
+    }
+    
+    .header-style-1.header-height-2 .search-style-2 form {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .section-title h3 {
+        font-size: 20px;
+    }
+    
+    .product-img-action-wrap .product-img {
+        height: auto;
+    }
+    
+    .mb-30 {
+        margin-bottom: 20px !important;
+    }
+    
+    .mt-30 {
+        margin-top: 20px !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .product-cart-wrap .product-content-wrap {
+        padding: 15px;
+    }
+    
+    .product-badges span {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+}
