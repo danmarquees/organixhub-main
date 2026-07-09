@@ -251,3 +251,42 @@ select.form-select:focus,
         padding: 3px 8px;
     }
 }
+
+/* Quick View Modal Bug Fixes */
+.modal:not(.show) {
+    display: none !important;
+}
+
+.modal-backdrop:not(.show) {
+    display: none !important;
+}
+
+/* Header Layout Overlap Fixes */
+.header-middle .header-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.search-style-2 form {
+    display: flex;
+    align-items: center;
+}
+
+.header-action-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-info-right ul {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}

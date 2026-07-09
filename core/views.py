@@ -260,7 +260,7 @@ def ajax_add_review(request, pid):
 
 def search(request):
     # Pega a query de busca da requisição
-    query = request.GET.get("q")
+    query = request.GET.get("q", "")
 
     # Busca produtos com o título contendo a query, ordenados pela data
     produtos = Produto.objects.filter(titulo__icontains=query).order_by("-data")
